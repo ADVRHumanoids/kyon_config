@@ -1,0 +1,77 @@
+# For DC the use_DC flag must be enabled!
+ec_board_ctrl :
+  eth_iface: rteth0
+  sync_cycle_time_ns: 1000000 #this value is used also for DC sync. 
+  #sync_cycle_time_ns: 0
+  sync_cycle_offset_ns: 300000000
+  sync_point_ns : 500000
+  power_off_boards: false
+  reset_micro : true
+  use_DC: true
+  
+ec_boards_base :
+  app_mode : run_mode
+  #app_mode : config_mode
+  robot_name : NoNe
+  read_SDOs : false
+  use_pipes : true
+  log_level : 1
+  #fault_power_off : true
+  use_ecat_pos_as_id : true
+  pb_utils_verbose : true
+
+zmq_pub :
+  base_port : 9000
+  uri : "tcp://*:"
+  fd_timeout_us : 100000
+
+zmq_rep :
+  uri: "tcp://*:5555"
+  zmq_rcvtimeo_ms : 500
+  #pipe_prefix : "/tmp/nrt_pipes/"
+  pb_utils_verbose : false
+
+ati_config :
+  ati_ip_addr : 192.168.1.1
+  ft_ecat_pos : 1
+  save_calib_matrix : false
+  calib_mat_file : ../examples/ati_ft6_calib/data/ones.txt
+  #calib_mat_file : ../examples/ati_ft6_calib/data/Calib_matrix_Cogimon_right_Foot_ft_147_sens8.txt
+  dump_log : true
+
+
+#############################
+## Circulo 9 config
+#############################
+CirculoESC_X:
+  #joint_config:
+    ##robot_id: 1                     # Maximum 8 bit
+    #module_type: 5                   # Maximum 4 bit (module_params)
+    #module_size: 2                   # Maximum 4 bit (module_params)
+    #module_id:   1                   # Maxum 8 bit   (module_params)
+    #module_revision: 0                # Maximum 8 bit (module_params)
+  #brake:
+    #brake_voltage: 17               # Voltage (in Volt) that will be applied to the coil of the brake
+  #motor_configuration:
+    #inertia: 0.000017668 #kg*m^2
+  #control_mode: 3B_motor_pos_ctrl   #esc.cpp --> controller_type_map
+  #pid:                                                          # Gain value for the different type of controllers (be sure that this value have been tuned well! They will be used as the default at starting the drive, unless who start the drive (XBot) will override them)
+    #position: [0.0062845, 0.0 , 0.0 , 6.578719 , 311.577179]    #3B_motor_pos_ctrl: 0: P_Pos, 1: I_Pos, 2: D_Pos, 3:P_Vel, 4:I_Vel
+    #velocity: [10, 300 , 0.0 ]                                  #71_motor_speed_ctrl, 0: P, 1: I, 2: D
+    #current: [2000, 2000]                                       #CC_current_ctrl: 0: Damping [mill, 1 --> 1000 mill], 1: Settling time [us]
+    #torque: [0.08, 0.0015, 0.007]                                    # Torque control, Kp, Ki, Kd. LIMIT: [0.09, 0, 0.009]
+
+
+CirculoESC_KYON_MOTOR_2:
+  position_limits_rad:
+    min: -2.7
+    max: 2.7
+  link_zero_incr: 51001 
+
+CirculoESC_KYON_MOTOR_1:
+  position_limits_rad:
+    min: -3.1
+    max: 3.1
+  link_zero_incr: 258072
+
+
