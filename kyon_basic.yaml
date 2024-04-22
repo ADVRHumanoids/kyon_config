@@ -1,0 +1,90 @@
+XBotInterface:
+    urdf_path: $(rospack find kyon_urdf)/urdf/kyon_leg.urdf
+    srdf_path: $(rospack find kyon_srdf)/srdf/kyon_leg.srdf
+
+ModelInterface:
+  model_type: RBDL
+
+# hal
+xbotcore_device_configs:
+    sim: $(rospack find kyon_config)/hal/kyon_gz.yaml
+    dummy: $(rospack find kyon_config)/hal/kyon_dummy.yaml
+    ec_idle: $PWD/hal/ec_all.yaml
+    ec_pos: $PWD/hal/ec_all.yaml
+
+
+# threads
+xbotcore_threads:
+    rt_main:  {sched: fifo , prio: 60, period: 0.001}
+    nrt_main: {sched: other, prio: 0 , period: 0.005}
+
+
+# plugins
+xbotcore_plugins:
+
+    homing:
+        thread: rt_main
+        type: homing
+
+    zero:
+        thread: rt_main
+        type: homing
+        params:
+          qhome: 
+            type: Eigen::VectorXd
+            value: [0, 0]
+        
+    # circulo9_trajectory: 
+    #    thread: rt_main
+    #    type: circulo9_trajectory
+    #    params:
+    #        config: { value: $PWD/Trajectories.yaml, type: yamlfile}
+    #        log_name: {value: p004-d0002_15kg, type: string}
+    #        buffer_size: {value: 500000, type: int}
+    #        use_custom_controller: false
+
+    ros_io: {thread: nrt_main, type: ros_io}
+
+    ros_control: {thread: nrt_main, type: ros_control}
+
+    circulo9_ros:
+      thread: nrt_main
+      type: circulo9_control
+
+    ec_ros:
+      thread: nrt_main
+      type: ec_ros 
+      params:
+        aux_type_names: [iq_out, iq_ref]
+
+    trj:
+      thread: rt_main
+      type: trajectory_plugin
+      params: 
+        amplitude:
+          knee_pitch_2: 1.0
+          hip_pitch_2: 1.0
+        freq_min:
+          knee_pitch_2: 0.25
+          hip_pitch_2: 0.25
+        freq_max:
+          knee_pitch_2: 1.1
+          hip_pitch_2: 1.1
+        period:
+          knee_pitch_2: 30.0
+          hip_pitch_2: 30.0
+        phase_offset:
+          knee_pitch_2: 0.0
+          hip_pitch_2: 0.7
+      
+    
+
+
+# global parameters
+xbotcore_param:
+  /xbot/hal/joint_safety/filter_autostart: {value: true, type: bool}
+  /xbot/hal/joint_safety/filter_cutoff_hz: {value: 2.0, type: double}
+
+
+
+

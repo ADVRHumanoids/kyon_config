@@ -1,0 +1,15 @@
+xbotcore_devices:
+  circulo9_ec:
+    names: []
+    thread: rt_main
+    params:
+      robot_name: &rn { value: NoNe, type: string }
+      config_ec_pos:
+        value: $PWD/../joint_config/position.yaml
+        type: yamlfile
+      config_ec_idle:
+        value: $PWD/../joint_config/idle.yaml
+        type: yamlfile
+      joint_id_map: &jim
+        value: $PWD/../joint_map/joint_map.yaml
+        type: yamlfile

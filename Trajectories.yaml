@@ -1,0 +1,58 @@
+--- 
+wait_time: 1.0 # Time (s) to wait brtween 2 Trajectories
+Trajectories: 
+  
+
+  # - 
+  #   amplitude: 15.0
+  #   trajectory: Smooth_step
+  #   time: 4
+  #   transistion_time: 3
+
+  # - 
+  #   amplitude: 10
+  #   trajectory: Chirp 
+  #   min_frequency: 0.1
+  #   max_frequency: 0.5
+  #   reverse: false
+  #   step_size: 0.05
+
+#position 1 [1 rad, frequency=0.2Hz, duration time=120s)
+    #- 
+     #amplitude: 1.0
+     #trajectory: Sine 
+     #frequency: 0.2
+     #theta: 0.0
+     #time: 120
+
+#position 2 [0.5 rad, frequency=0.1Hz, duration time=120s)
+    #- 
+     #amplitude: 0.5
+     #trajectory: Sine 
+     #frequency: 1.0
+     #theta: 0.0
+     #time: 120
+     
+#velocity [0.5 rad/s, frequency=0.1Hz, duration time=120s)
+    - 
+     amplitude: 1.0
+     trajectory: Sine 
+     frequency: 0.1
+     theta: 0.0
+     time: 120
+     
+#torque [0.1 Nm, frequency=0.1Hz, duration time=120s)
+    #- 
+     #amplitude: 0.1
+     #trajectory: Sine 
+     #frequency: 0.1
+     #theta: 0.0
+     #time: 120
+     
+#current [0.1 A, frequency=0.1Hz, duration time=120s)
+    #- 
+     #amplitude: 0.2
+     #trajectory: Sine 
+     #frequency: 10.0
+     #theta: 0.0
+     #time: 120
