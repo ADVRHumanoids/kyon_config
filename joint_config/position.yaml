@@ -30,5 +30,17 @@ knee_pitch_2:
         derivative: 0.006
         direct_feedback: 0.005
         friction_compensation: 0.1
-        dob_coeff: 2.0        
-
+        dob_coeff: 2.0   
+        
+wheel_joint_2:
+    motor_has_brake: false
+    inertia: 0.0000842712 #kg*m^2
+    control_mode: velocity
+    pid:
+        velocity: [2.665988, 158.797806 , 0.0 ]
+    custom_controller: 
+        proportional: 0.06
+        derivative: 0.006
+        direct_feedback: 0.005
+        friction_compensation: 0.1
+        dob_coeff: 2.0
