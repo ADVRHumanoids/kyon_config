@@ -6,8 +6,8 @@ hip_pitch_2:
     inertia: 0.0000906528 #kg*m^2
     control_mode: position
     pid:
-        #position: [0.033615, 2.944499, 0.0 , 8.125743, 0.0] #3B_motor_pos_ctrl: 0: P_Pos, 1: I_Pos, 2: D_Pos, 3:P_Vel, 4:I_Vel
-        position: [0.012, 0.003, 0.0002, 0.0, 0.0] #3B_motor_pos_ctrl: 0: P_Pos, 1: I_Pos, 2: D_Pos, 3:P_Vel, 4:I_Vel
+        #position: [0.012, 0.003, 0.0002, 0.0, 0.0] #3B_motor_pos_ctrl: 0: P_Pos, 1: I_Pos, 2: D_Pos, 3:P_Vel, 4:I_Vel
+        position: [0.014, 0.003, 0.00007, 0.0, 0.0] #3B_motor_pos_ctrl: 0: P_Pos, 1: I_Pos, 2: D_Pos, 3:P_Vel, 4:I_Vel
         #position: [0.0, 0.0, 0.0, 0.0, 0.0] #3B_motor_pos_ctrl: 0: P_Pos, 1: I_Pos, 2: D_Pos, 3:P_Vel, 4:I_Vel
     custom_controller: 
         proportional: 0.06
@@ -21,9 +21,8 @@ knee_pitch_2:
     inertia: 0.0000842712 #kg*m^2
     control_mode: position
     pid:
-        #position: [0.033615, 2.944499, 0.0 , 8.125743, 0.0] #3B_motor_pos_ctrl: 0: P_Pos, 1: I_Pos, 2: D_Pos, 3:P_Vel, 4:I_Vel
-        #position: [0.012,0.001, 0.0 , 2.0, 0.0] #3B_motor_pos_ctrl: 0: P_Pos, 1: I_Pos, 2: D_Pos, 3:P_Vel, 4:I_Vel
-        position: [0.012, 0.003, 0.0002, 0.0, 0.0] #3B_motor_pos_ctrl: 0: P_Pos, 1: I_Pos, 2: D_Pos, 3:P_Vel, 4:I_Vel
+        #position: [0.012, 0.003, 0.0002, 0.0, 0.0] #3B_motor_pos_ctrl: 0: P_Pos, 1: I_Pos, 2: D_Pos, 3:P_Vel, 4:I_Vel
+        position: [0.014, 0.003, 0.00007, 0.0, 0.0] #3B_motor_pos_ctrl: 0: P_Pos, 1: I_Pos, 2: D_Pos, 3:P_Vel, 4:I_Vel
         #position: [0.0, 0.0, 0.0, 0.0, 0.0] #3B_motor_pos_ctrl: 0: P_Pos, 1: I_Pos, 2: D_Pos, 3:P_Vel, 4:I_Vel
     custom_controller: 
         proportional: 0.06
@@ -38,6 +37,7 @@ wheel_joint_2:
     control_mode: velocity
     pid:
         velocity: [2.665988, 158.797806 , 0.0 ]
+        #velocity: [0.0, 0.0 , 0.0 ]
     custom_controller: 
         proportional: 0.06
         derivative: 0.006

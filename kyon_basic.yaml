@@ -32,7 +32,7 @@ xbotcore_plugins:
         params:
           qhome: 
             type: Eigen::VectorXd
-            value: [0, 0]
+            value: [0, 0, 0]
         
     # circulo9_trajectory: 
     #    thread: rt_main
