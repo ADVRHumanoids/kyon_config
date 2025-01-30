@@ -17,7 +17,7 @@ ec_boards_base :
   use_pipes : true
   log_level : 1
   #fault_power_off : true
-  use_ecat_pos_as_id : true
+  use_ecat_pos_as_id : false
   pb_utils_verbose : true
 
 zmq_pub :
@@ -62,16 +62,53 @@ SynapticonESC_X:
     #torque: [0.08, 0.0015, 0.007]                                    # Torque control, Kp, Ki, Kd. LIMIT: [0.09, 0, 0.009]
 
 
-SynapticonESC_KYON_MOTOR_2:
+SynapticonESC_11:
   position_limits_rad:
     min: -2.7
     max: 2.7
-  link_zero_incr: 47706 #51001 
+  link_zero_incr: 966649
 
-SynapticonESC_KYON_MOTOR_1:
+SynapticonESC_12:
   position_limits_rad:
-    min: -3.1
-    max: 3.1
-  link_zero_incr: 0 #16615
+    min: -2.7
+    max: 2.7
+  link_zero_incr: 246089
+
+SynapticonESC_13:
+  position_limits_rad:
+    min: -3.0
+    max: 3.0
+  link_zero_incr: 443745
+
+SynapticonESC_14:
+  position_limits_rad:
+    min: -2.7
+    max: 2.7
+  link_zero_incr: 3480
+
+SynapticonESC_21:
+  position_limits_rad:
+    min: -2.7
+    max: 2.7
+  link_zero_incr: 50399
+
+SynapticonESC_22:
+  position_limits_rad:
+    min: -2.7
+    max: 2.7
+  link_zero_incr: 377193
+
+SynapticonESC_23:
+  position_limits_rad:
+    min: -3.0
+    max: 3.0
+  link_zero_incr: 436924
+
+SynapticonESC_24:
+  position_limits_rad:
+    min: -2.7
+    max: 2.7
+  link_zero_incr: 2755
+
 
 

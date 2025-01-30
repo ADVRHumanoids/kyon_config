@@ -1,8 +1,13 @@
 joint_map:
-  1: wheel_joint_2
-  2: hip_pitch_2
-  3: knee_pitch_2
+  11: shoulder_yaw_1
+  12: shoulder_pitch_1
+  13: elbow_pitch_1
+  14: wrist_pitch_1
+  15: wrist_yaw_1
+  21: shoulder_yaw_2
+  22: shoulder_pitch_2
+  23: elbow_pitch_2
+  24: wrist_pitch_2
+  25: wrist_yaw_2
+
   
-  #1: hip_pitch_2
-  #2: knee_pitch_2
-  #3: wheel_joint_2

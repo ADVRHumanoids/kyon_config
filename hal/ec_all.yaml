@@ -7,6 +7,9 @@ xbotcore_devices:
       config_ec_pos:
         value: $PWD/../joint_config/position.yaml
         type: yamlfile
+      config_ec_effort:
+        value: $PWD/../joint_config/effort.yaml
+        type: yamlfile
       config_ec_idle:
         value: $PWD/../joint_config/idle.yaml
         type: yamlfile

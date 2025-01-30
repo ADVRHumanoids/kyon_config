@@ -1,6 +1,6 @@
 XBotInterface:
-    urdf_path: $(rospack find kyon_urdf)/urdf/kyon_leg.urdf
-    srdf_path: $(rospack find kyon_srdf)/srdf/kyon_leg.srdf
+    urdf: xacro $(rospack find kyon_urdf)/urdf/kyon.urdf.xacro upper_body:=true legs:=false
+    srdf: xacro $(rospack find kyon_srdf)/srdf/kyon.srdf.xacro upper_body:=true legs:=false
 
 ModelInterface:
   model_type: RBDL
@@ -32,7 +32,7 @@ xbotcore_plugins:
         params:
           qhome: 
             type: Eigen::VectorXd
-            value: [0, 0, 0]
+            value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         
     # circulo9_trajectory: 
     #    thread: rt_main
@@ -57,25 +57,35 @@ xbotcore_plugins:
       params:
         aux_type_names: [iq_out, iq_ref]
 
+    friction_comp:
+      type: friction_comp_plugin
+      thread: rt_main
+      params:
+        fc_slope: 20.0
+        fc: 0.75
+        param_config: 
+          value: $PWD/friction/fc_config.yaml
+          type: yamlfile
+
     trj:
       thread: rt_main
       type: trajectory_plugin
       params: 
         amplitude:
-          knee_pitch_2: 1.0
-          hip_pitch_2: 1.0
-        freq_min:
-          knee_pitch_2: 0.25
-          hip_pitch_2: 0.25
-        freq_max:
-          knee_pitch_2: 1.1
-          hip_pitch_2: 1.1
-        period:
-          knee_pitch_2: 30.0
-          hip_pitch_2: 30.0
-        phase_offset:
-          knee_pitch_2: 0.0
-          hip_pitch_2: 0.7
+          shoulder_yaw_1: 1.0
+          shoulder_pitch_1: 1.0
+          elbow_pitch_1: 1.0
+          wrist_pitch_1: 1.0
+          # wrist_yaw_1: 0.1
+          shoulder_yaw_2: 1.0
+          shoulder_pitch_2: 1.0
+          elbow_pitch_2: 1.0
+          wrist_pitch_2: 1.0
+          # wrist_yaw_2: 0.1
+        freq_min: 0.2
+        freq_max: 0.2
+        period: 30.0
+
       
     
 

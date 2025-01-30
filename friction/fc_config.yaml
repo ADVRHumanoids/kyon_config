@@ -1,0 +1,115 @@
+A0313: # shoulder_yaw_1
+  J: 0.37986749500368255
+  f0: 3.3898192365854687
+  f1: 6.886620939795299
+  f3: -0.3092067280600082
+  ke: 1.1554991939995518
+  tau0: -0.7536085190493564
+
+A0307: # shoulder_pitch_1
+  J: 0.47036875375806375
+  f0: 2.1809457696819394
+  f1: 4.802845039813896
+  f3: -0.12689545063636126
+  ke: 1.1143840229107702
+  tau0: -0.2151010539279932
+
+A0318: # elbow_pitch_1
+  J: 0.38156989472695274
+  f0: 2.267698934462972
+  f1: 5.286451843639534
+  f3: -0.241882119967197
+  ke: 1.1623245178530155
+  tau0: -1.4732858996038114
+
+A0322: # wrist_pitch_1
+  J: 0.07643967658703042
+  f0: 0.9049036512783363
+  f1: 0.7169904231287647
+  f3: -0.004507732962301424
+  ke: 1.0029187042727938
+  tau0: 0.6228725979631923
+
+A0314: # shoulder_yaw_2
+  J: 0.37897067797644596
+  f0: 3.201096742466033
+  f1: 8.129988744410266
+  f3: -0.40171831569598354
+  ke: 1.1329464333880928
+  tau0: -0.6954488604736747
+
+A0308: # shoulder_pitch_2
+  J: 0.47365773588920107
+  f0: 2.32711364432976
+  f1: 5.620361775848449
+  f3: -0.18235995944988287
+  ke: 1.1644103254559695
+  tau0: -1.1987974399191745
+
+A0317: # elbow_pitch_2
+  J: 0.3811326283429188
+  f0: 3.760229585045345
+  f1: 6.623950055486431
+  f3: -0.25551452703924554
+  ke: 1.1437499054252156
+  tau0: -1.4272941362730207
+  gain: 0.85
+
+A0323: # wrist_pitch_2
+    J: 0.0693559447207795
+    f0: 0.6653524204264699
+    f1: 0.575542139964843
+    f3: -0.0026213406396025985
+    ke: 0.987069441320487
+    tau0: 0.39991401402455945
+
+A0297:
+  J: 0.23897948905379418
+  f0: 5.454791778962614
+  f1: 1.4988116735393116
+  f3: -0.0185094852525285
+  ke: 1.3386256443928775
+  tau0: -1.8450014952465197  
+
+
+
+#   [info][xbot/hal/circulo9_ec] trying to perform: get_slaves_description 
+# [info][shoulder_yaw_1] actuator name is A0313
+# [info][shoulder_yaw_1] enc1 resolution: 524288.0  gear ratio: 120.0
+# [info][shoulder_yaw_1] pos_gain_udm_to_si = 1201579.6  vel_gain_udm_to_si = 137.50987
+# [info][shoulder_yaw_1] trying to perform: start_motor 
+# [ok  ][xbot/hal/circulo9_ec] Circulo9 detected 'shoulder_yaw_1' with id 11
+# [info][shoulder_pitch_1] actuator name is A0307
+# [info][shoulder_pitch_1] enc1 resolution: 524288.0  gear ratio: 120.0
+# [info][shoulder_pitch_1] pos_gain_udm_to_si = 1201579.6  vel_gain_udm_to_si = 137.50987
+# [info][shoulder_pitch_1] trying to perform: start_motor 
+# [ok  ][xbot/hal/circulo9_ec] Circulo9 detected 'shoulder_pitch_1' with id 12
+# [info][elbow_pitch_1] actuator name is A0318
+# [info][elbow_pitch_1] enc1 resolution: 524288.0  gear ratio: 120.0
+# [info][elbow_pitch_1] pos_gain_udm_to_si = 1201579.6  vel_gain_udm_to_si = 137.50987
+# [info][elbow_pitch_1] trying to perform: start_motor 
+# [ok  ][xbot/hal/circulo9_ec] Circulo9 detected 'elbow_pitch_1' with id 13
+# [info][wrist_pitch_1] actuator name is A0322
+# [info][wrist_pitch_1] enc1 resolution: 16384.0  gear ratio: 100.0
+# [info][wrist_pitch_1] pos_gain_udm_to_si = 26075.945  vel_gain_udm_to_si = 95.492966
+# [info][wrist_pitch_1] trying to perform: start_motor 
+# [ok  ][xbot/hal/circulo9_ec] Circulo9 detected 'wrist_pitch_1' with id 14
+# [info][shoulder_yaw_2] actuator name is A0314
+# [info][shoulder_yaw_2] enc1 resolution: 524288.0  gear ratio: 120.0
+# [info][shoulder_yaw_2] pos_gain_udm_to_si = 1201579.6  vel_gain_udm_to_si = 137.50987
+# [info][shoulder_yaw_2] trying to perform: start_motor 
+# [ok  ][xbot/hal/circulo9_ec] Circulo9 detected 'shoulder_yaw_2' with id 21
+# [info][shoulder_pitch_2] actuator name is A0308
+# [info][shoulder_pitch_2] enc1 resolution: 524288.0  gear ratio: 120.0
+# [info][shoulder_pitch_2] pos_gain_udm_to_si = 1201579.6  vel_gain_udm_to_si = 137.50987
+# [info][shoulder_pitch_2] trying to perform: start_motor 
+# [ok  ][xbot/hal/circulo9_ec] Circulo9 detected 'shoulder_pitch_2' with id 22
+# [info][elbow_pitch_2] actuator name is A0317
+# [info][elbow_pitch_2] enc1 resolution: 524288.0  gear ratio: 120.0
+# [info][elbow_pitch_2] pos_gain_udm_to_si = 1201579.6  vel_gain_udm_to_si = 137.50987
+# [info][elbow_pitch_2] trying to perform: start_motor 
+# [ok  ][xbot/hal/circulo9_ec] Circulo9 detected 'elbow_pitch_2' with id 23
+# [info][wrist_pitch_2] actuator name is A0323
+# [info][wrist_pitch_2] enc1 resolution: 16384.0  gear ratio: 100.0
+# [info][wrist_pitch_2] pos_gain_udm_to_si = 26075.945  vel_gain_udm_to_si = 95.492966
+# [info][wrist_pitch_2] trying to perform: start_motor 
