@@ -16,3 +16,4 @@ xbotcore_devices:
       joint_id_map: &jim
         value: $PWD/../joint_map/joint_map.yaml
         type: yamlfile
+      ignore_id: [99]

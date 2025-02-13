@@ -1,6 +1,6 @@
 XBotInterface:
-    urdf: xacro $(rospack find kyon_urdf)/urdf/kyon.urdf.xacro upper_body:=true legs:=false
-    srdf: xacro $(rospack find kyon_srdf)/srdf/kyon.srdf.xacro upper_body:=true legs:=false
+    urdf: xacro $(rospack find kyon_urdf)/urdf/kyon.urdf.xacro upper_body:=true legs:=true
+    srdf: xacro $(rospack find kyon_srdf)/srdf/kyon.srdf.xacro upper_body:=true legs:=true
 
 ModelInterface:
   model_type: RBDL
@@ -72,18 +72,21 @@ xbotcore_plugins:
       type: trajectory_plugin
       params: 
         amplitude:
-          shoulder_yaw_1: 1.0
+          shoulder_yaw_1: 1.5
           shoulder_pitch_1: 1.0
-          elbow_pitch_1: 1.0
-          wrist_pitch_1: 1.0
+          elbow_pitch_1: 1.5
+          wrist_pitch_1: 1.5
           # wrist_yaw_1: 0.1
-          shoulder_yaw_2: 1.0
+          shoulder_yaw_2: 1.5
           shoulder_pitch_2: 1.0
-          elbow_pitch_2: 1.0
-          wrist_pitch_2: 1.0
+          elbow_pitch_2: 1.5
+          wrist_pitch_2: 1.5
           # wrist_yaw_2: 0.1
-        freq_min: 0.2
-        freq_max: 0.2
+          hip_roll_1: -0.0
+          hip_pitch_1: 0.5
+          knee_pitch_1: 0.5
+        freq_min: 2.0
+        freq_max: 2.0
         period: 30.0
 
       

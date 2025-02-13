@@ -61,7 +61,7 @@ SynapticonESC_X:
     #current: [2000, 2000]                                       #CC_current_ctrl: 0: Damping [mill, 1 --> 1000 mill], 1: Settling time [us]
     #torque: [0.08, 0.0015, 0.007]                                    # Torque control, Kp, Ki, Kd. LIMIT: [0.09, 0, 0.009]
 
-
+# arms
 SynapticonESC_11:
   position_limits_rad:
     min: -2.7
@@ -112,3 +112,22 @@ SynapticonESC_24:
 
 
 
+# fl leg
+
+SynapticonESC_31:
+  position_limits_rad:
+    min: -2.7
+    max: 2.7
+  link_zero_incr: 746056
+
+SynapticonESC_32:
+  position_limits_rad:
+    min: -3.0
+    max: 3.0
+  link_zero_incr: 1032373 
+
+SynapticonESC_33:
+  position_limits_rad:
+    min: -2.7
+    max: 2.7
+  link_zero_incr: 900512
