@@ -25,6 +25,11 @@ xbotcore_plugins:
     homing:
         thread: rt_main
         type: homing
+        params:
+          ctrl_override:  # homing does not affect grippers
+            dagana_1_clamp_joint: 0
+            dagana_2_clamp_joint: 0
+
 
     zero:
         thread: rt_main

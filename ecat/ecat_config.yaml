@@ -86,6 +86,12 @@ SynapticonESC_14:
     max: 2.7
   link_zero_incr: 3480
 
+SynapticonESC_15:
+  position_limits_rad:
+    min: -2.7
+    max: 2.7
+  link_zero_incr: 3856
+
 SynapticonESC_21:
   position_limits_rad:
     min: -2.7
@@ -110,6 +116,26 @@ SynapticonESC_24:
     max: 2.7
   link_zero_incr: 2755
 
+SynapticonESC_25:
+  position_limits_rad:
+    min: -2.7
+    max: 2.7
+  link_zero_incr: 3538
+
+
+# dagana
+
+SynapticonESC_101:
+  position_limits_rad:
+    min: -0.01
+    max: 2.7
+  link_zero_incr: 3896
+
+SynapticonESC_102:
+  position_limits_rad:
+    min: -0.01
+    max: 2.7
+  link_zero_incr: 891
 
 
 # fl leg
