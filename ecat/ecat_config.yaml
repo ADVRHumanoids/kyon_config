@@ -11,7 +11,7 @@ ec_board_ctrl :
   
 ec_boards_base :
   app_mode : run_mode
-  #app_mode : config_mode
+  # app_mode : config_mode
   robot_name : NoNe
   read_SDOs : false
   use_pipes : true
@@ -144,16 +144,79 @@ SynapticonESC_31:
   position_limits_rad:
     min: -2.7
     max: 2.7
-  link_zero_incr: 746056
+  link_zero_incr: 768828
 
 SynapticonESC_32:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 1032373 
+  link_zero_incr: 508477 
 
 SynapticonESC_33:
   position_limits_rad:
     min: -2.7
     max: 2.7
-  link_zero_incr: 900512
+  link_zero_incr: 112584
+
+
+# fr leg
+
+SynapticonESC_41:
+  position_limits_rad:
+    min: -2.7
+    max: 2.7
+  link_zero_incr: 377722
+
+SynapticonESC_42:
+  position_limits_rad:
+    min: -3.0
+    max: 3.0
+  link_zero_incr: 244801
+
+SynapticonESC_43:
+  position_limits_rad:
+    min: -2.7
+    max: 2.7
+  link_zero_incr: 957472
+
+
+# rl leg
+
+SynapticonESC_51:
+  position_limits_rad:
+    min: -2.7
+    max: 2.7
+  link_zero_incr: 117624
+
+SynapticonESC_52:
+  position_limits_rad:
+    min: -3.0
+    max: 3.0
+  link_zero_incr: 901383 
+
+SynapticonESC_53:
+  position_limits_rad:
+    min: -2.7
+    max: 2.7
+  link_zero_incr: 481088
+
+
+# rr leg
+
+SynapticonESC_61:
+  position_limits_rad:
+    min: -2.7
+    max: 2.7
+  link_zero_incr: 768699
+
+SynapticonESC_62:
+  position_limits_rad:
+    min: -3.0
+    max: 3.0
+  link_zero_incr: 640481 
+
+SynapticonESC_63:
+  position_limits_rad:
+    min: -2.7
+    max: 2.7
+  link_zero_incr: 474537

@@ -57,5 +57,17 @@ hip_roll_1: *leg_default
 hip_pitch_1: *leg_default
 knee_pitch_1: *leg_default
 
+hip_roll_2: *leg_default
+hip_pitch_2: *leg_default
+knee_pitch_2: *leg_default
+
+hip_roll_3: *leg_default
+hip_pitch_3: *leg_default
+knee_pitch_3: *leg_default
+
+hip_roll_4: *leg_default
+hip_pitch_4: *leg_default
+knee_pitch_4: *leg_default
+
 dagana_1_clamp_joint: *hand_default
 dagana_2_clamp_joint: *hand_default

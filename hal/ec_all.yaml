@@ -4,6 +4,7 @@ xbotcore_devices:
     thread: rt_main
     params:
       robot_name: &rn { value: NoNe, type: string }
+      op_not_enabled_max_iters: 20
       config_ec_pos:
         value: $PWD/../joint_config/position.yaml
         type: yamlfile

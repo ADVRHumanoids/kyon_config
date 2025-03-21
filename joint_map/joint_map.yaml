@@ -16,6 +16,18 @@ joint_map:
   32: hip_pitch_1
   33: knee_pitch_1
 
+  41: hip_roll_2
+  42: hip_pitch_2
+  43: knee_pitch_2
+
+  51: hip_roll_3
+  52: hip_pitch_3
+  53: knee_pitch_3
+
+  61: hip_roll_4
+  62: hip_pitch_4
+  63: knee_pitch_4
+
   101: dagana_1_clamp_joint
   102: dagana_2_clamp_joint
 
