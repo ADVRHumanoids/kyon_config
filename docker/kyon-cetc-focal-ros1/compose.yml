@@ -1,0 +1,21 @@
+services:
+  app:
+    image: hhcmhub/kyon-cetc-focal-ros1-base
+    stdin_open: true
+    tty: true 
+    privileged: true
+    entrypoint: /bin/bash
+    network_mode: host
+    cap_add:
+      - ALL
+    restart: no
+    ulimits: 
+      core: -1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw  # x11
+      - ~/.ssh:/home/user/.ssh  # ssh
+      - ~/.cache/kyon-cetc-focal-ros1-base:/home/kyon_ros1/data
+    environment:
+      - TERM=xterm-256color
+      - DISPLAY
+      - HHCM_FOREST_CLONE_DEFAULT_PROTO=https

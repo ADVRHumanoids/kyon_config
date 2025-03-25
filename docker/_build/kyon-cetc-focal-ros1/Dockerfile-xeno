@@ -1,0 +1,24 @@
+FROM kyon-cetc-focal-ros1-base
+
+RUN echo "KERNEL_VER = $KERNEL_VER"
+
+# get kernel version
+ARG KERNEL_VER=0
+ARG USER_ID=1000
+ARG USER_NAME=kyon-ros1
+# ENV PYTHONUNBUFFERED=1
+
+# remove xbot2
+RUN sudo apt remove -y xbot2
+
+# build required software (requires valid netrc for auth)
+RUN --mount=type=secret,id=netrc,dst=/home/$USER_NAME/.netrc,uid=$USER_ID /bin/bash scripts/build-xeno.bash
+
+# xenomai from regular user
+RUN sudo groupadd -f xenomai -g 1001
+RUN sudo usermod -a -G xenomai $USER_NAME
+
+# tty from regular user
+RUN sudo usermod -a -G dialout $USER_NAME
+
+

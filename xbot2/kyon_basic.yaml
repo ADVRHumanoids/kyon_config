@@ -1,0 +1,130 @@
+XBotInterface:
+    urdf: xacro $(rospack find kyon_urdf)/urdf/kyon.urdf.xacro upper_body:=true legs:=true
+    srdf: xacro $(rospack find kyon_srdf)/srdf/kyon.srdf.xacro upper_body:=true legs:=true
+
+ModelInterface:
+  model_type: RBDL
+
+# hal
+xbotcore_device_configs:
+    sim: $(rospack find kyon_config)/hal/kyon_gz.yaml
+    dummy: $(rospack find kyon_config)/hal/kyon_dummy.yaml
+    ec_idle: $PWD/hal/ec_all.yaml
+    ec_pos: $PWD/hal/ec_all.yaml
+
+
+# threads
+xbotcore_threads:
+    rt_main:  {sched: fifo , prio: 60, period: 0.001}
+    nrt_main: {sched: other, prio: 0 , period: 0.005}
+
+
+# plugins
+xbotcore_plugins:
+
+    homing:
+        thread: rt_main
+        type: homing
+        params:
+          ctrl_override:  # homing does not affect grippers
+            dagana_1_clamp_joint: 0
+            dagana_2_clamp_joint: 0
+
+
+    zero:
+        thread: rt_main
+        type: homing
+        params:
+          qhome: 
+            type: Eigen::VectorXd
+            value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        
+    # circulo9_trajectory: 
+    #    thread: rt_main
+    #    type: circulo9_trajectory
+    #    params:
+    #        config: { value: $PWD/Trajectories.yaml, type: yamlfile}
+    #        log_name: {value: p004-d0002_15kg, type: string}
+    #        buffer_size: {value: 500000, type: int}
+    #        use_custom_controller: false
+
+    ros_io: {thread: nrt_main, type: ros_io}
+
+    ros_control: {thread: nrt_main, type: ros_control}
+
+    circulo9_ros:
+      thread: nrt_main
+      type: circulo9_control
+
+    ec_ros:
+      thread: nrt_main
+      type: ec_ros 
+      params:
+        aux_type_names: [iq_out, iq_ref]
+
+    friction_comp:
+      type: friction_comp_plugin
+      thread: rt_main
+      params:
+        fc_slope: 20.0
+        fc: 1.0
+        param_config: 
+          value: $PWD/friction/fc_config.yaml
+          type: yamlfile
+
+    gcomp:
+      type: gcomp_plugin
+      thread: rt_main
+
+    trj:
+      thread: rt_main
+      type: trajectory_plugin
+      params: 
+        amplitude:
+          hip_roll_1: 0.35
+          hip_pitch_1: 0.5
+          knee_pitch_1: 0.5
+          hip_roll_2: 0.35
+          hip_pitch_2: 0.5
+          knee_pitch_2: 0.5
+          hip_roll_3: -0.25
+          hip_pitch_3: 0.5
+          knee_pitch_3: 0.5
+          hip_roll_4: 0.35
+          hip_pitch_4: 0.5
+          knee_pitch_4: 0.5
+        freq_min: 1.80
+        freq_max: 1.80
+        period: 30.0
+
+    trj_ub:
+      thread: rt_main
+      type: trajectory_plugin
+      params: 
+        amplitude:
+          shoulder_yaw_1: 1.5
+          shoulder_pitch_1: 1.0
+          elbow_pitch_1: 1.5
+          wrist_pitch_1: 1.5
+          wrist_yaw_1: 1.5
+          shoulder_yaw_2: 1.5
+          shoulder_pitch_2: 1.0
+          elbow_pitch_2: 1.5
+          wrist_pitch_2: 1.5
+          wrist_yaw_2: 1.5
+        freq_min: 0.20
+        freq_max: 0.20
+        period: 30.0
+
+      
+    
+
+
+# global parameters
+xbotcore_param:
+  /xbot/hal/joint_safety/filter_autostart: true
+  /xbot/hal/joint_safety/filter_cutoff_hz: 2.0
+
+
+
+

@@ -1,0 +1,21 @@
+services:
+  base:
+    build: 
+      dockerfile: Dockerfile-base
+      secrets: [netrc]
+      args:
+        - USER_ID
+        - USER_NAME
+  xeno:
+    depends_on: [base]
+    build: 
+      dockerfile: Dockerfile-xeno
+      secrets: [netrc]
+      args:
+        - USER_ID
+        - KERNEL_VER
+        - USER_NAME
+      
+secrets:
+  netrc:
+    file: ~/.netrc
