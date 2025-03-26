@@ -1,3 +1,5 @@
+export PATH=~/.local/bin:$PATH
+
 source /opt/ros/noetic/setup.bash
 source /opt/xbot/setup.sh
 source ~/xbot2_ws/setup.bash    
