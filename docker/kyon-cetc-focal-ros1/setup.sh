@@ -3,6 +3,6 @@ ros1(){
     cd $SCRIPT_DIR
     xhost +local:root
     echo "Running docker image from $PWD..."
-    docker compose up -d --no-recreate
-    docker compose exec app bash
+    docker compose up dev -d --no-recreate
+    docker compose exec dev bash
 }

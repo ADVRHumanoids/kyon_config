@@ -1,5 +1,5 @@
 services:
-  dev:
+  base:
     image: hhcmhub/kyon-cetc-focal-ros1-base
     stdin_open: true
     tty: true 
@@ -14,14 +14,17 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw  # x11
       - ~/.ssh:/home/user/.ssh  # ssh
-      - ~/.cache/kyon-cetc-focal-ros1-base:/home/kyon_ros1/data
     environment:
       - TERM=xterm-256color
       - DISPLAY
       - HHCM_FOREST_CLONE_DEFAULT_PROTO=https
 
+  dev:
+    extends: base 
+    volumes:
+      - ~/.cache/kyon-cetc-focal-ros1-base:/home/kyon_ros1/data
 
   xbot2_gui_server:
-    extends: dev
+    extends: base
     entrypoint: bash -ic "until rostopic list; do sleep 1; done; sleep 1; xbot2_gui_server /home/kyon_ros1/xbot2_ws/src/kyon_config/gui/gui_server_config.yaml"
     restart: always
