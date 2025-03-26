@@ -1,0 +1,17 @@
+context:
+  session: kyon
+
+.defines:
+  - &embedded embedded@10.24.12.100
+
+roscore:
+  cmd: roscore
+  machine: *embedded
+  ready_check: timeout 5 rostopic list
+  docker: kyon-cetc-focal-ros1-xeno
+
+imu: 
+  cmd: roslaunch vectornav vectornav.launch
+  machine: *embedded
+  ready_check: timeout 5 rostopic echo /xbotcore/imu/imu_link -n 1
+  docker: kyon-cetc-focal-ros1-xeno
