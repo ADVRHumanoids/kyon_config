@@ -1,5 +1,7 @@
 #!/bin/bash 
 
+set -e
+
 export USER_NAME=kyon_ros1
 export KERNEL_VER=6
 export USER_ID=1000
