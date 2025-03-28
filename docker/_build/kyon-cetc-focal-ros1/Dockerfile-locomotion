@@ -1,0 +1,50 @@
+FROM kyon-cetc-focal-ros1-base
+
+# get kernel version
+ARG USER_ID=1000
+ARG KERNEL_VER=0
+ARG USER_NAME=kyon_ros1
+
+# env
+ENV PYTHONUNBUFFERED=1
+
+USER root
+
+# build required software (requires valid netrc for auth)
+RUN apt-get update && apt-get install -y sudo build-essential gfortran \
+    git curl python3-tk python3-pip libjpeg-dev wget patchelf nano libglfw3-dev
+
+RUN apt-get install -y libassimp-dev liblapack-dev libblas-dev libyaml-cpp-dev libmatio-dev
+
+RUN apt-get install -y swig
+# # clang to generate mpc functions in c++
+RUN apt-get install -y clang
+# # Install ROS catkin tools
+RUN apt-get install -y ros-noetic-catkin
+# # install joy
+RUN apt-get install -y ros-noetic-joy
+# # install graphviz-dev for horizon urdf modifier
+RUN apt-get install -y graphviz-dev
+
+
+# # Upgrade pip and install the latest version of NumPy 
+# # only required for ROS noetic
+RUN pip install numpy && pip install scipy
+
+    
+# # required packages
+RUN pip install numpy_ros matplotlib
+RUN pip install colorama Cython networkx pygraphviz
+
+USER ${USER_NAME}
+
+# # grow
+WORKDIR /home/${USER_NAME}/xbot2_ws
+RUN forest grow pybind11 -j20
+RUN forest grow casadi -j20 -v
+RUN forest grow pinocchio -j20 -v
+RUN forest grow casadi_kin_dyn -j20 -v
+RUN forest grow horizon -j20 -v
+RUN forest grow phase_manager -j20 -v
+RUN cd ~/xbot2_ws/recipes/multidof_recipes && git pull origin kyon-cetc
+RUN --mount=type=secret,id=netrc,dst=/home/$USER_NAME/.netrc,uid=$USER_ID forest grow kyon_controller -j20 -v
