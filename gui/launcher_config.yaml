@@ -1,17 +1,39 @@
 context:
   session: kyon
+  params:
+    hw_type: ec_pos
+  .defines:
+    - &embedded embedded@10.24.12.100
+    - &control kyon@10.24.12.102
+    - &vision kyon@10.24.12.101
 
-.defines:
-  - &embedded embedded@10.24.12.100
+    - &docker-xeno  focal-ros1-xeno-dev-1
+    - &docker-base  focal-ros1-dev-1
 
-roscore:
-  cmd: roscore
-  machine: *embedded
-  ready_check: timeout 5 rostopic list
-  docker: kyon-cetc-focal-ros1-xeno
 
 imu: 
   cmd: roslaunch vectornav vectornav.launch
   machine: *embedded
   ready_check: timeout 5 rostopic echo /xbotcore/imu/imu_link -n 1
-  docker: kyon-cetc-focal-ros1-xeno
+  docker: *docker-xeno
+
+ecat:
+  cmd: ecat_master
+  machine: *embedded
+  docker: *docker-xeno
+
+xbot2:
+  cmd: xbot2-core --hw {hw_type}
+  machine: *embedded
+  ready_check: timeout 5 rostopic echo /xbotcore/joint_states -n 1
+  docker: *docker-xeno
+  variants:
+    verbose:
+      cmd: "{cmd} -V"
+    ctrl:
+      - ec_idle:
+          params:
+            hw_type: ec_idle
+      - ec_pos:
+          params:
+            hw_type: ec_pos
