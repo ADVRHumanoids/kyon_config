@@ -1,4 +1,4 @@
-FROM hhcmhub/xbot2-noble-dev:latest
+FROM hhcmhub/xbot2-noble-dev
 
 # get kernel version
 ARG USER_ID=1000

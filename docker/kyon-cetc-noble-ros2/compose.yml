@@ -1,6 +1,6 @@
 services:
   base:
-    image: hhcmhub/kyon-cetc-focal-ros1-base
+    image: hhcmhub/kyon-cetc-noble-ros2-base
     stdin_open: true
     tty: true 
     privileged: true
@@ -13,7 +13,7 @@ services:
       core: -1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw  # x11
-      - ~/.ssh:/home/kyon_ros1/.ssh  # ssh
+      - ~/.ssh:/home/kyon_ros2/.ssh  # ssh
     environment:
       - TERM=xterm-256color
       - DISPLAY
@@ -22,9 +22,14 @@ services:
   dev:
     extends: base 
     volumes:
-      - ~/.cache/kyon-cetc-focal-ros1-base:/home/kyon_ros1/data
+      - ~/.cache/kyon-cetc-focal-ros1-dev:/home/kyon_ros2/data
+  sim:
+    extends: base 
+    image: hhcmhub/kyon-cetc-noble-ros2-sim
+    volumes:
+      - ~/.cache/kyon-cetc-focal-ros1-sim:/home/kyon_ros2/data
 
   xbot2_gui_server:
     extends: base
-    entrypoint: bash -ic "until rostopic list; do sleep 1; done; sleep 1; cd ~/xbot2_ws/src/kyon_config; git pull origin master; xbot2_gui_server gui/gui_server_config.yaml; bash"
+    entrypoint: bash -ic "cd ~/xbot2_ws/src/kyon_config; git pull origin master; xbot2_gui_server gui/gui_server_config.yaml; bash"
     restart: always

@@ -1,0 +1,15 @@
+FROM kyon-cetc-noble-ros2-base
+
+# get kernel version
+ARG KERNEL_VER=0
+ARG USER_ID=1000
+ARG USER_NAME=kyon-ros1
+ENV PYTHONUNBUFFERED=1
+
+# install deps
+RUN sudo apt update && sudo apt install -y libglfw3-dev
+
+# build xbot2_mujoco
+RUN cd xbot2_ws && forest grow xbot2_mujoco -j 20 -v
+
+

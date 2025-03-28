@@ -11,6 +11,9 @@ ARG USER_NAME=kyon-ros1
 # remove xbot2
 RUN sudo apt remove -y xbot2 && sudo apt install -y libtool pkg-config
 
+# build xenomai
+RUN cd xbot2_ws && forest grow Xenomai -j 20 --clone-depth 1 -v
+
 # build required software (requires valid netrc for auth)
 RUN --mount=type=secret,id=netrc,dst=/home/$USER_NAME/.netrc,uid=$USER_ID /bin/bash scripts/build-xeno.bash
 
