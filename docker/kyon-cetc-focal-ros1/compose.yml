@@ -1,4 +1,5 @@
 services:
+
   base:
     image: hhcmhub/kyon-cetc-focal-ros1-base
     stdin_open: true
@@ -18,6 +19,8 @@ services:
       - TERM=xterm-256color
       - DISPLAY
       - HHCM_FOREST_CLONE_DEFAULT_PROTO=https
+      - ROS_MASTER_URI
+      - ROS_IP
 
   dev:
     extends: base 
@@ -28,3 +31,7 @@ services:
     extends: base
     entrypoint: bash -ic "until rostopic list; do sleep 1; done; sleep 1; cd ~/xbot2_ws/src/kyon_config; git pull origin master; xbot2_gui_server gui/gui_server_config.yaml; bash"
     restart: always
+
+  locomotion:
+    extends: base
+    image: hhcmhub/kyon-cetc-focal-ros1-locomotion

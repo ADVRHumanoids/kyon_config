@@ -15,6 +15,14 @@ services:
         - USER_ID
         - KERNEL_VER
         - USER_NAME
+  locomotion:
+    depends_on: [base]
+    build: 
+      dockerfile: Dockerfile-locomotion
+      secrets: [netrc]
+      args:
+        - USER_ID
+        - USER_NAME
       
 secrets:
   netrc:
