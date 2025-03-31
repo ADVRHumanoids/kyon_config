@@ -1,6 +1,6 @@
 XBotInterface:
-    urdf: xacro $(rospack find kyon_urdf)/urdf/kyon.urdf.xacro upper_body:=true legs:=true
-    srdf: xacro $(rospack find kyon_srdf)/srdf/kyon.srdf.xacro upper_body:=true legs:=true
+    urdf: xacro $(rospack find kyon_urdf)/urdf/kyon.urdf.xacro upper_body:=true legs:=true dagana:=false
+    srdf: xacro $(rospack find kyon_srdf)/srdf/kyon.srdf.xacro upper_body:=true legs:=true dagana:=false
 
 ModelInterface:
   model_type: RBDL
@@ -22,13 +22,24 @@ xbotcore_threads:
 # plugins
 xbotcore_plugins:
 
-    homing:
+    homing_lb:
         thread: rt_main
         type: homing
         params:
-          ctrl_override:  # homing does not affect grippers
+          ctrl_override:  # homing does not affect grippers and upper body
             dagana_1_clamp_joint: 0
             dagana_2_clamp_joint: 0
+            shoulder_yaw_1: 0
+            shoulder_pitch_1: 0
+            elbow_pitch_1: 0
+            wrist_pitch_1: 0
+            wrist_yaw_1: 0
+            shoulder_yaw_2: 0
+            shoulder_pitch_2: 0
+            elbow_pitch_2: 0
+            wrist_pitch_2: 0
+            wrist_yaw_2: 0
+
 
 
     zero:
@@ -37,7 +48,7 @@ xbotcore_plugins:
         params:
           qhome: 
             type: Eigen::VectorXd
-            value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         
     # circulo9_trajectory: 
     #    thread: rt_main
@@ -81,20 +92,20 @@ xbotcore_plugins:
       type: trajectory_plugin
       params: 
         amplitude:
-          hip_roll_1: 0.35
+          hip_roll_1: 0.20
           hip_pitch_1: 0.5
           knee_pitch_1: 0.5
-          hip_roll_2: 0.35
+          hip_roll_2: 0.20
           hip_pitch_2: 0.5
           knee_pitch_2: 0.5
-          hip_roll_3: -0.25
+          hip_roll_3: -0.20
           hip_pitch_3: 0.5
           knee_pitch_3: 0.5
-          hip_roll_4: 0.35
+          hip_roll_4: 0.20
           hip_pitch_4: 0.5
           knee_pitch_4: 0.5
-        freq_min: 1.80
-        freq_max: 1.80
+        freq_min: 1.8 # 1.80
+        freq_max: 1.8 # 1.80
         period: 30.0
 
     trj_ub:
@@ -124,6 +135,9 @@ xbotcore_plugins:
 xbotcore_param:
   /xbot/hal/joint_safety/filter_autostart: true
   /xbot/hal/joint_safety/filter_cutoff_hz: 2.0
+  /xbot/hal/joint_safety/filter_medium_cutoff_hz: 20.0
+  /xbot/hal/joint_safety/filter_fast_cutoff_hz: 40.0
+  /xbot/hal/joint_safety/delta_check_dt: 0.05
 
 
 

@@ -142,81 +142,81 @@ SynapticonESC_102:
 
 SynapticonESC_31:
   position_limits_rad:
-    min: -2.7
-    max: 2.7
-  link_zero_incr: 768828
+    min: -0.65
+    max: 0.65
+  link_zero_incr: 772118
 
 SynapticonESC_32:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 508477 
+  link_zero_incr: 507483 
 
 SynapticonESC_33:
   position_limits_rad:
-    min: -2.7
-    max: 2.7
-  link_zero_incr: 112584
+    min: -3.15
+    max: 3.15
+  link_zero_incr: 1159899
 
 
 # fr leg
 
 SynapticonESC_41:
   position_limits_rad:
-    min: -2.7
-    max: 2.7
-  link_zero_incr: 377722
+    min: -0.65
+    max: 0.65
+  link_zero_incr: 1032342
 
 SynapticonESC_42:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 244801
+  link_zero_incr: 245325
 
 SynapticonESC_43:
   position_limits_rad:
-    min: -2.7
-    max: 2.7
-  link_zero_incr: 957472
+    min: -3.15
+    max: 3.15
+  link_zero_incr: 957791
 
 
 # rl leg
 
 SynapticonESC_51:
   position_limits_rad:
-    min: -2.7
-    max: 2.7
-  link_zero_incr: 117624
+    min: -0.65
+    max: 0.65
+  link_zero_incr: 768769
 
 SynapticonESC_52:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 901383 
+  link_zero_incr: 377714 
 
 SynapticonESC_53:
   position_limits_rad:
-    min: -2.7
-    max: 2.7
-  link_zero_incr: 481088
+    min: -3.15
+    max: 3.15
+  link_zero_incr: 483484
 
 
 # rr leg
 
 SynapticonESC_61:
   position_limits_rad:
-    min: -2.7
-    max: 2.7
-  link_zero_incr: 768699
+    min: -0.65
+    max: 0.65
+  link_zero_incr: 771436
 
 SynapticonESC_62:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 640481 
+  link_zero_incr: 639983
 
 SynapticonESC_63:
   position_limits_rad:
-    min: -2.7
-    max: 2.7
-  link_zero_incr: 474537
+    min: -3.15
+    max: 3.15
+  link_zero_incr: 492559
