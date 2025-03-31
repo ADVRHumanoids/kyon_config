@@ -37,3 +37,7 @@ xbot2:
       - ec_pos:
           params:
             hw_type: ec_pos
+      - dummy:
+          params:
+            hw_type: dummy
+
