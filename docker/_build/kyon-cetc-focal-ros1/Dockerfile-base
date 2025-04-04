@@ -42,5 +42,8 @@ SHELL [ "/bin/bash", "-ic" ]
 # configure forest to use https
 ENV HHCM_FOREST_CLONE_DEFAULT_PROTO=https
 
+# pip deps
+RUN pip install scipy numpy
+
 # build required software (requires valid netrc for auth)
 RUN --mount=type=secret,id=netrc,dst=/home/$USER_NAME/.netrc,uid=$USER_ID /bin/bash scripts/build-base.bash
