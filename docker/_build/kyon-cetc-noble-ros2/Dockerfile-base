@@ -43,4 +43,4 @@ SHELL [ "/bin/bash", "-ic" ]
 ENV HHCM_FOREST_CLONE_DEFAULT_PROTO=https
 
 # build required software (requires valid netrc for auth)
-RUN --mount=type=secret,id=netrc,dst=/home/$USER_NAME/.netrc,uid=$USER_ID /bin/bash scripts/build-base.bash
+RUN --mount=type=secret,id=netrc,dst=/home/$USER_NAME/.netrc,uid=$USER_ID echo 1 && /bin/bash scripts/build-base.bash

@@ -13,3 +13,4 @@ source setup.bash
 forest add-recipes git@github.com:advrhumanoids/multidof_recipes.git -t kyon-cetc-ros2
 forest grow iit-kyon-ros-pkg -j8 -v
 forest grow kyon_config -j8 -v
+forest grow xbot2_gui_server
