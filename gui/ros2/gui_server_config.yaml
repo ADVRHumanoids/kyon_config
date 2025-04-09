@@ -1,0 +1,9 @@
+# launcher:
+#   launcher_config: launcher_config.yaml
+
+ecat:
+  uri: kyon-mio-5375:5555
+
+cartesian:
+  cmd_vel_topics:
+    - /omnisteering/cmd_vel
