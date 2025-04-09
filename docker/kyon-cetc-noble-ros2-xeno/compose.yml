@@ -1,0 +1,39 @@
+services:
+  base:
+    image: hhcmhub/kyon-cetc-noble-ros2-base
+    stdin_open: true
+    tty: true 
+    privileged: true
+    entrypoint: /bin/bash
+    network_mode: host
+    cap_add:
+      - ALL
+    restart: no
+    ulimits: 
+      core: -1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw  # x11
+      - ~/.ssh:/home/kyon_ros2/.ssh  # ssh
+    environment:
+      - TERM=xterm-256color
+      - DISPLAY
+      - HHCM_FOREST_CLONE_DEFAULT_PROTO=https
+
+  dev:
+    extends: base 
+    volumes:
+      - ~/.cache/kyon-cetc-focal-ros1-dev:/home/kyon_ros2/data
+    environment:
+      - CUSTOM_PS="(dev) "
+  sim:
+    extends: base 
+    image: hhcmhub/kyon-cetc-noble-ros2-sim
+    volumes:
+      - ~/.cache/kyon-cetc-focal-ros1-sim:/home/kyon_ros2/data
+
+  xbot2_gui_server:
+    extends: base
+    entrypoint: bash -ic "cd ~/xbot2_ws/src/kyon_config; git pull origin master; xbot2_gui_server gui/ros2/gui_server_config.yaml; bash"
+    restart: always
+    environment:
+      - CUSTOM_PS="(xbot2_gui_server) "
