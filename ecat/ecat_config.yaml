@@ -173,19 +173,19 @@ SynapticonESC_41:
   position_limits_rad:
     min: -0.65
     max: 0.65
-  link_zero_incr: 1032342
+  link_zero_incr: 1032841
 
 SynapticonESC_42:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 245325
+  link_zero_incr: 246219
 
 SynapticonESC_43:
   position_limits_rad:
     min: -3.15
     max: 3.15
-  link_zero_incr: 955426
+  link_zero_incr: 891753
 
 SynapticonESC_44:
   position_limits_rad:
