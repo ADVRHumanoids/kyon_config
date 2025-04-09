@@ -1,6 +1,19 @@
 zmq_setup:
     timeout: 1000
 
+.wheel_default: &wheel_default
+    motor_has_brake: false
+    inertia: 0.0000906528 #kg*m^2
+    control_mode: velocity
+    pid:
+        velocity: [0.01, 5.0, 0.0] #3B_motor_pos_ctrl: 0: P_Pos, 1: I_Pos, 2: D_Pos, 3:P_Vel, 4:I_Vel
+    custom_controller: 
+        proportional: 0.06
+        derivative: 0.006
+        direct_feedback: 0.005
+        friction_compensation: 0.1
+        dob_coeff: 2.0
+
 .arm_default: &arm_default
     motor_has_brake: false
     inertia: 0.0000906528 #kg*m^2
@@ -32,7 +45,7 @@ zmq_setup:
     inertia: 0.0000906528 #kg*m^2
     control_mode: idle
     pid:
-        position: [250, 0, 10.0, 0.0, 0.0] #3B_motor_pos_ctrl: 0: P_Pos, 1: I_Pos, 2: D_Pos, 3:P_Vel, 4:I_Vel
+        position: [500, 0, 10.0, 0.0, 0.0] #3B_motor_pos_ctrl: 0: P_Pos, 1: I_Pos, 2: D_Pos, 3:P_Vel, 4:I_Vel
     custom_controller: 
         proportional: 0.06
         derivative: 0.006
@@ -57,25 +70,25 @@ hip_roll_1: *leg_default
 hip_pitch_1: *leg_default
 knee_pitch_1: *leg_default
 ankle_yaw_1: *leg_default
-wheel_joint_1: *leg_default
+wheel_joint_1: *wheel_default
 
 hip_roll_2: *leg_default
 hip_pitch_2: *leg_default
 knee_pitch_2: *leg_default
 ankle_yaw_2: *leg_default
-wheel_joint_2: *leg_default
+wheel_joint_2: *wheel_default
 
 hip_roll_3: *leg_default
 hip_pitch_3: *leg_default
 knee_pitch_3: *leg_default
 ankle_yaw_3: *leg_default
-wheel_joint_3: *leg_default
+wheel_joint_3: *wheel_default
 
 hip_roll_4: *leg_default
 hip_pitch_4: *leg_default
 knee_pitch_4: *leg_default
 ankle_yaw_4: *leg_default
-wheel_joint_4: *leg_default
+wheel_joint_4: *wheel_default
 
 dagana_1_clamp_joint: *hand_default
 dagana_2_clamp_joint: *hand_default

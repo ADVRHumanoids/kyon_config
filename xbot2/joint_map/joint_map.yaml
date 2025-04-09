@@ -15,20 +15,29 @@ joint_map:
   31: hip_roll_1
   32: hip_pitch_1
   33: knee_pitch_1
+  34: ankle_yaw_1
+  35: wheel_joint_1
 
   41: hip_roll_2
   42: hip_pitch_2
   43: knee_pitch_2
+  44: ankle_yaw_2
+  45: wheel_joint_2
 
   51: hip_roll_3
   52: hip_pitch_3
   53: knee_pitch_3
+  54: ankle_yaw_3
+  55: wheel_joint_3
 
   61: hip_roll_4
   62: hip_pitch_4
   63: knee_pitch_4
+  64: ankle_yaw_4
+  65: wheel_joint_4
 
   101: dagana_1_clamp_joint
   102: dagana_2_clamp_joint
 
-  
+  201: power_board
+

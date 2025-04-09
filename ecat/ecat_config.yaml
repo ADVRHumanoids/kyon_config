@@ -1,7 +1,7 @@
 # For DC the use_DC flag must be enabled!
 ec_board_ctrl :
   eth_iface: rteth0
-  sync_cycle_time_ns: 1000000 #this value is used also for DC sync. 
+  sync_cycle_time_ns: 2000000 #this value is used also for DC sync. 
   #sync_cycle_time_ns: 0
   sync_cycle_offset_ns: 300000000
   sync_point_ns : 500000
@@ -156,7 +156,15 @@ SynapticonESC_33:
   position_limits_rad:
     min: -3.15
     max: 3.15
-  link_zero_incr: 1159899
+  link_zero_incr: 111823
+
+SynapticonESC_34:
+  position_limits_rad:
+    min: -3.0
+    max: 3.0
+  link_zero_incr: 182638
+
+
 
 
 # fr leg
@@ -177,7 +185,15 @@ SynapticonESC_43:
   position_limits_rad:
     min: -3.15
     max: 3.15
-  link_zero_incr: 957791
+  link_zero_incr: 955426
+
+SynapticonESC_44:
+  position_limits_rad:
+    min: -3.0
+    max: 3.0
+  link_zero_incr: 312394
+
+
 
 
 # rl leg
@@ -198,7 +214,15 @@ SynapticonESC_53:
   position_limits_rad:
     min: -3.15
     max: 3.15
-  link_zero_incr: 483484
+  link_zero_incr: 481241
+
+SynapticonESC_54:
+  position_limits_rad:
+    min: -3.0
+    max: 3.0
+  link_zero_incr: 573415
+
+
 
 
 # rr leg
@@ -219,4 +243,11 @@ SynapticonESC_63:
   position_limits_rad:
     min: -3.15
     max: 3.15
-  link_zero_incr: 492559
+  link_zero_incr: 491790
+
+SynapticonESC_64:
+  position_limits_rad:
+    min: -3.0
+    max: 3.0
+  link_zero_incr: 1098507
+

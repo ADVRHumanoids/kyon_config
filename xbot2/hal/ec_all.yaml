@@ -1,4 +1,14 @@
 xbotcore_devices:
+  
+  # pow_ec:
+  #   names: []
+  #   thread: rt_main
+  #   params:
+  #     robot_name: &rn { value: NoNe, type: string }
+  #     joint_id_map: &jim
+  #       value: $PWD/../joint_map/joint_map.yaml
+  #       type: yamlfile
+
   circulo9_ec:
     names: []
     thread: rt_main
@@ -13,6 +23,9 @@ xbotcore_devices:
         type: yamlfile
       config_ec_idle:
         value: $PWD/../joint_config/idle.yaml
+        type: yamlfile
+      config_ec_test:
+        value: $PWD/../joint_config/test.yaml
         type: yamlfile
       joint_id_map: &jim
         value: $PWD/../joint_map/joint_map.yaml
