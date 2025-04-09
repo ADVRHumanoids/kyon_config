@@ -4,20 +4,26 @@ services:
     extends:
       file: ../kyon-cetc-focal-ros1/compose.yml
       service: base
-    image: hhcmhub/kyon-cetc-focal-ros1-xeno
+    image: hhcmhub/kyon-cetc-focal-ros1-xeno-${KERNEL_VER}
     cap_add:
       - ALL
     volumes:
       - /dev:/dev
       - /usr/lib/modules:/usr/lib/modules
+    environment:
+      - CUSTOM_PS="(dev) "
 
   roscore:
     extends: dev
     entrypoint: bash -ic "roscore"
     restart: always
+    environment:
+      - CUSTOM_PS="(roscore) "
 
   xbot2_gui_server:
     depends_on: [roscore]
     extends: dev
-    entrypoint: bash -ic "until rostopic list; do sleep 1; done; sleep 1; cd ~/xbot2_ws/src/kyon_config; git pull origin master; xbot2_gui_server gui/gui_server_config.yaml; bash"
+    entrypoint: bash -ic "until rostopic list; do sleep 1; done; sleep 1; cd ~/xbot2_ws/src/kyon_config; git pull origin master; xbot2_gui_server gui/ros1/gui_server_config.yaml; bash"
     restart: always
+    environment:
+      - CUSTOM_PS="(xbot2_gui_server) "

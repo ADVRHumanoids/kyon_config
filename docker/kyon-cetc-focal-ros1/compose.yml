@@ -26,12 +26,19 @@ services:
     extends: base 
     volumes:
       - ~/.cache/kyon-cetc-focal-ros1-base:/home/kyon_ros1/data
+    environment:
+      - CUSTOM_PS="(dev) "
 
   xbot2_gui_server:
     extends: base
-    entrypoint: bash -ic "until rostopic list; do sleep 1; done; sleep 1; cd ~/xbot2_ws/src/kyon_config; git pull origin master; xbot2_gui_server gui/gui_server_config.yaml; bash"
+    entrypoint: bash -ic "until rostopic list; do sleep 1; done; sleep 1; cd ~/xbot2_ws/src/kyon_config; git pull origin master; xbot2_gui_server gui/ros1/gui_server_config.yaml; bash"
     restart: always
+    environment:
+      - CUSTOM_PS="(xbot2_gui_server) "
 
   locomotion:
     extends: base
     image: hhcmhub/kyon-cetc-focal-ros1-locomotion
+    restart: always
+    environment:
+      - CUSTOM_PS="(locomotion) "

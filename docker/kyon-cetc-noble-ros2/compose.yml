@@ -1,6 +1,6 @@
 services:
   base:
-    image: hhcmhub/kyon-cetc-noble-ros2-base
+    image: hhcmhub/kyon-cetc-noble-ros2-xeno-v${KERNEL_VER}
     stdin_open: true
     tty: true 
     privileged: true
@@ -23,6 +23,8 @@ services:
     extends: base 
     volumes:
       - ~/.cache/kyon-cetc-focal-ros1-dev:/home/kyon_ros2/data
+    environment:
+      - CUSTOM_PS="(dev) "
   sim:
     extends: base 
     image: hhcmhub/kyon-cetc-noble-ros2-sim
@@ -31,5 +33,7 @@ services:
 
   xbot2_gui_server:
     extends: base
-    entrypoint: bash -ic "cd ~/xbot2_ws/src/kyon_config; git pull origin master; xbot2_gui_server gui/gui_server_config.yaml; bash"
+    entrypoint: bash -ic "cd ~/xbot2_ws/src/kyon_config; git pull origin master; xbot2_gui_server gui/ros2/gui_server_config.yaml; bash"
     restart: always
+    environment:
+      - CUSTOM_PS="(xbot2_gui_server) "
