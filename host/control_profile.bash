@@ -5,3 +5,4 @@ export ROS_IP=10.24.12.102
 
 # enable ros1 alias to login into docker container
 source $SCRIPT_DIR/../docker/kyon-cetc-focal-ros1/setup.sh
+source $SCRIPT_DIR/../docker/kyon-cetc-noble-ros2/setup.sh
