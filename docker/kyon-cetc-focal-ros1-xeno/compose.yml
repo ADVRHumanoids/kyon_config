@@ -4,7 +4,7 @@ services:
     extends:
       file: ../kyon-cetc-focal-ros1/compose.yml
       service: base
-    image: hhcmhub/kyon-cetc-focal-ros1-xeno-${KERNEL_VER}
+    image: hhcmhub/kyon-cetc-focal-ros1-xeno-v${KERNEL_VER}
     cap_add:
       - ALL
     volumes:
