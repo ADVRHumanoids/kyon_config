@@ -6,7 +6,7 @@ zmq_setup:
     inertia: 0.0000906528 #kg*m^2
     control_mode: velocity
     pid:
-        velocity: [0.01, 5.0, 0.0] #3B_motor_pos_ctrl: 0: P_Pos, 1: I_Pos, 2: D_Pos, 3:P_Vel, 4:I_Vel
+        velocity: [8.0, 6.0, 0.0] #3B_motor_pos_ctrl: 0: P_Pos, 1: I_Pos, 2: D_Pos, 3:P_Vel, 4:I_Vel
     custom_controller: 
         proportional: 0.06
         derivative: 0.006
