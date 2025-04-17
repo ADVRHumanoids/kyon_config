@@ -1,13 +1,13 @@
 xbotcore_devices:
   
-  # pow_ec:
-  #   names: []
-  #   thread: rt_main
-  #   params:
-  #     robot_name: &rn { value: NoNe, type: string }
-  #     joint_id_map: &jim
-  #       value: $PWD/../joint_map/joint_map.yaml
-  #       type: yamlfile
+  pow_ec:
+    names: []
+    thread: rt_main
+    params:
+      robot_name: &rn { value: NoNe, type: string }
+      joint_id_map: &jim
+        value: $PWD/../joint_map/joint_map.yaml
+        type: yamlfile
 
   circulo9_ec:
     names: []

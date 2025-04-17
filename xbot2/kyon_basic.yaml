@@ -1,6 +1,6 @@
 XBotInterface:
-    urdf: xacro $(rospack find kyon_urdf)/urdf/kyon.urdf.xacro upper_body:=true legs:=true dagana:=false wheels:=true 
-    srdf: xacro $(rospack find kyon_srdf)/srdf/kyon.srdf.xacro upper_body:=true legs:=true dagana:=false wheels:=true
+    urdf: xacro $(rospack find kyon_urdf)/urdf/kyon.urdf.xacro upper_body:=true legs:=true dagana:=false wheels:=true varta:=false 
+    srdf: xacro $(rospack find kyon_srdf)/srdf/kyon.srdf.xacro upper_body:=true legs:=true dagana:=false wheels:=true varta:=false
 
 ModelInterface:
   model_type: RBDL
@@ -16,49 +16,57 @@ xbotcore_device_configs:
 
 # threads
 xbotcore_threads:
-    rt_main:  {sched: fifo , prio: 60, period: 0.001}
+    rt_main:  {sched: fifo , prio: 60, period: 0.001, core_id: 3}
     nrt_main: {sched: other, prio: 0 , period: 0.005}
 
 
 # plugins
 xbotcore_plugins:
 
-    homing_lb:
-        thread: rt_main
-        type: homing
-        params:
-          ctrl_override:  # homing does not affect grippers and upper body
-            dagana_1_clamp_joint: 0
-            dagana_2_clamp_joint: 0
-            shoulder_yaw_1: 0
-            shoulder_pitch_1: 0
-            elbow_pitch_1: 0
-            wrist_pitch_1: 0
-            wrist_yaw_1: 0
-            shoulder_yaw_2: 0
-            shoulder_pitch_2: 0
-            elbow_pitch_2: 0
-            wrist_pitch_2: 0
-            wrist_yaw_2: 0
+    homing:
+      thread: rt_main
+      type: homing
+      params:
+        ctrl_override:  # homing does not affect grippers
+          dagana_1_clamp_joint: 0
+          dagana_2_clamp_joint: 0
 
-    naruto:
-        thread: rt_main
-        type: homing
-        params:
-          home: naruto
-          ctrl_override: 
-            hip_roll_1: 0
-            hip_pitch_1: 0
-            knee_pitch_1: 0
-            hip_roll_2: 0
-            hip_pitch_2: 0
-            knee_pitch_2: 0
-            hip_roll_3: 0
-            hip_pitch_3: 0
-            knee_pitch_3: 0
-            hip_roll_4: 0
-            hip_pitch_4: 0
-            knee_pitch_4: 0
+    homing_lb:
+      thread: rt_main
+      type: homing
+      params:
+        ctrl_override:  # homing does not affect grippers and upper body
+          dagana_1_clamp_joint: 0
+          dagana_2_clamp_joint: 0
+          shoulder_yaw_1: 0
+          shoulder_pitch_1: 0
+          elbow_pitch_1: 0
+          wrist_pitch_1: 0
+          wrist_yaw_1: 0
+          shoulder_yaw_2: 0
+          shoulder_pitch_2: 0
+          elbow_pitch_2: 0
+          wrist_pitch_2: 0
+          wrist_yaw_2: 0
+
+    # naruto:
+    #     thread: rt_main
+    #     type: homing
+    #     params:
+    #       home: naruto
+    #       ctrl_override: 
+    #         hip_roll_1: 0
+    #         hip_pitch_1: 0
+    #         knee_pitch_1: 0
+    #         hip_roll_2: 0
+    #         hip_pitch_2: 0
+    #         knee_pitch_2: 0
+    #         hip_roll_3: 0
+    #         hip_pitch_3: 0
+    #         knee_pitch_3: 0
+    #         hip_roll_4: 0
+    #         hip_pitch_4: 0
+    #         knee_pitch_4: 0
 
 
     # zero:
@@ -86,11 +94,11 @@ xbotcore_plugins:
     #   thread: nrt_main
     #   type: circulo9_control
 
-    # ec_ros:
-    #   thread: nrt_main
-    #   type: ec_ros 
-    #   params:
-    #     aux_type_names: []
+    ec_ros:
+      thread: nrt_main
+      type: ec_ros 
+      params:
+        aux_type_names: []
 
     friction_comp:
       type: friction_comp_plugin
@@ -98,6 +106,7 @@ xbotcore_plugins:
       params:
         fc_slope: 20.0
         fc: 1.0
+        use_vel_ref: true
         param_config: 
           value: $PWD/friction/fc_config.yaml
           type: yamlfile
