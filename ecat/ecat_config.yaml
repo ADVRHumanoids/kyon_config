@@ -92,6 +92,12 @@ SynapticonESC_15:
     max: 2.7
   link_zero_incr: 3856
 
+SynapticonESC_101:
+  position_limits_rad:
+    min: -0.1
+    max: 1.25
+  link_zero_incr: -204
+
 SynapticonESC_21:
   position_limits_rad:
     min: -2.7
@@ -108,7 +114,7 @@ SynapticonESC_23:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 436924
+  link_zero_incr: 484651.0
 
 SynapticonESC_24:
   position_limits_rad:
@@ -121,6 +127,12 @@ SynapticonESC_25:
     min: -2.7
     max: 2.7
   link_zero_incr: 3538
+
+SynapticonESC_102:
+  position_limits_rad:
+    min: -0.1
+    max: 1.25
+  link_zero_incr: 896
 
 
 # dagana
@@ -142,8 +154,8 @@ SynapticonESC_102:
 
 SynapticonESC_31:
   position_limits_rad:
-    min: -0.68
-    max: 0.68
+    min: -0.70
+    max: 0.70
   link_zero_incr: 772118
 
 SynapticonESC_32:
@@ -171,8 +183,8 @@ SynapticonESC_34:
 
 SynapticonESC_41:
   position_limits_rad:
-    min: -0.68
-    max: 0.68
+    min: -0.70
+    max: 0.70
   link_zero_incr: 1032841
 
 SynapticonESC_42:
@@ -200,8 +212,8 @@ SynapticonESC_44:
 
 SynapticonESC_51:
   position_limits_rad:
-    min: -0.68
-    max: 0.68
+    min: -0.70
+    max: 0.70
   link_zero_incr: 768769
 
 SynapticonESC_52:
@@ -229,8 +241,8 @@ SynapticonESC_54:
 
 SynapticonESC_61:
   position_limits_rad:
-    min: -0.68
-    max: 0.68
+    min: -0.70
+    max: 0.70
   link_zero_incr: 771436
 
 SynapticonESC_62:

@@ -30,7 +30,7 @@ zmq_setup:
 .hand_default: &hand_default
     motor_has_brake: false
     inertia: 0.0000906528 #kg*m^2
-    control_mode: idle
+    control_mode: position
     pid:
         position: [50, 0, 1.0, 0.0, 0.0] #3B_motor_pos_ctrl: 0: P_Pos, 1: I_Pos, 2: D_Pos, 3:P_Vel, 4:I_Vel
     custom_controller: 
