@@ -36,12 +36,17 @@ xbotcore_devices:
     names: [dagana_1, dagana_2]
     thread: nrt_main
     params:
-      dagana_1/joint_name: dagana_1_claw_joint
-      dagana_1/joint_type: joint_ec
-      dagana_1/qopen: 1.5
+      dagana_1/joint_name: dagana_1_clamp_joint
+      dagana_1/joint_type: circulo9_ec
+      dagana_1/qopen: 1.15
       dagana_1/qclosed: 0.0
-      dagana_2/joint_name: dagana_2_claw_joint
-      dagana_2/joint_type: joint_ec
-      dagana_2/qopen: 1.5
+      dagana_1/vmax: 1.0
+      dagana_1/stiffness: 50.0
+
+      dagana_2/joint_name: dagana_2_clamp_joint
+      dagana_2/joint_type: circulo9_ec
+      dagana_2/qopen: 1.15
       dagana_2/qclosed: 0.0
+      dagana_2/vmax: 1.0
+      dagana_2/stiffness: 50.0
 
