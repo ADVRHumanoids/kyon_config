@@ -1,6 +1,6 @@
 XBotInterface:
-    urdf: xacro $(rospack find kyon_urdf)/urdf/kyon.urdf.xacro upper_body:=true legs:=true dagana:=true wheels:=true varta:=false 
-    srdf: xacro $(rospack find kyon_srdf)/srdf/kyon.srdf.xacro upper_body:=true legs:=true dagana:=true wheels:=true varta:=false
+    urdf: xacro $(rospack find kyon_urdf)/urdf/kyon.urdf.xacro upper_body:=true legs:=true dagana:=true wheels:=false varta:=true 
+    srdf: xacro $(rospack find kyon_srdf)/srdf/kyon.srdf.xacro upper_body:=true legs:=true dagana:=true wheels:=false varta:=true
 
 ModelInterface:
   model_type: RBDL
@@ -112,8 +112,11 @@ xbotcore_plugins:
           type: yamlfile
 
     gcomp:
-      type: gcomp_plugin
+      type: internal_force_comp
       thread: rt_main
+      params:
+        contact_names: [contact_1, contact_2, contact_3, contact_4]
+        do_gcomp: true
 
     omnisteering:
       type: omnisteering_controller_plugin
