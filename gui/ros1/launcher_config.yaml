@@ -7,8 +7,8 @@ context:
     - &control kyon@10.24.12.102
     - &vision kyon@10.24.12.101
 
-    - &docker-xeno  focal-ros1-xeno-dev-1
-    - &docker-base  focal-ros1-dev-1
+    - &docker-xeno  kyon-cetc-focal-ros1-xeno-dev-1
+    - &docker-dev  kyon-cetc-focal-ros1-dev-1
 
 
 imu: 
@@ -41,3 +41,22 @@ xbot2:
           params:
             hw_type: dummy
 
+front_down_cam:
+  cmd: /home/kyon/Docker/Docker_Ros2_Zed/ros1_build/run_zed_front_down.bash
+  machine: *vision
+  #  ready_check: timeout 5 rostopic echo /zed_front_down/zed_node/rgb/image_rect_color -n 1
+
+front_up_cam:
+  cmd: /home/kyon/Docker/Docker_Ros2_Zed/ros1_build/run_zed_front_up.bash
+  machine: *vision
+  #  ready_check: timeout 5 rostopic echo /zed_front_up/zed_node/rgb/image_rect_color -n 1
+
+park:
+  cmd: rosrun kyon_cartesio parking.py -a park
+  machine: *control
+  docker: *docker-dev
+
+unpark:
+  cmd: rosrun kyon_cartesio parking.py -a unpark
+  machine: *control
+  docker: *docker-dev
