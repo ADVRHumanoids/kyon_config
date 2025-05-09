@@ -32,6 +32,23 @@ services:
     environment:
       - CUSTOM_PS=(dev)
 
+  dev-nvidia:
+    extends: dev 
+    restart: always
+    volumes:
+      - ~:/home/kyon_ros1/host
+    environment:
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - NVIDIA_VISIBLE_DEVICES=all
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+              count: 1
+
   xbot2_gui_server:
     extends: base
     entrypoint: bash -ic "until rostopic list; do sleep 1; done; sleep 1; cd ~/xbot2_ws/src/kyon_config; xbot2_gui_server gui/ros1/gui_server_config.yaml; bash"

@@ -14,7 +14,9 @@ ENV PYTHONUNBUFFERED=1
 RUN sudo apt update && sudo apt install -y \ 
 	xbot2_desktop_full \
 	ros-noetic-realsense2-description \
-	ros-noetic-theora-image-transport
+	ros-noetic-realsense2-camera \
+	ros-noetic-theora-image-transport \
+    ros-noetic-moveit 
 
 # remove default user
 RUN sudo userdel -r user

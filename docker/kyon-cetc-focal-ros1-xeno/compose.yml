@@ -12,7 +12,7 @@ services:
       - /dev:/dev
       - /usr/lib/modules:/usr/lib/modules
     environment:
-      - CUSTOM_PS=(dev) 
+      - CUSTOM_PS=(dev)
 
   roscore:
     extends: dev
