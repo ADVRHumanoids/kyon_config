@@ -9,6 +9,7 @@ context:
 
     - &docker-xeno  kyon-cetc-focal-ros1-xeno-dev-1
     - &docker-dev  kyon-cetc-focal-ros1-dev-1
+    - &docker-loco kyon-cetc-focal-ros1-locomotion-1
 
 
 imu: 
@@ -51,6 +52,11 @@ front_up_cam:
   machine: *vision
   #  ready_check: timeout 5 rostopic echo /zed_front_up/zed_node/rgb/image_rect_color -n 1
 
+lidar:
+  cmd: rosrun hesai_ros_driver hesai_ros_driver_node
+  machine: *control 
+  docker: *docker-dev
+
 park:
   cmd: rosrun kyon_cartesio parking.py -a park
   machine: *control
@@ -60,3 +66,44 @@ unpark:
   cmd: rosrun kyon_cartesio parking.py -a unpark
   machine: *control
   docker: *docker-dev
+  variants:
+    dance:
+      cmd: "{cmd} --dance"
+
+joint_pose:
+  cmd: rosrun kyon_cartesio joint_poses_client.py {pose_name}
+  machine: *control
+  docker: *docker-dev
+  variants:
+    pose_name:
+      - home_left:
+          params:
+            pose_name: home_left
+      - home_right:
+          params:
+            pose_name: home_right
+      - home_lr:
+          params:
+            pose_name: home_lr
+      - reach_to_grasp_left:
+          params:
+            pose_name: reach_to_grasp_left
+      - reach_to_grasp_right:
+          params:
+            pose_name: reach_to_grasp_right
+
+record_bag:
+  cmd: ~/data/record_bag.bash
+  machine: *control
+  docker: *docker-dev
+
+record_bag_perception:
+  cmd: ~/data/record_bag_perception.bash
+  machine: *control
+  docker: *docker-dev
+
+loco:
+  cmd: roslaunch kyon_controller controller.launch xbot:=true closed_loop:=true joy:=false
+  machine: *control
+  ready_check: timeout 10 rostopic echo /mpc_solution -n 1
+  docker: *docker-loco
