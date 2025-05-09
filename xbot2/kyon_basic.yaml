@@ -1,5 +1,5 @@
 XBotInterface:
-    urdf: xacro $(rospack find kyon_urdf)/urdf/kyon.urdf.xacro upper_body:=true legs:=true dagana:=true wheels:=false varta:=true 
+    urdf: xacro $(rospack find kyon_urdf)/urdf/kyon.urdf.xacro upper_body:=true legs:=true dagana:=true wheels:=false varta:=true  
     srdf: xacro $(rospack find kyon_srdf)/srdf/kyon.srdf.xacro upper_body:=true legs:=true dagana:=true wheels:=false varta:=true
 
 ModelInterface:
@@ -49,50 +49,9 @@ xbotcore_plugins:
           wrist_pitch_2: 0
           wrist_yaw_2: 0
 
-    # naruto:
-    #     thread: rt_main
-    #     type: homing
-    #     params:
-    #       home: naruto
-    #       ctrl_override: 
-    #         hip_roll_1: 0
-    #         hip_pitch_1: 0
-    #         knee_pitch_1: 0
-    #         hip_roll_2: 0
-    #         hip_pitch_2: 0
-    #         knee_pitch_2: 0
-    #         hip_roll_3: 0
-    #         hip_pitch_3: 0
-    #         knee_pitch_3: 0
-    #         hip_roll_4: 0
-    #         hip_pitch_4: 0
-    #         knee_pitch_4: 0
-
-
-    # zero:
-    #     thread: rt_main
-    #     type: homing
-    #     params:
-    #       qhome: 
-    #         type: Eigen::VectorXd
-    #         value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        
-    # circulo9_trajectory: 
-    #    thread: rt_main
-    #    type: circulo9_trajectory
-    #    params:
-    #        config: { value: $PWD/Trajectories.yaml, type: yamlfile}
-    #        log_name: {value: p004-d0002_15kg, type: string}
-    #        buffer_size: {value: 500000, type: int}
-    #        use_custom_controller: false
-
     ros_io: {thread: nrt_main, type: ros_io}
 
     ros_control: {thread: nrt_main, type: ros_control}
-
-    # circulo9_ros:
-    #   thread: nrt_main
-    #   type: circulo9_control
 
     ec_ros:
       thread: nrt_main
@@ -116,7 +75,7 @@ xbotcore_plugins:
       thread: rt_main
       params:
         contact_names: [contact_1, contact_2, contact_3, contact_4]
-        do_gcomp: true
+        do_gcomp: false
 
     omnisteering:
       type: omnisteering_controller_plugin
@@ -125,49 +84,7 @@ xbotcore_plugins:
         wheel_names: [wheel_1, wheel_2, wheel_3, wheel_4]
         wheel_radius: [0.107, 0.107, 0.107, 0.107]
 
-    # trj:
-    #   thread: rt_main
-    #   type: trajectory_plugin
-    #   params: 
-    #     amplitude:
-    #       hip_roll_1: 0.20
-    #       hip_pitch_1: 0.5
-    #       knee_pitch_1: 0.5
-    #       hip_roll_2: 0.20
-    #       hip_pitch_2: 0.5
-    #       knee_pitch_2: 0.5
-    #       hip_roll_3: -0.20
-    #       hip_pitch_3: 0.5
-    #       knee_pitch_3: 0.5
-    #       hip_roll_4: 0.20
-    #       hip_pitch_4: 0.5
-    #       knee_pitch_4: 0.5
-    #     freq_min: 0.02 # 1.80
-    #     freq_max: 0.02 # 1.80
-    #     period: 30.0
-
-    # trj_ub:
-    #   thread: rt_main
-    #   type: trajectory_plugin
-    #   params: 
-    #     amplitude:
-    #       shoulder_yaw_1: 1.5
-    #       shoulder_pitch_1: 1.0
-    #       elbow_pitch_1: 1.5
-    #       wrist_pitch_1: 1.5
-    #       wrist_yaw_1: 1.5
-    #       shoulder_yaw_2: 1.5
-    #       shoulder_pitch_2: 1.0
-    #       elbow_pitch_2: 1.5
-    #       wrist_pitch_2: 1.5
-    #       wrist_yaw_2: 1.5
-    #     freq_min: 0.02
-    #     freq_max: 0.02
-    #     period: 30.0
-
-      
     
-
 
 # global parameters
 xbotcore_param:
