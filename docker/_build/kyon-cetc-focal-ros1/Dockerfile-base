@@ -11,12 +11,14 @@ ENV PYTHONUNBUFFERED=1
 # additional dependencies
 # RUN sudo sh -c 'echo "deb http://xbot.cloud/xbot2/ubuntu/$(lsb_release -sc) /" > /etc/apt/sources.list.d/xbot-latest.list' && \
 #     wget -q -O - http://xbot.cloud/xbot2/ubuntu/KEY.gpg | sudo apt-key add -
+RUN sudo apt remove -y xbot2_desktop_full && sudo apt autoremove -y 
 RUN sudo apt update && sudo apt install -y \ 
 	xbot2_desktop_full \
 	ros-noetic-realsense2-description \
 	ros-noetic-realsense2-camera \
 	ros-noetic-theora-image-transport \
-    ros-noetic-moveit 
+    ros-noetic-moveit
+
 
 # remove default user
 RUN sudo userdel -r user
@@ -25,6 +27,8 @@ RUN sudo userdel -r user
 USER root
 RUN useradd -u $USER_ID -ms /bin/bash $USER_NAME
 RUN adduser $USER_NAME sudo
+RUN adduser $USER_NAME dialout
+
 RUN echo "$USER_NAME:user" | chpasswd
 
 WORKDIR /home/$USER_NAME
