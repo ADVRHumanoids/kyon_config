@@ -1,4 +1,4 @@
-FROM kyon-cetc-focal-ros1-base
+FROM kyon-cetc-focal-ros1-base:latest
 
 # get kernel version
 ARG USER_ID=1000
@@ -23,12 +23,12 @@ RUN pip install numpy scipy numpy_ros matplotlib colorama Cython networkx pygrap
 USER ${USER_NAME}
 
 # grow
-RUN cd ~/xbot2_ws/recipes/multidof_recipes && git pull origin kyon-cetc
+RUN echo 1 && cd ~/xbot2_ws/recipes/multidof_recipes && git pull origin kyon-cetc 
 WORKDIR /home/${USER_NAME}/xbot2_ws
 RUN --mount=type=secret,id=netrc,dst=/home/$USER_NAME/.netrc,uid=$USER_ID \ 
     forest grow pybind11 -j20 && \
-    forest grow casadi -j20 -v && \
-    forest grow pinocchio -j20 -v && \
+    forest grow casadi -j20 --clone-depth 1 -v && \
+    forest grow pinocchio -j20 --clone-depth 1 -v && \
     forest grow casadi_kin_dyn -j20 -v && \
     forest grow horizon -j20 -v && \
     forest grow phase_manager -j20 -v && \
