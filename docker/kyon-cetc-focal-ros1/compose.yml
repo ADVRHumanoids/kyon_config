@@ -1,8 +1,7 @@
 services:
 
   base:
-    build:
-      dockerfile: Dockerfile
+    image: hhcmhub/kyon-cetc-focal-ros1-base:v1.0.0
     stdin_open: true
     tty: true 
     privileged: true
