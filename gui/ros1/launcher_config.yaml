@@ -27,6 +27,7 @@ xbot2:
   cmd: xbot2-core --hw {hw_type}
   machine: *embedded
   ready_check: timeout 5 rostopic echo /xbotcore/joint_states -n 1
+  depends: [imu]
   docker: *docker-xeno
   variants:
     verbose:
@@ -45,22 +46,43 @@ xbot2:
 front_down_cam:
   cmd: /home/kyon/Docker/Docker_Ros2_Zed/ros1_build/run_zed_front_down.bash
   machine: *vision
+  show_ui: false
   #  ready_check: timeout 5 rostopic echo /zed_front_down/zed_node/rgb/image_rect_color -n 1
 
 front_up_cam:
   cmd: /home/kyon/Docker/Docker_Ros2_Zed/ros1_build/run_zed_front_up.bash
   machine: *vision
+  show_ui: false
   #  ready_check: timeout 5 rostopic echo /zed_front_up/zed_node/rgb/image_rect_color -n 1
 
 lidar:
   cmd: rosrun hesai_ros_driver hesai_ros_driver_node
   machine: *control 
   docker: *docker-dev
+  show_ui: false
+
+left_cam:
+  cmd: roslaunch kyon_robot left_camera.launch
+  machine: *control
+  docker: *docker-dev
+  show_ui: false
+
+right_cam:
+  cmd: roslaunch kyon_robot right_camera.launch
+  machine: *control
+  docker: *docker-dev
+  show_ui: false
 
 park:
   cmd: rosrun kyon_cartesio parking.py -a park
   machine: *control
   docker: *docker-dev
+
+box:
+  cmd: rosrun kyon_cartesio parking.py -a box
+  machine: *control
+  docker: *docker-dev
+  show_ui: false
 
 unpark:
   cmd: rosrun kyon_cartesio parking.py -a unpark
@@ -74,6 +96,7 @@ joint_pose:
   cmd: rosrun kyon_cartesio joint_poses_client.py {pose_name}
   machine: *control
   docker: *docker-dev
+  show_ui: false
   variants:
     pose_name:
       - home_left:
@@ -91,19 +114,30 @@ joint_pose:
       - reach_to_grasp_right:
           params:
             pose_name: reach_to_grasp_right
+      - homing_inward:
+          params:
+            pose_name: homing_inward
 
 record_bag:
   cmd: ~/data/record_bag.bash
   machine: *control
   docker: *docker-dev
+  show_ui: false
 
 record_bag_perception:
   cmd: ~/data/record_bag_perception.bash
   machine: *control
   docker: *docker-dev
+  show_ui: false
 
 loco:
   cmd: roslaunch kyon_controller controller.launch xbot:=true closed_loop:=true joy:=false
   machine: *control
-  ready_check: timeout 10 rostopic echo /mpc_solution -n 1
+  ready_check: timeout 3 rostopic echo /mpc_solution -n 1
   docker: *docker-loco
+
+ik:
+  cmd: roslaunch kyon_cartesio kyon.launch gui:=false
+  machine: *control
+  docker: *docker-dev
+  ready_check: timeout 3 rostopic echo /cartesian/solution -n 1
