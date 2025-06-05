@@ -1,11 +1,19 @@
 #!/bin/bash 
 set -e
 
-export USER_NAME=kyon_ros1
-export USER_ID=1000
-export KERNEL_VER=5
+# Load configuration
+if [ -f build.env ]; then
+    source build.env
+fi
 
-TAGNAME=v1.0.0
+# Use the variables with defaults
+export USER_NAME=${DOCKER_USER_NAME:-robot_user}
+export USER_ID=${DOCKER_USER_ID:-1000}
+export KERNEL_VER=${KERNEL_VER:-5}
+export IMAGE_PREFIX=${IMAGE_PREFIX:-hhcmhub/robot}
+
+TAGNAME=${TAGNAME:-v1.0.0}
+
 docker compose build
 docker tag kyon-cetc-focal-ros1-base hhcmhub/kyon-cetc-focal-ros1-base:$TAGNAME
 docker tag kyon-cetc-focal-ros1-xeno hhcmhub/kyon-cetc-focal-ros1-xeno-v$KERNEL_VER:$TAGNAME
@@ -17,6 +25,6 @@ docker tag kyon-cetc-focal-ros1-locomotion hhcmhub/kyon-cetc-focal-ros1-locomoti
 # docker tag kyon-cetc-focal-ros1-xeno hhcmhub/kyon-cetc-focal-ros1-xeno-v$KERNEL_VER:$TAGNAME
 # docker push hhcmhub/kyon-cetc-focal-ros1-xeno-v6:latest
 
-docker push hhcmhub/kyon-cetc-focal-ros1-base:$TAGNAME
-docker push hhcmhub/kyon-cetc-focal-ros1-xeno-v5:$TAGNAME
-docker push hhcmhub/kyon-cetc-focal-ros1-locomotion:$TAGNAME
+docker push ${IMAGE_PREFIX}-focal-ros1-base:$TAGNAME
+docker push ${IMAGE_PREFIX}-focal-ros1-xeno-v$KERNEL_VER:$TAGNAME
+docker push ${IMAGE_PREFIX}-focal-ros1-locomotion:$TAGNAME
