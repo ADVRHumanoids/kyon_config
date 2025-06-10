@@ -16,6 +16,3 @@ echo "  BASE_IMAGE_NAME: $BASE_IMAGE_NAME"
 # Use the generalized build from submodule
 cd ../docker-base/robot-template/_build/robot-focal-ros1/
 ./build.bash
-
-echo "Kyon docker images built and pushed successfully!"
-echo "Note: This script now does both build AND push, just like the original."
