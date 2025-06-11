@@ -6,7 +6,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 cd "$SCRIPT_DIR"
 
 # Source kyon-specific configuration
-source kyon-config.env
+source kyon-config_ros1.env
 
 echo "Building Kyon docker images with configuration:"
 echo "  ROBOT_NAME: $ROBOT_NAME"
