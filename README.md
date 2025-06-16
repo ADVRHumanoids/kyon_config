@@ -44,6 +44,13 @@ The Kyon configuration repository is available at: https://github.com/ADVRHumano
 
 ```
 kyon_config/
+├── docker/                         # Docker build configurations
+│   ├── build-kyon.bash            # Robot-specific build script
+│   ├── kyon-config_ros1.env       # ROS1 environment configuration
+│   ├── kyon-config_ros2.env       # ROS2 environment configuration
+│   └── kyon-cetc-*/               # Runtime compose configurations
+├── docker-base/                    # Submodule: generalized xbot2_docker
+│   └── robot-template/            # Generic robot build templates
 ├── gui/
 │   ├── gui_server_config.yaml      # Primary configuration for xbot2_gui_server
 │   └── launcher_config.yaml        # Process definitions for Concert Launcher
@@ -56,6 +63,8 @@ kyon_config/
 │   └── friction/                    # Plugin configurations
 │       ├── fc_config.yaml          # Friction compensation configuration
 │       └── ...
+├── ecat/                          # EtherCAT configurations
+├── host/                          # Host machine setup scripts
 ├── compose.yaml                    # Docker Compose configuration
 └── setup.sh                        # Setup and launch script
 ```
@@ -359,3 +368,210 @@ The typical sequence of events when using the system via the GUI:
    - Server calls `executor.kill()` with appropriate parameters
    - Executor sends the appropriate signal to the process
    - Status updates are sent to the frontend
+
+---
+
+# Docker Build System and Development Environment
+
+This section explains how the Kyon configuration repository integrates with the generalized `xbot2_docker` build system to create a complete development and deployment environment. The build system follows a layered approach where robot-specific configurations leverage generalized build templates from the `xbot2_docker` submodule.
+
+## Understanding the Build System Architecture
+
+The build system is designed around the principle of separation of concerns, allowing multiple robot projects to share the same underlying build infrastructure while maintaining their unique configurations. This design pattern provides several key advantages:
+
+**Robot-Specific Layer**: The `docker/` directory in this repository contains configuration files that define Kyon-specific parameters, package selections, and environment settings. This layer allows each robot project to specify exactly what software components it needs without modifying the underlying build logic.
+
+**Generic Build Layer**: The `docker-base/` submodule provides reusable Docker build templates, compose configurations, and build scripts that work across different robot projects. This shared infrastructure ensures consistency and reduces maintenance overhead across multiple robot systems.
+
+**Integration Layer**: The `build-kyon.bash` script serves as the bridge between these two layers, loading robot-specific configurations and delegating the actual build process to the generic build system.
+
+### How the Build Process Works
+
+When you initiate a build, the system follows this sequence:
+
+1. **Environment Loading**: The build script sources the appropriate environment file (such as `kyon-config_ros1.env`) which defines all the parameters needed for the Kyon-specific build
+2. **Configuration Display**: The script shows all the build parameters for verification, helping you understand exactly what will be built
+3. **Delegation**: The script calls the generic build infrastructure in `docker-base/robot-template/_build/`
+4. **Image Building**: Docker Compose builds multiple specialized images for different use cases (base development environment, real-time enabled environment, etc.)
+
+## Environment Configuration Files
+
+The environment files are the heart of the robot-specific configuration system. These files define all the parameters needed to build Docker images tailored for the Kyon robot system. Understanding these parameters is crucial for both using the system effectively and adapting it for other robots.
+
+### Core Parameters
+
+```bash
+export ROBOT_NAME=kyon              # Identifies the robot type for logging and organization
+export USER_NAME=user               # Default username in containers (should match host user patterns)
+export USER_ID=1000                 # User ID (should match host user to avoid permission issues)
+export KERNEL_VER=5                 # Xenomai kernel version for real-time capabilities
+```
+
+These core parameters establish the basic identity and user configuration for the Docker containers. The `ROBOT_NAME` parameter helps organize builds and logs when working with multiple robot types. The user configuration parameters ensure that files created inside containers maintain proper ownership when mounted back to the host system.
+
+### Repository Configuration
+
+```bash
+export RECIPES_TAG=kyon-cetc        # Git tag/branch for robot recipes
+export RECIPES_REPO=git@github.com:advrhumanoids/multidof_recipes.git
+```
+
+The repository configuration tells the build system where to find robot-specific software recipes and which version to use. The recipes repository contains the detailed instructions for building and configuring the software components specific to each robot. By using tags or branches, you can ensure reproducible builds and manage different versions of the software stack.
+
+### Package Selection
+
+```bash
+export ROBOT_PACKAGES="iit-kyon-ros-pkg kyon_config"
+export ADDITIONAL_PACKAGES="vectornav hesai_ros_driver"
+```
+
+The package selection parameters define what software will be installed in the Docker images. `ROBOT_PACKAGES` specifies the core packages specific to the Kyon robot, while `ADDITIONAL_PACKAGES` includes extra packages needed for sensors, drivers, and other peripherals. This modular approach allows you to build lean images with only the necessary components for specific use cases.
+
+### Docker Naming Convention
+
+```bash
+export BASE_IMAGE_NAME=kyon-cetc-focal-ros1
+export TAGNAME=v1.0.0
+export DOCKER_REGISTRY=hhcmhub
+```
+
+These parameters determine how the resulting Docker images will be named and where they can be pushed for sharing. The naming convention follows a structured pattern that includes the robot name, build variant, Ubuntu distribution, and ROS version. This systematic naming helps organize images and makes it easy to identify the right image for specific deployment scenarios.
+
+## Using the Build System
+
+### Initial Setup Process
+
+The setup process involves several important steps that prepare your environment for building and running the Docker images.
+
+**Clone the repository with submodules**: Since this repository depends on the `xbot2_docker` submodule for its build infrastructure, you must ensure that submodules are properly initialized:
+
+```bash
+git clone --recursive <repository-url>
+# Or if you've already cloned the repository:
+git submodule update --init --recursive
+```
+
+**Verify Docker installation**: The build system requires both Docker and Docker Compose to be properly installed and accessible:
+
+```bash
+docker --version
+docker compose version
+```
+
+**Set up authentication for private repositories**: If your robot configuration uses private repositories, you'll need to configure authentication. For HTTPS authentication, create a `.netrc` file:
+
+```bash
+echo "machine github.com login <username> password <token>" > ~/.netrc
+chmod 600 ~/.netrc
+```
+
+For SSH access, ensure your SSH keys are properly configured and that the SSH agent is running with your keys loaded.
+
+### Building Docker Images
+
+The `build-kyon.bash` script provides a simple but powerful interface to the underlying build system. Understanding its options helps you use it effectively for different scenarios.
+
+**Local development builds**: For most development work, you'll want to build images locally:
+
+```bash
+cd docker/
+./build-kyon.bash
+```
+
+This command builds all the configured images locally, making them available for immediate use on your development machine.
+
+**Building and distributing images**: When you want to share images with team members or deploy to other machines:
+
+```bash
+./build-kyon.bash --push
+```
+
+This option builds the images locally and then pushes them to the configured Docker registry, making them available for others to pull and use.
+
+**Using pre-built images**: If someone else has already built and pushed images that you want to use:
+
+```bash
+./build-kyon.bash --pull
+```
+
+This option downloads pre-built images from the registry without building them locally, which can save significant time during initial setup or when switching between different versions.
+
+### Understanding the Build Process
+
+When you run `build-kyon.bash`, a sophisticated sequence of operations takes place behind the scenes. Understanding this process helps you troubleshoot issues and customize the build for your specific needs.
+
+**Environment Loading Phase**: The script begins by sourcing the appropriate environment file (`kyon-config_ros1.env` for ROS1 builds or `kyon-config_ros2.env` for ROS2 builds). This step loads all the configuration parameters that will guide the build process.
+
+**Configuration Verification Phase**: The script displays all the build parameters, giving you an opportunity to verify that the configuration matches your intentions. This step is particularly important when switching between different robot configurations or build variants.
+
+**Build Delegation Phase**: The script then calls the generic build infrastructure located in `docker-base/robot-template/_build/`. This delegation pattern allows the robot-specific script to remain simple while leveraging sophisticated build logic that can be shared across multiple robot projects.
+
+**Image Construction Phase**: Docker Compose orchestrates the building of multiple specialized images. The build process typically creates three main image types:
+
+- **Base Image**: A core development environment with XBot2, ROS, and essential development tools
+- **Real-time Image**: An enhanced version with Xenomai kernel modules for real-time control applications  
+- **Locomotion Image**: A specialized image with additional locomotion control stack components
+
+### Resulting Docker Images
+
+After a successful build, you'll have a set of Docker images that follow a systematic naming convention. For a typical Kyon ROS1 build, you might see:
+
+- `hhcmhub/kyon-cetc-focal-ros1-base:v1.0.0`
+- `hhcmhub/kyon-cetc-focal-ros1-xeno-v5:v1.0.0`  
+- `hhcmhub/kyon-cetc-focal-ros1-locomotion:v1.0.0`
+
+Each image is optimized for specific use cases. The base image provides a general development environment, the xeno image adds real-time capabilities essential for robot control, and the locomotion image includes specialized algorithms for mobile robot navigation and control.
+
+## Runtime Usage and Development Workflow
+
+Once your images are built, the runtime system provides convenient ways to use them for development and deployment. The runtime configurations are organized in directories that match your build configurations.
+
+### Development Environment Access
+
+**For ROS1 real-time development**:
+```bash
+cd docker/kyon-cetc-focal-ros1-xeno/
+source setup.sh
+ros1  # This launches the development container
+```
+
+This sequence changes to the appropriate runtime directory, loads the environment configuration, and starts an interactive development container with real-time capabilities enabled.
+
+**For ROS2 development**:
+```bash
+cd docker/kyon-cetc-noble-ros2/
+source setup.sh
+ros2 dev  # Specify which service to start
+```
+
+The ROS2 workflow is similar but requires you to specify which service you want to start, giving you more control over the specific environment you're working in.
+
+### Development Workflow Considerations
+
+The runtime system is designed to support efficient development workflows while maintaining consistency with deployment environments. When you're actively developing, you might want to mount your source code directories into the containers so that changes are immediately reflected without rebuilding images.
+
+You can modify the compose files in the runtime directories to add volume mounts for your development folders. This approach minimizes build times during development while ensuring that your deployment images remain reproducible and well-defined.
+
+## Customizing for Other Robots
+
+The modular design of this build system makes it straightforward to adapt for different robot platforms. The process involves creating robot-specific configurations while reusing the proven build infrastructure.
+
+### Creating Robot-Specific Configurations
+
+**Duplicate and modify environment files**: Start by copying the existing configuration and adapting it for your robot:
+
+```bash
+cp kyon-config_ros1.env myrobot-config_ros1.env
+# Edit the file with your robot's specific parameters
+```
+
+Key parameters to modify include the robot name, package lists, repository references, and Docker naming conventions. Take care to ensure that package names and repository references are correct for your robot's software stack.
+
+**Create corresponding build script**: Copy and adapt the build script to use your new configuration:
+
+```bash
+cp build-kyon.bash build-myrobot.bash
+# Update the source line to point to your environment file
+```
+
+**Adapt runtime configurations**: Modify the Docker Compose files in the runtime directories to match your robot's specific requirements, such as hardware access needs, network configurations, or volume mounts.
