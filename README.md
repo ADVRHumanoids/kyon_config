@@ -25,7 +25,7 @@ The Kyon robot software stack consists of several interconnected components that
      - Manages processes locally, remotely via SSH, and inside Docker containers.
      - Utilizes `tmux` for reliable background process management.
      - Provides status checking and output streaming capabilities.
-   - **Documentation**: For detailed documentation on the Concert Launcher, see the [Concert Launcher README](https://github.com/ADVRHumanoids/concert_launcher/tree/Documentation).
+   - **Documentation**: For detailed documentation on the Concert Launcher, see the [Concert Launcher README](https://github.com/ADVRHumanoids/concert_launcher).
 
 3. **`xbot2_gui_server` (Implemented in `launcher.py`)**: 
    - **Role**: The backend web server providing a Graphical User Interface for managing the robot software.
