@@ -3,9 +3,9 @@ context:
   params:
     hw_type: ec_pos
   .defines:
-    - &embedded embedded@10.24.12.100
-    - &control kyon@10.24.12.102
-    - &vision kyon@10.24.12.101
+    - &embedded embedded@10.24.13.100
+    - &control kyon@10.24.13.102
+    - &vision kyon@10.24.13.101
 
     - &docker-xeno  kyon-cetc-focal-ros1-xeno-dev-1
     - &docker-dev  kyon-cetc-focal-ros1-dev-1
