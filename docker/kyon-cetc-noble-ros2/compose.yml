@@ -1,6 +1,6 @@
 services:
   base:
-    image: hhcmhub/kyon-cetc-noble-ros2-xeno-v${KERNEL_VER}
+    image: hhcmhub/kyon-cetc-noble-ros2-base
     stdin_open: true
     tty: true 
     privileged: true
@@ -14,6 +14,8 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw  # x11
       - ~/.ssh:/home/kyon_ros2/.ssh  # ssh
+      # Mount the kyon_config repository root into the container
+      - ../../:/home/kyon_ros2/xbot2_ws/src/kyon_config
     environment:
       - TERM=xterm-256color
       - DISPLAY
@@ -22,14 +24,14 @@ services:
   dev:
     extends: base 
     volumes:
-      - ~/.cache/kyon-cetc-focal-ros1-dev:/home/kyon_ros2/data
+      - ~/.cache/kyon-cetc-noble-ros2-dev:/home/kyon_ros2/data
     environment:
       - CUSTOM_PS="(dev) "
   sim:
     extends: base 
     image: hhcmhub/kyon-cetc-noble-ros2-sim
     volumes:
-      - ~/.cache/kyon-cetc-focal-ros1-sim:/home/kyon_ros2/data
+      - ~/.cache/kyon-cetc-noble-ros2-sim:/home/kyon_ros2/data
 
   xbot2_gui_server:
     extends: base

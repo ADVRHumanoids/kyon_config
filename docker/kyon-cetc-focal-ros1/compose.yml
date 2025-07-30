@@ -16,6 +16,8 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw  # x11
       - ~/.ssh:/home/kyon_ros1/.ssh  # ssh
       - /dev:/dev
+      # Mount the kyon_config repository root into the container
+      - ../../:/home/kyon_ros1/xbot2_ws/src/kyon_config
     environment:
       - TERM=xterm-256color
       - DISPLAY

@@ -11,6 +11,8 @@ services:
     volumes:
       - /dev:/dev
       - /usr/lib/modules:/usr/lib/modules
+      # Mount the kyon_config repository root into the container
+      - ../../:/home/kyon_ros1/xbot2_ws/src/kyon_config
     environment:
       - CUSTOM_PS=(dev)
 
