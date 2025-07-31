@@ -92,6 +92,7 @@ source "$CONFIG_FILE"
 if [[ -n "$GITHUB_REF_NAME" ]]; then
   export TAGNAME="$GITHUB_REF_NAME"
   echo "Using tag from GitHub: $TAGNAME"
+fi
 
 # Display the build configuration for transparency
 # This helps users verify they're building with the correct settings
