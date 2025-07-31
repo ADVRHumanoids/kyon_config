@@ -100,8 +100,7 @@ jobs:
     # Build on tags or when ROS2 changes detected
     if: |
       startsWith(github.ref, 'refs/tags/v') || 
-      needs.detect-changes.outputs.ros2 == 'true' || 
-      needs.detect-changes.outputs.build-all == 'true'
+      needs.detect-changes.outputs.ros2 == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
