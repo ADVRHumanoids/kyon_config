@@ -144,44 +144,137 @@ jobs:
           ./build-kyon.bash --ros2 --push
 
   summary:
-    needs: [detect-changes, build-ros1, build-ros2]
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Build Summary
-        run: |
-          echo "## Build Results" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          
-          # Just simple, clear information
-          echo "**Tag:** ${{ env.TAG_NAME }}" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          
-          # ROS1 status
-          if [[ "${{ needs.build-ros1.result }}" == "success" ]]; then
-            echo "ROS1 images built successfully" >> $GITHUB_STEP_SUMMARY
-          elif [[ "${{ needs.build-ros1.result }}" == "failure" ]]; then
-            echo "ROS1 build failed - check the logs" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "ROS1 build was skipped (no changes detected)" >> $GITHUB_STEP_SUMMARY
-          fi
-          
-          # ROS2 status
-          if [[ "${{ needs.build-ros2.result }}" == "success" ]]; then
-            echo "ROS2 images built successfully" >> $GITHUB_STEP_SUMMARY
-          elif [[ "${{ needs.build-ros2.result }}" == "failure" ]]; then
-            echo "ROS2 build failed - check the logs" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "ROS2 build was skipped (no changes detected)" >> $GITHUB_STEP_SUMMARY
-          fi
-          
-          echo "" >> $GITHUB_STEP_SUMMARY
-          
-          # Add push status if relevant
-          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
-            echo "Images pushed to registry (release tag detected)" >> $GITHUB_STEP_SUMMARY
-          elif [[ "${{ github.ref }}" == "refs/heads/main" ]] || [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
-            echo "Images pushed to registry (main branch)" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "Images built locally only (no push for PRs/feature branches)" >> $GITHUB_STEP_SUMMARY
-          fi
+      needs: [detect-changes, build-ros1, build-ros2]
+      if: always()
+      runs-on: ubuntu-latest
+      steps:
+        - name: Build Summary
+          run: |
+            echo "## Build and Push Summary" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # Display the trigger information
+            echo "### Trigger Information" >> $GITHUB_STEP_SUMMARY
+            echo "**Branch/Tag:** ${{ env.TAG_NAME }}" >> $GITHUB_STEP_SUMMARY
+            echo "**Event:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+            if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+              echo "**PR:** #${{ github.event.pull_request.number }}" >> $GITHUB_STEP_SUMMARY
+            fi
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # Track what actually happened
+            ROS1_BUILT=false
+            ROS2_BUILT=false
+            ANYTHING_BUILT=false
+            PUSH_ATTEMPTED=false
+            
+            # Display detected changes
+            echo "### Changes Detected" >> $GITHUB_STEP_SUMMARY
+            if [[ "${{ needs.detect-changes.outputs.ros1 }}" == "true" ]]; then
+              echo "- ✅ ROS1 files changed" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "- ⚪ No ROS1 changes" >> $GITHUB_STEP_SUMMARY
+            fi
+            
+            if [[ "${{ needs.detect-changes.outputs.ros2 }}" == "true" ]]; then
+              echo "- ✅ ROS2 files changed" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "- ⚪ No ROS2 changes" >> $GITHUB_STEP_SUMMARY
+            fi
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # Build Results section
+            echo "### Build Results" >> $GITHUB_STEP_SUMMARY
+            
+            # ROS1 Build Status
+            if [[ "${{ needs.build-ros1.result }}" == "success" ]]; then
+              echo "- ✅ **ROS1**: All images built successfully" >> $GITHUB_STEP_SUMMARY
+              ROS1_BUILT=true
+              ANYTHING_BUILT=true
+            elif [[ "${{ needs.build-ros1.result }}" == "failure" ]]; then
+              echo "- ❌ **ROS1**: Build failed (check logs)" >> $GITHUB_STEP_SUMMARY
+            elif [[ "${{ needs.build-ros1.result }}" == "skipped" ]]; then
+              # Check if it was skipped due to no changes or due to tag trigger
+              if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+                echo "- ⚪ **ROS1**: Skipped (tag trigger but no ROS1 changes)" >> $GITHUB_STEP_SUMMARY
+              else
+                echo "- ⚪ **ROS1**: Skipped (no changes detected)" >> $GITHUB_STEP_SUMMARY
+              fi
+            fi
+            
+            # ROS2 Build Status
+            if [[ "${{ needs.build-ros2.result }}" == "success" ]]; then
+              echo "- ✅ **ROS2**: All images built successfully" >> $GITHUB_STEP_SUMMARY
+              ROS2_BUILT=true
+              ANYTHING_BUILT=true
+            elif [[ "${{ needs.build-ros2.result }}" == "failure" ]]; then
+              echo "- ❌ **ROS2**: Build failed (check logs)" >> $GITHUB_STEP_SUMMARY
+            elif [[ "${{ needs.build-ros2.result }}" == "skipped" ]]; then
+              if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+                echo "- ⚪ **ROS2**: Skipped (tag trigger but no ROS2 changes)" >> $GITHUB_STEP_SUMMARY
+              else
+                echo "- ⚪ **ROS2**: Skipped (no changes detected)" >> $GITHUB_STEP_SUMMARY
+              fi
+            fi
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # Push Status section - only show if builds occurred
+            echo "### Registry Push Status" >> $GITHUB_STEP_SUMMARY
+            
+            # Determine if push was attempted based on ref and build success
+            if [[ "$ANYTHING_BUILT" == "true" ]]; then
+              if [[ "${{ github.ref }}" == refs/tags/* ]] || \
+                [[ "${{ github.ref }}" == "refs/heads/main" ]] || \
+                [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
+                PUSH_ATTEMPTED=true
+              fi
+            fi
+            
+            # Display push status
+            if [[ "$PUSH_ATTEMPTED" == "true" ]]; then
+              echo "**Status:** Images pushed to registry" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "Images pushed:" >> $GITHUB_STEP_SUMMARY
+              if [[ "$ROS1_BUILT" == "true" ]]; then
+                echo "- ROS1 images → \`${{ env.DOCKER_REGISTRY }}/kyon-cetc-focal-ros1-*:${{ env.TAG_NAME }}\`" >> $GITHUB_STEP_SUMMARY
+              fi
+              if [[ "$ROS2_BUILT" == "true" ]]; then
+                echo "- ROS2 images → \`${{ env.DOCKER_REGISTRY }}/kyon-cetc-noble-ros2-*:${{ env.TAG_NAME }}\`" >> $GITHUB_STEP_SUMMARY
+              fi
+            elif [[ "$ANYTHING_BUILT" == "true" ]]; then
+              echo "**Status:** Images built locally only (not pushed)" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+                echo "_Note: Images are not pushed for pull requests_" >> $GITHUB_STEP_SUMMARY
+              else
+                echo "_Note: Images are only pushed from main/master branches or tags_" >> $GITHUB_STEP_SUMMARY
+              fi
+            else
+              echo "**Status:** No images built or pushed" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "_No changes detected that require rebuilding images_" >> $GITHUB_STEP_SUMMARY
+            fi
+            
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            # Add helpful next steps based on the outcome
+            echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+            
+            if [[ "$ANYTHING_BUILT" == "false" ]]; then
+              echo "No action needed - no relevant changes detected." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "If you expected builds to occur, check that your changes are in the monitored paths:" >> $GITHUB_STEP_SUMMARY
+              echo "- ROS1: \`docker/kyon-config_ros1.env\`, \`docker/kyon-cetc-focal-ros1*/\`, \`gui/ros1/\`" >> $GITHUB_STEP_SUMMARY
+              echo "- ROS2: \`docker/kyon-config_ros2.env\`, \`docker/kyon-cetc-noble-ros2*/\`, \`gui/ros2/\`" >> $GITHUB_STEP_SUMMARY
+            elif [[ "$PUSH_ATTEMPTED" == "true" ]]; then
+              echo "✅ Images have been pushed to the registry and are ready for use." >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "To use these images:" >> $GITHUB_STEP_SUMMARY
+              echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+              echo "docker pull ${{ env.DOCKER_REGISTRY }}/kyon-cetc-focal-ros1-base:${{ env.TAG_NAME }}" >> $GITHUB_STEP_SUMMARY
+              echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "Images were built but not pushed. To use them:" >> $GITHUB_STEP_SUMMARY
+              echo "- Merge this PR to main/master to trigger automatic push" >> $GITHUB_STEP_SUMMARY
+              echo "- Or create a release tag to push images" >> $GITHUB_STEP_SUMMARY
+            fi
