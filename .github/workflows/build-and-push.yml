@@ -34,7 +34,10 @@ jobs:
         uses: dorny/paths-filter@v3
         id: changes
         with:
-          base: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before || 'HEAD~1' }}
+          # For submodules, compare against a more reliable base
+          base: ${{ github.event_name == 'pull_request' && 'HEAD' || github.event.before }}
+          # Enable submodule tracking explicitly
+          list-files: shell
           filters: |
             ros1:
               - 'docker-base/robot-template/_build/robot-focal-ros1/**'
