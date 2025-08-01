@@ -37,16 +37,9 @@ jobs:
           base: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before || 'HEAD~1' }}
           filters: |
             ros1:
-              - 'docker/kyon-config_ros1.env'
-              - 'docker/kyon-cetc-focal-ros1/**'
-              - 'docker/kyon-cetc-focal-ros1-xeno/**'
-              - 'gui/ros1/**'
+              - 'robot-template/_build/robot-focal-ros1/**'
             ros2:
-              - 'docker/kyon-config_ros2.env'
-              - 'docker/kyon-cetc-noble-ros2/**'
-              - 'docker/kyon-cetc-noble-ros2-xeno/**'
-              - 'gui/ros2/**'
-
+              - 'robot-template/_build/robot-noble-ros2/**'
   build-ros1:
     needs: detect-changes
     # Build on tags or when ROS1 changes detected
