@@ -20,9 +20,8 @@ jobs:
   detect-changes:
     runs-on: ubuntu-latest
     outputs:
-      ros1: ${{ steps.changes.outputs.ros1 }}
-      ros2: ${{ steps.changes.outputs.ros2 }}
-      build-all: ${{ steps.changes.outputs.build-all }}
+      ros1: ${{ steps.changes.outputs.ros1 == 'true' || steps.manual-check.outputs.ros1-manual == 'true' }}
+      ros2: ${{ steps.changes.outputs.ros2 == 'true' || steps.manual-check.outputs.ros2-manual == 'true' }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -42,7 +41,64 @@ jobs:
             ros1:
               - 'docker-base/robot-template/_build/robot-focal-ros1/**'
             ros2:
-              - 'docker-base/robot-template/_build/robot-noble-ros2/**'
+              - 'docker-base/robot-template/_build/robot-noble-ros2/**'        
+      - name: Manual submodule change detection
+        id: manual-check
+        run: |
+          echo "=== Manual Submodule Check ==="
+          
+          # Initialize outputs
+          ROS1_CHANGED=false
+          ROS2_CHANGED=false
+          
+          # Check if docker-base submodule was updated (we know it was from debug)
+          if git diff --name-only ${{ github.event.before }}..${{ github.sha }} | grep -q "^docker-base$"; then
+            echo "✅ docker-base submodule was updated - checking internal changes"
+            
+            # Get the submodule commit hashes
+            cd docker-base
+            
+            # Get the previous submodule commit hash
+            cd ..
+            SUBMODULE_BEFORE=$(git rev-parse ${{ github.event.before }}:docker-base)
+            SUBMODULE_CURRENT=$(git rev-parse HEAD:docker-base)
+            
+            echo "Submodule before: $SUBMODULE_BEFORE"
+            echo "Submodule current: $SUBMODULE_CURRENT"
+            
+            if [[ "$SUBMODULE_BEFORE" != "$SUBMODULE_CURRENT" ]]; then
+              cd docker-base
+              
+              # Check what files changed in the submodule between commits
+              echo "Checking what changed in submodule..."
+              CHANGED_FILES=$(git diff --name-only $SUBMODULE_BEFORE..$SUBMODULE_CURRENT)
+              echo "Changed files in submodule:"
+              echo "$CHANGED_FILES"
+              
+              # Check for ROS1 changes
+              if echo "$CHANGED_FILES" | grep -q "robot-template/_build/robot-focal-ros1/"; then
+                echo "✅ ROS1 files changed in submodule"
+                ROS1_CHANGED=true
+              fi
+              
+              # Check for ROS2 changes  
+              if echo "$CHANGED_FILES" | grep -q "robot-template/_build/robot-noble-ros2/"; then
+                echo "✅ ROS2 files changed in submodule"
+                ROS2_CHANGED=true
+              fi
+              
+              cd ..
+            fi
+          else
+            echo "❌ No docker-base submodule update detected"
+          fi
+          
+          # Output results for use in job conditions
+          echo "ros1-manual=$ROS1_CHANGED" >> $GITHUB_OUTPUT
+          echo "ros2-manual=$ROS2_CHANGED" >> $GITHUB_OUTPUT
+          echo "🎯 Final manual detection - ROS1: $ROS1_CHANGED, ROS2: $ROS2_CHANGED"
+
+
       - name: Debug submodule and change detection
         run: |
           echo "=== Git Status ==="
