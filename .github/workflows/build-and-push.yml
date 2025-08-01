@@ -37,9 +37,9 @@ jobs:
           base: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before || 'HEAD~1' }}
           filters: |
             ros1:
-              - 'robot-template/_build/robot-focal-ros1/**'
+              - 'docker-base/robot-template/_build/robot-focal-ros1/**'
             ros2:
-              - 'robot-template/_build/robot-noble-ros2/**'
+              - 'docker-base/robot-template/_build/robot-noble-ros2/**'
   build-ros1:
     needs: detect-changes
     # Build on tags or when ROS1 changes detected
