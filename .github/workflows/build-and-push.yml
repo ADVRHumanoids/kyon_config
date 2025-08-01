@@ -43,6 +43,32 @@ jobs:
               - 'docker-base/robot-template/_build/robot-focal-ros1/**'
             ros2:
               - 'docker-base/robot-template/_build/robot-noble-ros2/**'
+      - name: Debug submodule and change detection
+        run: |
+          echo "=== Git Status ==="
+          git status
+          echo ""
+          echo "=== Submodule Status ==="
+          git submodule status
+          echo ""
+          echo "=== Recent Commits ==="
+          echo "Last 3 commits:"
+          git log --oneline -3
+          echo ""
+          echo "=== Changed Files Since Base ==="
+          echo "Base SHA: ${{ github.event.before }}"
+          echo "Current SHA: ${{ github.sha }}"
+          if [[ -n "${{ github.event.before }}" ]]; then
+            echo "Files changed:"
+            git diff --name-only ${{ github.event.before }}..${{ github.sha }} || echo "No diff available"
+            echo ""
+            echo "Submodule changes:"
+            git diff --name-only ${{ github.event.before }}..${{ github.sha }} | grep docker-base || echo "No docker-base changes detected"
+          fi
+          echo ""
+          echo "=== Check if submodule files exist ==="
+          ls -la docker-base/robot-template/_build/robot-focal-ros1/ || echo "Path doesn't exist"
+      
   build-ros1:
     needs: detect-changes
     # Build on tags or when ROS1 changes detected
