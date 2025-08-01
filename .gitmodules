@@ -1,4 +1,4 @@
 [submodule "docker-base"]
 	path = docker-base
 	url = https://github.com/ADVRHumanoids/xbot2_docker.git
-	branch = general
+	branch = master
