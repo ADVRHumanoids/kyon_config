@@ -149,8 +149,17 @@ jobs:
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
+          password: ${{ secrets.DOCKERHUB_TOKEN }}     
+      - name: Setup .netrc for Docker build
+        run: |
+          cat > ~/.netrc << EOF
+          machine github.com
+          login ${{ secrets.GH_USERNAME }}
+          password ${{ secrets.GH_TOKEN }}
+          EOF
+          chmod 600 ~/.netrc
+          echo "✅ .netrc file created for Docker build authentication"
+    
       - name: Build all ROS1 images
         run: |
           cd docker
@@ -198,7 +207,15 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
+      - name: Setup .netrc for Docker build
+        run: |
+          cat > ~/.netrc << EOF
+          machine github.com
+          login ${{ secrets.GH_USERNAME }}
+          password ${{ secrets.GH_TOKEN }}
+          EOF
+          chmod 600 ~/.netrc
+          echo "✅ .netrc file created for Docker build authentication"
       - name: Build all ROS2 images
         run: |
           cd docker
