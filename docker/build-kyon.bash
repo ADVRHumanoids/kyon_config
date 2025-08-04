@@ -4,6 +4,7 @@ set -e
 CONFIG_TYPE=""
 PUSH_IMAGES=false
 PULL_IMAGES=false
+NO_CACHE=true
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -13,6 +14,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --ros2)
       CONFIG_TYPE="ros2"
+      shift
+      ;;
+      --no-cache)
+      NO_CACHE=true
       shift
       ;;
     --push)
@@ -37,11 +42,13 @@ while [[ $# -gt 0 ]]; do
       echo "Options:"
       echo "  --push     Push images to registry after building"
       echo "  --pull     Pull images from registry instead of building"
+      echo "  --no-cache Skip cache during build (useful for debugging)"
       echo "  --help     Show this help message"
       echo ""
       echo "Examples:"
       echo "  $0 --ros1              # Build all ROS1 images locally"
       echo "  $0 --ros2 --push       # Build and push all ROS2 images"
+      echo "  $0 --no-cache         # Build locally without cache"
       echo "  $0 --ros1 --pull       # Pull pre-built ROS1 images"
       exit 0
       ;;
@@ -137,6 +144,9 @@ if [[ "$PULL_IMAGES" == "true" ]]; then
 fi
 if [[ "$PUSH_IMAGES" == "true" ]]; then
   BUILD_ARGS="$BUILD_ARGS --push"
+fi
+if [[ "$NO_CACHE" == "true" ]]; then
+  BUILD_ARGS="$BUILD_ARGS --no-cache"
 fi
 
 # Execute the generic build script
