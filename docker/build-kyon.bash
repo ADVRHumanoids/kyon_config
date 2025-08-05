@@ -157,6 +157,7 @@ echo ""
 
 # Run the build and capture the exit code
 ./build.bash $BUILD_ARGS
+
 BUILD_EXIT_CODE=$?
 
 # Return to original directory
