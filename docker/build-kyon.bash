@@ -4,7 +4,7 @@ set -e
 CONFIG_TYPE=""
 PUSH_IMAGES=false
 PULL_IMAGES=false
-NO_CACHE=true
+NO_CACHE=false
 
 while [[ $# -gt 0 ]]; do
   case $1 in
