@@ -171,6 +171,10 @@ if [[ $BUILD_EXIT_CODE -ne 0 ]]; then
   exit $BUILD_EXIT_CODE
 fi
 
+# The build succeeded. Turn off "exit on error" for the final summary section.
+# Now, a failing 'grep' won't cause the whole job to fail.
+set +e
+
 echo ""
 echo "Build completed successfully!"
 echo ""
