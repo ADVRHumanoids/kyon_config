@@ -189,9 +189,10 @@ fi
 echo ""
 echo "Verifying images exist locally:"
 # Show actual images that match our pattern
-docker images | grep "$DOCKER_REGISTRY/$ROBOT_NAME" | grep "$TAGNAME" || {
+docker images --format "table {{.Repository}}:{{.Tag}}" | grep "${BASE_IMAGE_NAME}" | grep "${TAGNAME}" || {
   echo "Warning: No images found matching expected pattern."
-  echo "This might indicate a build problem or different naming convention."
+  # This part is optional, but makes the failure clearer
+  # exit 1 
 }
 
 # Provide next steps based on what the user did
