@@ -171,7 +171,7 @@ jobs:
           
           # Show what we built
           echo "Images created:"
-          docker images | grep "${DOCKER_REGISTRY}" | grep "focal-ros1" | grep "${TAGNAME}"
+          docker images | grep "${BASE_IMAGE_NAME}" | grep "${TAGNAME}" || true
 
       - name: Push ROS1 images
         if: |
