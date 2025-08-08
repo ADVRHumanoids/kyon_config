@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x 
 set -e
 # Parse command line arguments
 CONFIG_TYPE=""
