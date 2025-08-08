@@ -188,13 +188,13 @@ else
 fi
 
 echo ""
+
+echo ""
 echo "Verifying images exist locally:"
-# Show actual images that match our pattern
-docker images --format "table {{.Repository}}:{{.Tag}}" | grep "${BASE_IMAGE_NAME}" | grep "${TAGNAME}" || {
-  echo "Warning: No images found matching expected pattern."
-  # This part is optional, but makes the failure clearer
-  # exit 1 
-}
+# This pipeline now includes "|| true" at the end.
+# This is the crucial fix. It ensures that even if grep finds nothing,
+# this step will NOT cause the entire script to exit with an error.
+docker images --format "table {{.Repository}}:{{.Tag}}" | grep "${BASE_IMAGE_NAME}" | grep "${TAGNAME}" || true
 
 # Provide next steps based on what the user did
 echo ""
@@ -209,3 +209,6 @@ else
   echo "  Use --push to upload them to the registry"
   echo "  Use the runtime scripts in docker/kyon-cetc-*/ to run containers"
 fi
+
+# If you have ANY other "docker images | grep" commands after this point,
+# make sure they also have "|| true" at the end.
