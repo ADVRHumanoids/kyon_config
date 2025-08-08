@@ -214,5 +214,4 @@ else
   echo "  Use the runtime scripts in docker/kyon-cetc-*/ to run containers"
 fi
 
-# If you have ANY other "docker images | grep" commands after this point,
-# make sure they also have "|| true" at the end.
+exit 0
