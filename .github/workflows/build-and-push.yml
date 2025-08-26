@@ -160,28 +160,14 @@ jobs:
           chmod 600 ~/.netrc
           echo "✅ .netrc file created for Docker build authentication"
     
-      - name: Build all ROS1 images
+      - name: Build (and auto-push) ROS1 images
+        env:
+          TAGNAME: ${{ env.TAG_NAME }}
         run: |
           cd docker
-          export TAGNAME=${{ env.TAG_NAME }}
-          echo "Building ROS1 stack with tag: $TAGNAME"
-          
-          # Build all ROS1 images (base, locomotion, xeno) together
+          export TAGNAME="${TAGNAME}"
           ./build-kyon.bash --ros1
           
-          # Show what we built
-          echo "Images created:"
-          docker images | grep "${BASE_IMAGE_NAME}" | grep "${TAGNAME}" || true
-
-      - name: Push ROS1 images
-        if: |
-          startsWith(github.ref, 'refs/tags/v') || 
-          (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'))
-        run: |
-          cd docker
-          export TAGNAME=${{ env.TAG_NAME }}
-          ./build-kyon.bash --ros1 --push
-
   build-ros2:
     needs: detect-changes
     # Build on tags or when ROS2 changes detected
