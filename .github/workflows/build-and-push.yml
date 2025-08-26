@@ -166,8 +166,8 @@ jobs:
         run: |
           cd docker
           export TAGNAME="${TAGNAME}"
-          ./build-kyon.bash --ros1
-          
+          ./build-kyon.bash --ros1 --push
+
   build-ros2:
     needs: detect-changes
     # Build on tags or when ROS2 changes detected
