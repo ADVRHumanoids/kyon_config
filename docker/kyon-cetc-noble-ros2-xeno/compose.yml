@@ -33,13 +33,13 @@ services:
     volumes:
       - /dev:/dev
       - /usr/lib/modules:/usr/lib/modules
-      - ~/.cache/kyon-cetc-noble-ros2-dev:/home/kyon_ros2/data
+      - ~/.cache/kyon-cetc-noble-ros2-dev:/home/user/data
     environment:
       - CUSTOM_PS=(dev)
   sim:
     extends: base 
     volumes:
-      - ~/.cache/kyon-cetc-noble-ros2-sim:/home/kyon_ros2/data
+      - ~/.cache/kyon-cetc-noble-ros2-sim:/home/user/data
 
   xbot2_gui_server:
     extends: base
