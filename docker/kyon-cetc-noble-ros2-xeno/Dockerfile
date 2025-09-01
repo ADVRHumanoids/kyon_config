@@ -1,4 +1,4 @@
-FROM hhcmhub/kyon-cetc-noble-ros2-xeno:master
+FROM hhcmhub/kyon-cetc-noble-ros2-xeno-v5:master
 
 ARG ROS_IP=localhost
 
