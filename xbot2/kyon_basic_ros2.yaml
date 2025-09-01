@@ -1,6 +1,6 @@
 XBotInterface:
-    urdf: xacro $(ros2 pkg prefix --share kyon_urdf)/urdf/kyon.urdf.xacro upper_body:=true legs:=false
-    srdf: xacro $(ros2 pkg prefix --share kyon_srdf)/srdf/kyon.srdf.xacro upper_body:=true legs:=false
+    urdf: xacro $(ros2 pkg prefix --share kyon_urdf)/urdf/kyon.urdf.xacro upper_body:=false legs:=true varta:=false
+    srdf: xacro $(ros2 pkg prefix --share kyon_srdf)/srdf/kyon.srdf.xacro upper_body:=false legs:=true varta:=false
 
 ModelInterface:
   model_type: pin
