@@ -17,8 +17,8 @@ services:
       core: -1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw  # x11
-      - ~/.ssh:/home/kyon_ros2/.ssh  # ssh
-      - ../../:/home/user/xbot2_ws/src/kyon_config
+      - ~/.ssh:/home/user/.ssh  # ssh
+      - ./../..:/home/user/xbot2_ws/src/kyon_config:ro
     environment:
       - TERM=xterm-256color
       - DISPLAY
