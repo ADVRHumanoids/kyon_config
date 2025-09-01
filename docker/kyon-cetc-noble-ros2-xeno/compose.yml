@@ -1,6 +1,6 @@
 services:
   base:
-    image: hhcmhub/kyon-cetc-noble-ros2-base
+    image: hhcmhub/kyon-cetc-noble-ros2-xeno-v5:master
     stdin_open: true
     tty: true 
     privileged: true
@@ -13,7 +13,8 @@ services:
       core: -1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw  # x11
-      - ~/.ssh:/home/kyon_ros2/.ssh  # ssh
+      - ~/.ssh:/home/user/.ssh  # ssh
+      - ./../..:/home/user/xbot2_ws/src/kyon_config:ro
     environment:
       - TERM=xterm-256color
       - DISPLAY
@@ -29,8 +30,6 @@ services:
       - /dev:/dev
       - /usr/lib/modules:/usr/lib/modules
       - ~/.cache/kyon-cetc-noble-ros2-dev:/home/kyon_ros2/data
-      # Mount the kyon_config repository root into the container
-      - ../../:/home/kyon_ros2/xbot2_ws/src/kyon_config
     environment:
       - CUSTOM_PS=(dev)
   sim:
@@ -44,4 +43,4 @@ services:
     entrypoint: bash -ic "cd ~/xbot2_ws/src/kyon_config; git pull origin master; xbot2_gui_server gui/ros2/gui_server_config.yaml; bash"
     restart: always
     environment:
-      - CUSTOM_PS="(xbot2_gui_server) "
+      - CUSTOM_PS=(xbot2_gui_server)
