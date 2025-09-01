@@ -1,6 +1,10 @@
 services:
   base:
-    image: hhcmhub/kyon-cetc-noble-ros2-base
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - ROS_IP=${ROS_IP}
     stdin_open: true
     tty: true 
     privileged: true
@@ -26,10 +30,9 @@ services:
     volumes:
       - ~/.cache/kyon-cetc-noble-ros2-dev:/home/kyon_ros2/data
     environment:
-      - CUSTOM_PS="(dev) "
+      - CUSTOM_PS=(dev)
   sim:
     extends: base 
-    image: hhcmhub/kyon-cetc-noble-ros2-sim
     volumes:
       - ~/.cache/kyon-cetc-noble-ros2-sim:/home/kyon_ros2/data
 
@@ -38,4 +41,4 @@ services:
     entrypoint: bash -ic "cd ~/xbot2_ws/src/kyon_config; git pull origin master; xbot2_gui_server gui/ros2/gui_server_config.yaml; bash"
     restart: always
     environment:
-      - CUSTOM_PS="(xbot2_gui_server) "
+      - CUSTOM_PS=(xbot2_gui_server)

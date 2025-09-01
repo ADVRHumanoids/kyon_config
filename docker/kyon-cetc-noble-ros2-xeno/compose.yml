@@ -1,6 +1,10 @@
 services:
   base:
-    image: hhcmhub/kyon-cetc-noble-ros2-xeno-v5:master
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      args:
+        ROS_IP: ${ROS_IP}
     stdin_open: true
     tty: true 
     privileged: true
@@ -22,7 +26,6 @@ services:
 
   dev:
     extends: base
-    image: hhcmhub/kyon-cetc-noble-ros2-xeno-v${KERNEL_VER}
     restart: always
     cap_add:
       - ALL
@@ -34,7 +37,6 @@ services:
       - CUSTOM_PS=(dev)
   sim:
     extends: base 
-    image: hhcmhub/kyon-cetc-noble-ros2-sim
     volumes:
       - ~/.cache/kyon-cetc-noble-ros2-sim:/home/kyon_ros2/data
 
