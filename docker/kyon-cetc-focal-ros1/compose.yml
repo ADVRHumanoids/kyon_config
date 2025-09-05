@@ -1,7 +1,7 @@
 services:
 
   base:
-    image: hhcmhub/kyon-cetc-focal-ros1-base:v1.0.0
+    image: hhcmhub/kyon-cetc-focal-ros1-base:master
     stdin_open: true
     tty: true 
     privileged: true
@@ -14,14 +14,15 @@ services:
       core: -1
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw  # x11
-      - ~/.ssh:/home/kyon_ros1/.ssh  # ssh
+      - ~/.ssh:/home/user/.ssh  # ssh
       - /dev:/dev
       # Mount the kyon_config repository root into the container
-      - ../../:/home/kyon_ros1/xbot2_ws/src/kyon_config
+      - ../../:/home/user/xbot2_ws/src/kyon_config:ro
     environment:
       - TERM=xterm-256color
       - DISPLAY
       - HHCM_FOREST_CLONE_DEFAULT_PROTO=https
+      - ROBOT_CONFIG_PATH=/home/user/xbot2_ws/src/kyon_config/setup.sh
       - ROS_MASTER_URI
       - ROS_IP
 
@@ -29,7 +30,7 @@ services:
     extends: base 
     restart: always
     volumes:
-      - ~/.cache/kyon-cetc-focal-ros1-base:/home/kyon_ros1/data
+      - ~/.cache/kyon-cetc-focal-ros1-base:/home/user/data
     environment:
       - CUSTOM_PS=(dev)
 
@@ -37,7 +38,7 @@ services:
     extends: dev 
     restart: always
     volumes:
-      - ~:/home/kyon_ros1/host
+      - ~:/home/user/host
     environment:
       - NVIDIA_DRIVER_CAPABILITIES=all
       - NVIDIA_VISIBLE_DEVICES=all
