@@ -4,15 +4,13 @@ services:
     extends:
       file: ../kyon-cetc-focal-ros1/compose.yml
       service: base
-    image: hhcmhub/kyon-cetc-focal-ros1-xeno-v${KERNEL_VER}:v1.0.0
+    image: hhcmhub/kyon-cetc-focal-ros1-xeno-v${KERNEL_VER}:master
     restart: always
     cap_add:
       - ALL
     volumes:
       - /dev:/dev
       - /usr/lib/modules:/usr/lib/modules
-      # Mount the kyon_config repository root into the container
-      - ../../:/home/kyon_ros1/xbot2_ws/src/kyon_config
     environment:
       - CUSTOM_PS=(dev)
 

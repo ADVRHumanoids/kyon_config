@@ -18,7 +18,7 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw  # x11
       - ~/.ssh:/home/user/.ssh  # ssh
-      - ../../:/home/user/xbot2_ws/src/kyon_config
+      - ../../:/home/user/xbot2_ws/src/kyon_config:ro
     environment:
       - TERM=xterm-256color
       - DISPLAY
@@ -43,7 +43,7 @@ services:
 
   xbot2_gui_server:
     extends: base
-    entrypoint: bash -ic "cd ~/xbot2_ws/src/kyon_config; git pull origin master; xbot2_gui_server gui/ros2/gui_server_config.yaml; bash"
+    entrypoint: bash -ic "cd ~/xbot2_ws/src/kyon_config; xbot2_gui_server gui/ros2/gui_server_config.yaml; bash"
     restart: always
     environment:
-      - CUSTOM_PS="(xbot2_gui_server) "
+      - CUSTOM_PS=(xbot2_gui_server)
