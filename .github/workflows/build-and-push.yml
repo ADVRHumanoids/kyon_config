@@ -20,14 +20,63 @@ jobs:
   detect-changes:
     runs-on: ubuntu-latest
     outputs:
-      ros1: ${{ steps.changes.outputs.ros1 == 'true' || steps.manual-check.outputs.ros1-manual == 'true' }}
-      ros2: ${{ steps.changes.outputs.ros2 == 'true' || steps.manual-check.outputs.ros2-manual == 'true' }}
+      ros1: ${{ steps.changes.outputs.ros1 == 'true' || steps.manual-check.outputs.ros1-manual == 'true' || steps.commit-message.outputs.rebuild-ros1 == 'true' }}
+      ros2: ${{ steps.changes.outputs.ros2 == 'true' || steps.manual-check.outputs.ros2-manual == 'true' || steps.commit-message.outputs.rebuild-ros2 == 'true' }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: recursive
+
+      - name: Check commit message for rebuild triggers
+        id: commit-message
+        run: |
+          echo "=== Commit Message Check ==="
+          
+          # Initialize outputs
+          REBUILD_ROS1=false
+          REBUILD_ROS2=false
+          
+          # Get the commit message
+          # For push events, use the head commit message
+          # For pull requests, use the PR title or last commit message
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            # Try to get the PR title first, then fall back to last commit
+            COMMIT_MSG="${{ github.event.pull_request.title }}"
+            if [[ -z "$COMMIT_MSG" ]]; then
+              COMMIT_MSG=$(git log --format=%B -n 1 HEAD)
+            fi
+          else
+            # For push events, get the commit message
+            COMMIT_MSG=$(git log --format=%B -n 1 ${{ github.sha }})
+          fi
+          
+          echo "Commit message: $COMMIT_MSG"
+          
+          # Convert to lowercase for case-insensitive matching
+          COMMIT_MSG_LOWER=$(echo "$COMMIT_MSG" | tr '[:upper:]' '[:lower:]')
+          
+          # Check for rebuild triggers in commit message
+          if echo "$COMMIT_MSG_LOWER" | grep -q "rebuild ros1 ros2\|rebuild ros2 ros1\|rebuild both\|rebuild all"; then
+            echo "✅ Found trigger to rebuild both ROS1 and ROS2"
+            REBUILD_ROS1=true
+            REBUILD_ROS2=true
+          elif echo "$COMMIT_MSG_LOWER" | grep -q "rebuild ros1"; then
+            echo "✅ Found trigger to rebuild ROS1"
+            REBUILD_ROS1=true
+          elif echo "$COMMIT_MSG_LOWER" | grep -q "rebuild ros2"; then
+            echo "✅ Found trigger to rebuild ROS2"
+            REBUILD_ROS2=true
+          else
+            echo "ℹ️ No rebuild triggers found in commit message"
+          fi
+          
+          # Output results
+          echo "rebuild-ros1=$REBUILD_ROS1" >> $GITHUB_OUTPUT
+          echo "rebuild-ros2=$REBUILD_ROS2" >> $GITHUB_OUTPUT
+          
+          echo "🎯 Commit message triggers - ROS1: $REBUILD_ROS1, ROS2: $REBUILD_ROS2"
 
       - name: Detect changed files
         uses: dorny/paths-filter@v3
@@ -41,7 +90,8 @@ jobs:
             ros1:
               - 'docker-base/robot-template/_build/robot-focal-ros1/**'
             ros2:
-              - 'docker-base/robot-template/_build/robot-noble-ros2/**'        
+              - 'docker-base/robot-template/_build/robot-noble-ros2/**'
+              
       - name: Manual submodule change detection
         id: manual-check
         run: |
@@ -51,7 +101,7 @@ jobs:
           ROS1_CHANGED=false
           ROS2_CHANGED=false
           
-          # Check if docker-base submodule was updated (we know it was from debug)
+          # Check if docker-base submodule was updated
           if git diff --name-only ${{ github.event.before }}..${{ github.sha }} | grep -q "^docker-base$"; then
             echo "✅ docker-base submodule was updated - checking internal changes"
             
@@ -60,18 +110,18 @@ jobs:
             
             # Get the previous submodule commit hash
             cd ..
-            SUBMODULE_BEFORE=$(git rev-parse ${{ github.event.before }}:docker-base)
+            SUBMODULE_BEFORE=$(git rev-parse ${{ github.event.before }}:docker-base 2>/dev/null || echo "")
             SUBMODULE_CURRENT=$(git rev-parse HEAD:docker-base)
             
             echo "Submodule before: $SUBMODULE_BEFORE"
             echo "Submodule current: $SUBMODULE_CURRENT"
             
-            if [[ "$SUBMODULE_BEFORE" != "$SUBMODULE_CURRENT" ]]; then
+            if [[ -n "$SUBMODULE_BEFORE" ]] && [[ "$SUBMODULE_BEFORE" != "$SUBMODULE_CURRENT" ]]; then
               cd docker-base
               
               # Check what files changed in the submodule between commits
               echo "Checking what changed in submodule..."
-              CHANGED_FILES=$(git diff --name-only $SUBMODULE_BEFORE..$SUBMODULE_CURRENT)
+              CHANGED_FILES=$(git diff --name-only $SUBMODULE_BEFORE..$SUBMODULE_CURRENT 2>/dev/null || echo "")
               echo "Changed files in submodule:"
               echo "$CHANGED_FILES"
               
@@ -90,7 +140,7 @@ jobs:
               cd ..
             fi
           else
-            echo "❌ No docker-base submodule update detected"
+            echo "ℹ️ No docker-base submodule update detected"
           fi
           
           # Output results for use in job conditions
@@ -98,36 +148,33 @@ jobs:
           echo "ros2-manual=$ROS2_CHANGED" >> $GITHUB_OUTPUT
           echo "🎯 Final manual detection - ROS1: $ROS1_CHANGED, ROS2: $ROS2_CHANGED"
 
-
-      - name: Debug submodule and change detection
+      - name: Debug change detection summary
         run: |
-          echo "=== Git Status ==="
-          git status
+          echo "=== Change Detection Summary ==="
           echo ""
-          echo "=== Submodule Status ==="
-          git submodule status
+          echo "📋 Detection Results:"
+          echo "  Path filter ROS1: ${{ steps.changes.outputs.ros1 }}"
+          echo "  Path filter ROS2: ${{ steps.changes.outputs.ros2 }}"
+          echo "  Manual check ROS1: ${{ steps.manual-check.outputs.ros1-manual }}"
+          echo "  Manual check ROS2: ${{ steps.manual-check.outputs.ros2-manual }}"
+          echo "  Commit message ROS1: ${{ steps.commit-message.outputs.rebuild-ros1 }}"
+          echo "  Commit message ROS2: ${{ steps.commit-message.outputs.rebuild-ros2 }}"
           echo ""
-          echo "=== Recent Commits ==="
-          echo "Last 3 commits:"
-          git log --oneline -3
+          echo "📦 Final Build Decision:"
+          echo "  Build ROS1: ${{ steps.changes.outputs.ros1 == 'true' || steps.manual-check.outputs.ros1-manual == 'true' || steps.commit-message.outputs.rebuild-ros1 == 'true' }}"
+          echo "  Build ROS2: ${{ steps.changes.outputs.ros2 == 'true' || steps.manual-check.outputs.ros2-manual == 'true' || steps.commit-message.outputs.rebuild-ros2 == 'true' }}"
           echo ""
-          echo "=== Changed Files Since Base ==="
-          echo "Base SHA: ${{ github.event.before }}"
-          echo "Current SHA: ${{ github.sha }}"
-          if [[ -n "${{ github.event.before }}" ]]; then
-            echo "Files changed:"
-            git diff --name-only ${{ github.event.before }}..${{ github.sha }} || echo "No diff available"
-            echo ""
-            echo "Submodule changes:"
-            git diff --name-only ${{ github.event.before }}..${{ github.sha }} | grep docker-base || echo "No docker-base changes detected"
+          
+          # Show the commit message that was analyzed
+          echo "💬 Analyzed commit message:"
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "  PR Title: ${{ github.event.pull_request.title }}"
           fi
-          echo ""
-          echo "=== Check if submodule files exist ==="
-          ls -la docker-base/robot-template/_build/robot-focal-ros1/ || echo "Path doesn't exist"
+          git log --format="  %B" -n 1 ${{ github.sha }}
       
   build-ros1:
     needs: detect-changes
-    # Build on tags or when ROS1 changes detected
+    # Build on tags or when ROS1 changes detected (including commit message triggers)
     if: |
       startsWith(github.ref, 'refs/tags/v') || 
       needs.detect-changes.outputs.ros1 == 'true'
@@ -149,7 +196,8 @@ jobs:
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}     
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
       - name: Setup .netrc for Docker build
         run: |
           cat > ~/.netrc << EOF
@@ -159,6 +207,7 @@ jobs:
           EOF
           chmod 600 ~/.netrc
           echo "✅ .netrc file created for Docker build authentication"
+          
       - name: Build & push ROS1 images
         env:
           TAGNAME: ${{ env.TAG_NAME }}
@@ -171,9 +220,10 @@ jobs:
           else
             ./build-kyon.bash --ros1
           fi
+          
   build-ros2:
     needs: detect-changes
-    # Build on tags or when ROS2 changes detected
+    # Build on tags or when ROS2 changes detected (including commit message triggers)
     if: |
       startsWith(github.ref, 'refs/tags/v') || 
       needs.detect-changes.outputs.ros2 == 'true'
@@ -196,6 +246,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+          
       - name: Setup .netrc for Docker build
         run: |
           cat > ~/.netrc << EOF
@@ -205,6 +256,7 @@ jobs:
           EOF
           chmod 600 ~/.netrc
           echo "✅ .netrc file created for Docker build authentication"
+          
       - name: Build & push ROS2 images
         env:
           TAGNAME: ${{ env.TAG_NAME }}
@@ -217,6 +269,7 @@ jobs:
           else
             ./build-kyon.bash --ros2
           fi
+          
   summary:
       needs: [detect-changes, build-ros1, build-ros2]
       if: always()
@@ -245,15 +298,15 @@ jobs:
             # Display detected changes
             echo "### Changes Detected" >> $GITHUB_STEP_SUMMARY
             if [[ "${{ needs.detect-changes.outputs.ros1 }}" == "true" ]]; then
-              echo "- ✅ ROS1 files changed" >> $GITHUB_STEP_SUMMARY
+              echo "- ✅ ROS1 build triggered" >> $GITHUB_STEP_SUMMARY
             else
-              echo "- ⚪ No ROS1 changes" >> $GITHUB_STEP_SUMMARY
+              echo "- ⚪ No ROS1 trigger" >> $GITHUB_STEP_SUMMARY
             fi
             
             if [[ "${{ needs.detect-changes.outputs.ros2 }}" == "true" ]]; then
-              echo "- ✅ ROS2 files changed" >> $GITHUB_STEP_SUMMARY
+              echo "- ✅ ROS2 build triggered" >> $GITHUB_STEP_SUMMARY
             else
-              echo "- ⚪ No ROS2 changes" >> $GITHUB_STEP_SUMMARY
+              echo "- ⚪ No ROS2 trigger" >> $GITHUB_STEP_SUMMARY
             fi
             echo "" >> $GITHUB_STEP_SUMMARY
             
@@ -337,9 +390,10 @@ jobs:
             if [[ "$ANYTHING_BUILT" == "false" ]]; then
               echo "No action needed - no relevant changes detected." >> $GITHUB_STEP_SUMMARY
               echo "" >> $GITHUB_STEP_SUMMARY
-              echo "If you expected builds to occur, check that your changes are in the monitored paths:" >> $GITHUB_STEP_SUMMARY
-              echo "- ROS1: \`docker/kyon-config_ros1.env\`, \`docker/kyon-cetc-focal-ros1*/\`, \`gui/ros1/\`" >> $GITHUB_STEP_SUMMARY
-              echo "- ROS2: \`docker/kyon-config_ros2.env\`, \`docker/kyon-cetc-noble-ros2*/\`, \`gui/ros2/\`" >> $GITHUB_STEP_SUMMARY
+              echo "To trigger builds via commit message, use:" >> $GITHUB_STEP_SUMMARY
+              echo "- \`rebuild ros1\` - Build ROS1 images" >> $GITHUB_STEP_SUMMARY
+              echo "- \`rebuild ros2\` - Build ROS2 images" >> $GITHUB_STEP_SUMMARY  
+              echo "- \`rebuild ros1 ros2\` or \`rebuild both\` - Build both" >> $GITHUB_STEP_SUMMARY
             elif [[ "$PUSH_ATTEMPTED" == "true" ]]; then
               echo "✅ Images have been pushed to the registry and are ready for use." >> $GITHUB_STEP_SUMMARY
               echo "" >> $GITHUB_STEP_SUMMARY
