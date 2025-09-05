@@ -8,7 +8,7 @@ ModelInterface:
 # hal
 xbotcore_device_configs:
     sim: $(rospack find kyon_config)/hal/kyon_gz.yaml
-    dummy: $(rospack find kyon_config)/hal/kyon_dummy.yaml
+    dummy: $(ros2 pkg prefix --share kyon_config)/hal/kyon_dummy.yaml
     ec_idle: $PWD/hal/ec_all.yaml
     ec_pos: $PWD/hal/ec_all.yaml
 
@@ -95,7 +95,11 @@ xbotcore_plugins:
 xbotcore_param:
   /xbot/hal/joint_safety/filter_autostart: {value: true, type: bool}
   /xbot/hal/joint_safety/filter_cutoff_hz: {value: 2.0, type: double}
-
+  /xbot/hal/enable_safety: {value: true, type: bool}
+  /xbot/hal/joint_safety/filter_safe_cutoff_hz: {value: 5.0, type: double}
+  /xbot/hal/joint_safety/filter_medium_cutoff_hz: {value: 20.0, type: double}
+  /xbot/hal/joint_safety/filter_fast_cutoff_hz: {value: 40.0, type: double}
+  /xbot/hal/joint_safety/delta_check_dt: 0.05
 
 
 

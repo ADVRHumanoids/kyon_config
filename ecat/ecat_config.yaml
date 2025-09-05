@@ -66,31 +66,31 @@ SynapticonESC_11:
   position_limits_rad:
     min: -2.7
     max: 2.7
-  link_zero_incr: 0
+  link_zero_incr: 444942
 
 SynapticonESC_12:
   position_limits_rad:
     min: -2.7
     max: 2.7
-  link_zero_incr: 0
+  link_zero_incr: 641200
 
 SynapticonESC_13:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 0
+  link_zero_incr: -212046
 
 SynapticonESC_14:
   position_limits_rad:
     min: -2.7
     max: 2.7
-  link_zero_incr: 0
+  link_zero_incr: 2188
 
 SynapticonESC_15:
   position_limits_rad:
     min: -2.7
     max: 2.7
-  link_zero_incr: 0
+  link_zero_incr: 2699
 
 SynapticonESC_101:
   position_limits_rad:
@@ -102,31 +102,31 @@ SynapticonESC_21:
   position_limits_rad:
     min: -2.7
     max: 2.7
-  link_zero_incr: 0
+  link_zero_incr: 184018
 
 SynapticonESC_22:
   position_limits_rad:
     min: -2.7
     max: 2.7
-  link_zero_incr: 0
+  link_zero_incr: 1295155
 
 SynapticonESC_23:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 0
+  link_zero_incr: 1492791
 
 SynapticonESC_24:
   position_limits_rad:
     min: -2.7
     max: 2.7
-  link_zero_incr: 0
+  link_zero_incr: 826
 
 SynapticonESC_25:
   position_limits_rad:
     min: -2.7
     max: 2.7
-  link_zero_incr: 0
+  link_zero_incr: 3886
 
 SynapticonESC_102:
   position_limits_rad:
@@ -154,8 +154,8 @@ SynapticonESC_102:
 
 SynapticonESC_31:
   position_limits_rad:
-    min: -0.70
-    max: 0.70
+    min: -0.75
+    max: 0.75
   link_zero_incr: 774418
 
 SynapticonESC_32:
@@ -174,7 +174,7 @@ SynapticonESC_34:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 0
+  link_zero_incr: 968380
 
 
 
@@ -183,8 +183,8 @@ SynapticonESC_34:
 
 SynapticonESC_41:
   position_limits_rad:
-    min: -0.70
-    max: 0.70
+    min: -0.75
+    max: 0.75
   link_zero_incr: 375744
 
 SynapticonESC_42:
@@ -203,7 +203,7 @@ SynapticonESC_44:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 0
+  link_zero_incr: 51764
 
 
 
@@ -212,8 +212,8 @@ SynapticonESC_44:
 
 SynapticonESC_51:
   position_limits_rad:
-    min: -0.70
-    max: 0.70
+    min: -0.75
+    max: 0.75
   link_zero_incr: 902594
 
 SynapticonESC_52:
@@ -232,7 +232,7 @@ SynapticonESC_54:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 0
+  link_zero_incr: 705019
 
 
 
@@ -241,8 +241,8 @@ SynapticonESC_54:
 
 SynapticonESC_61:
   position_limits_rad:
-    min: -0.70
-    max: 0.70
+    min: -0.75
+    max: 0.75
   link_zero_incr: 511443
 
 SynapticonESC_62:
@@ -261,5 +261,5 @@ SynapticonESC_64:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 0
+  link_zero_incr: 576458
 
