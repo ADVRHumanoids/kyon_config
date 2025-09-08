@@ -575,3 +575,59 @@ cp build-kyon.bash build-myrobot.bash
 ```
 
 **Adapt runtime configurations**: Modify the Docker Compose files in the runtime directories to match your robot's specific requirements, such as hardware access needs, network configurations, or volume mounts.
+
+# CI/CD: Automatic Docker Image Builds & Pushes (ROS1 & ROS2)
+
+This repository includes a GitHub Actions workflow that **automatically rebuilds the Kyon Docker images** when relevant changes are detected in the **`docker-base` submodule** (both ROS1 and ROS2 build templates), or when explicitly requested via **commit message triggers**. Images are **pushed** to the registry on tags and on pushes to `main`/`master`.
+
+## What triggers a rebuild?
+
+The **`detect-changes`** job computes whether ROS1 and/or ROS2 images should be rebuilt using three signals:
+
+1. **Path-based detection** (using `dorny/paths-filter`):
+
+   * ROS1: changes under `docker-base/robot-template/_build/robot-focal-ros1/**`
+   * ROS2: changes under `docker-base/robot-template/_build/robot-noble-ros2/**`
+2. **Submodule-delta detection** (manual check):
+
+   * If the `docker-base` submodule pointer changes in a commit/PR, the workflow diffs the submodule commits and flags a rebuild if any of the above ROS1/ROS2 paths changed inside the submodule.
+3. **Commit message triggers** (case-insensitive):
+
+   * Rebuild **both**: `rebuild ros1 ros2`, `rebuild ros2 ros1`, `rebuild both`, or `rebuild all`
+   * Rebuild **ROS1 only**: `rebuild ros1`
+   * Rebuild **ROS2 only**: `rebuild ros2`
+
+> **Why this matters**: you get automatic image refreshes whenever the shared `xbot2_docker` templates evolve, even if no files inside this repo changed besides the submodule reference.
+
+## When are images pushed vs only built?
+
+* **Pushed**: on **tags** matching `vX.Y.Z` and on pushes to `main`/`master` (requires registry secrets).
+* **Built (no push)**: on pull requests (for verification) and on non-main branches.
+
+The target registry and tag are controlled by env vars:
+
+* `DOCKER_REGISTRY`: e.g., `hhcmhub`
+* `TAG_NAME`: uses `${{ github.ref_name }}` (branch name or tag like `v1.2.3`)
+
+## Required secrets
+
+To push images and pull private dependencies, configure these repository secrets:
+
+* `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`
+* `GH_USERNAME`, `GH_TOKEN` (used to populate a minimal `~/.netrc` for private GitHub fetches during Docker builds)
+
+## Commit message examples (manual triggers)
+
+```bash
+# Rebuild ROS2 only
+git commit -m "Update dependencies - rebuild ros2"
+
+# Rebuild *both* ROS1 and ROS2
+git commit -m "Major update - rebuild ros1 ros2"
+# or
+git commit -m "Update submodule - rebuild both"
+# or
+git commit -m "Update submodule - rebuild all"
+```
+
+> Triggers are case-insensitive and work in **PR titles** too (when opening a pull request).
