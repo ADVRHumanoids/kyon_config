@@ -618,4 +618,4 @@ git commit -m "Update submodule - rebuild both"
 git commit -m "Update submodule - rebuild all"
 ```
 
-> Triggers are case-insensitive and work in **PR titles** too (when opening a pull request).
+> Triggers are case-insensitive
