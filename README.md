@@ -597,18 +597,6 @@ The **`detect-changes`** job computes whether ROS1 and/or ROS2 images should be 
    * Rebuild **ROS1 only**: `rebuild ros1`
    * Rebuild **ROS2 only**: `rebuild ros2`
 
-> **Why this matters**: you get automatic image refreshes whenever the shared `xbot2_docker` templates evolve, even if no files inside this repo changed besides the submodule reference.
-
-## When are images pushed vs only built?
-
-* **Pushed**: on **tags** matching `vX.Y.Z` and on pushes to `main`/`master` (requires registry secrets).
-* **Built (no push)**: on pull requests (for verification) and on non-main branches.
-
-The target registry and tag are controlled by env vars:
-
-* `DOCKER_REGISTRY`: e.g., `hhcmhub`
-* `TAG_NAME`: uses `${{ github.ref_name }}` (branch name or tag like `v1.2.3`)
-
 ## Required secrets
 
 To push images and pull private dependencies, configure these repository secrets:
