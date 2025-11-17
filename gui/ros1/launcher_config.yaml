@@ -44,13 +44,13 @@ xbot2:
             hw_type: dummy
 
 front_down_cam:
-  cmd: /home/kyon/Docker/Docker_Ros2_Zed/ros1_build/run_zed_front_down.bash
+  cmd: bash /home/kyon/ros1-ros2-zed-jetson-docker/ros1_noetic/run_zed_front_down.bash
   machine: *vision
   show_ui: false
   #  ready_check: timeout 5 rostopic echo /zed_front_down/zed_node/rgb/image_rect_color -n 1
 
 front_up_cam:
-  cmd: /home/kyon/Docker/Docker_Ros2_Zed/ros1_build/run_zed_front_up.bash
+  cmd: bash /home/kyon/ros1-ros2-zed-jetson-docker/ros1_noetic/run_zed_front_up.bash
   machine: *vision
   show_ui: false
   #  ready_check: timeout 5 rostopic echo /zed_front_up/zed_node/rgb/image_rect_color -n 1
@@ -62,13 +62,13 @@ lidar:
   show_ui: false
 
 left_cam:
-  cmd: roslaunch kyon_robot left_camera.launch
+  cmd: ./launch_rs_cam_left_ros1.bash 
   machine: *control
   docker: *docker-dev
   show_ui: false
 
 right_cam:
-  cmd: roslaunch kyon_robot right_camera.launch
+  cmd: ./launch_rs_cam_right_ros1.bash
   machine: *control
   docker: *docker-dev
   show_ui: false
@@ -141,3 +141,17 @@ ik:
   machine: *control
   docker: *docker-dev
   ready_check: timeout 3 rostopic echo /cartesian/solution -n 1
+
+nav-slam:
+  cmd: source ~/nav_ws/devel/setup.bash; roslaunch kyon_ros_nav hdl_graph_slam.launch 
+  machine: *control
+  docker: *docker-dev
+  show_ui: true
+
+nav-plan:
+  cmd: source ~/nav_ws/devel/setup.bash; roslaunch kyon_ros_nav kyon_nav.launch        
+  machine: *control
+  docker: *docker-dev
+  show_ui: true
+
+

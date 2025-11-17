@@ -3,16 +3,17 @@ context:
   params:
     hw_type: ec_pos
   .defines:
-    - &embedded embedded@10.24.12.100
-    - &control kyon@10.24.12.102
-    - &vision kyon@10.24.12.101
+    - &embedded embedded@10.24.13.100
+    - &control kyon@10.24.13.102
+    - &vision kyon@10.24.13.101
 
-    - &docker-xeno  noble-ros2-xeno-dev-1
-    - &docker-base  noble-ros2-dev-1
+    - &docker-xeno  kyon-cetc-noble-ros2-xeno-dev-1
+    - &docker-base  kyon-cetc-noble-ros2-dev-1
+    - &docker-isaac  kyon-isaac-base
 
 
 imu: 
-  cmd: ros2 launch vectornav vectornav.launch
+  cmd: ros2 launch vectornav vectornav.launch.py
   machine: *embedded
   ready_check: timeout 5 ros2 topic echo /xbotcore/imu/imu_link --once
   docker: *docker-xeno
@@ -40,4 +41,44 @@ xbot2:
       - dummy:
           params:
             hw_type: dummy
+
+park:
+  cmd: ros2 run kyon_cartesio parking.py -a park
+  machine: *embedded
+  docker: *docker-xeno
+
+unpark:
+  cmd: ros2 run kyon_cartesio parking.py -a unpark
+  machine: *embedded
+  docker: *docker-xeno
+
+# record_bag:
+#   cmd: ~/data/record_bag.bash
+#   machine: *control
+#   docker: *docker-dev
+#   show_ui: false
+
+loco_isaac:
+  cmd: bash -i /workspace/kyon_isaac/scripts/rsl_rl/loco_isaac.bash
+  machine: *control
+  docker: *docker-isaac
+  show_ui: true
+
+loco_mjx:
+  cmd: cd /home/user/kyon_mjx/src/kyon_mjx && bash scripts/run_eval.bash
+  machine: *control
+  docker: gg-docker-dev-1
+  show_ui: true
+
+loco_mjx_ferk:
+  cmd: cd /home/user/kyon_mjx/src/kyon_mjx && bash scripts/run_ferk_eval.bash
+  machine: *control
+  docker: gg-docker-dev-1
+  show_ui: true
+
+homing_ferk:
+  cmd: cd /home/user/kyon_mjx/src/kyon_mjx && bash scripts/ferk_homing.bash
+  machine: *control
+  docker: gg-docker-dev-1
+  show_ui: true
 

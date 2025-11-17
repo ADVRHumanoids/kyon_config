@@ -1,6 +1,6 @@
 XBotInterface:
-    urdf: xacro $(ros2 pkg prefix --share kyon_urdf)/urdf/kyon.urdf.xacro upper_body:=false legs:=true varta:=false
-    srdf: xacro $(ros2 pkg prefix --share kyon_srdf)/srdf/kyon.srdf.xacro upper_body:=false legs:=true varta:=false
+    urdf: xacro $(ros2 pkg prefix --share kyon_urdf)/urdf/kyon.urdf.xacro upper_body:=false legs:=true varta:=true dagana:=false
+    srdf: xacro $(ros2 pkg prefix --share kyon_srdf)/srdf/kyon.srdf.xacro upper_body:=false legs:=true varta:=true dagana:=false
 
 ModelInterface:
   model_type: pin
@@ -9,15 +9,15 @@ ModelInterface:
 xbotcore_device_configs:
     sim: $(rospack find kyon_config)/hal/kyon_gz.yaml
     dummy: $(ros2 pkg prefix --share kyon_config)/hal/kyon_dummy.yaml
-    ec_idle: $PWD/hal/ec_all.yaml
-    ec_pos: $PWD/hal/ec_all.yaml
+    ec_idle: $PWD/hal/ec_all_ros2.yaml
+    ec_pos: $PWD/hal/ec_all_ros2.yaml
 
 
 # threads
 xbotcore_threads:
     rt_main:  {sched: fifo , prio: 60, period: 0.001}
-    nrt_main: {sched: other, prio: 0 , period: 0.005}
-    main: {sched: other, prio: 0 , period: 0.005, main: true}
+    nrt_main: {sched: other, prio: 0 , period: 0.001}
+    main: {sched: other, prio: 0 , period: 0.001, main: true}
 
 
 # plugins
@@ -27,14 +27,12 @@ xbotcore_plugins:
         thread: rt_main
         type: homing
 
-    zero:
+    homing_isaac:
         thread: rt_main
         type: homing
-        params:
-          qhome: 
-            type: Eigen::VectorXd
-            value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        
+        params: 
+            home: home_isaac 
+
     # circulo9_trajectory: 
     #    thread: rt_main
     #    type: circulo9_trajectory
@@ -44,7 +42,17 @@ xbotcore_plugins:
     #        buffer_size: {value: 500000, type: int}
     #        use_custom_controller: false
 
-    ros_io: {thread: main, type: ros2_io}
+    ros_io: 
+      thread: main
+      type: ros2_io
+      params:
+        ignore_imu: [imu_link]
+
+    zmq_io: 
+      type: zmq_io
+      thread: nrt_main
+      params:
+        autostart: true
 
     ros_control: {thread: nrt_main, type: ros2_control}
 
@@ -67,26 +75,6 @@ xbotcore_plugins:
         param_config: 
           value: $PWD/friction/fc_config.yaml
           type: yamlfile
-
-    trj:
-      thread: rt_main
-      type: trajectory_plugin
-      params: 
-        amplitude:
-          shoulder_yaw_1: 1.0
-          shoulder_pitch_1: 1.0
-          elbow_pitch_1: 1.0
-          wrist_pitch_1: 1.0
-          # wrist_yaw_1: 0.1
-          shoulder_yaw_2: 1.0
-          shoulder_pitch_2: 1.0
-          elbow_pitch_2: 1.0
-          wrist_pitch_2: 1.0
-          # wrist_yaw_2: 0.1
-        freq_min: 0.2
-        freq_max: 0.2
-        period: 30.0
-
       
     
 
@@ -99,7 +87,7 @@ xbotcore_param:
   /xbot/hal/joint_safety/filter_safe_cutoff_hz: {value: 5.0, type: double}
   /xbot/hal/joint_safety/filter_medium_cutoff_hz: {value: 20.0, type: double}
   /xbot/hal/joint_safety/filter_fast_cutoff_hz: {value: 40.0, type: double}
-  /xbot/hal/joint_safety/delta_check_dt: 0.05
+  /xbot/hal/joint_safety/delta_check_dt: 0.08
 
 
 

@@ -1,5 +1,5 @@
-# launcher:
-#   launcher_config: launcher_config.yaml
+launcher:
+  launcher_config: launcher_config.yaml
 
 ecat:
   uri: kyon-mio-5375:5555
@@ -7,3 +7,5 @@ ecat:
 cartesian:
   cmd_vel_topics:
     - /omnisteering/cmd_vel
+    - ZMQ
+  zmq_pub_remote: tcp://10.24.13.102:5051
