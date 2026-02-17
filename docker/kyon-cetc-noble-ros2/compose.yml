@@ -32,10 +32,25 @@ services:
       - ~/.cache/kyon-cetc-noble-ros2-dev:/home/user/data
     environment:
       - CUSTOM_PS=(dev)
-  sim:
-    extends: base 
+
+
+  dev-nvidia:
+    extends: dev
+    restart: always
     volumes:
-      - ~/.cache/kyon-cetc-noble-ros2-sim:/home/user/data
+      - ~:/home/user/host
+    environment:
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - NVIDIA_VISIBLE_DEVICES=all
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+              count: 1
+
 
   xbot2_gui_server:
     extends: base
