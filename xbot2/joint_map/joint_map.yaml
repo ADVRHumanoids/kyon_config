@@ -1,40 +1,40 @@
 joint_map:
 
-  11: shoulder_yaw_1
-  12: shoulder_pitch_1
-  13: elbow_pitch_1
-  14: wrist_pitch_1
-  15: wrist_yaw_1
+  51: shoulder_yaw_1
+  52: shoulder_pitch_1
+  53: elbow_pitch_1
+  54: wrist_pitch_1
+  55: wrist_yaw_1
 
-  21: shoulder_yaw_2
-  22: shoulder_pitch_2
-  23: elbow_pitch_2
-  24: wrist_pitch_2
-  25: wrist_yaw_2
+  61: shoulder_yaw_2
+  62: shoulder_pitch_2
+  63: elbow_pitch_2
+  64: wrist_pitch_2
+  65: wrist_yaw_2
 
-  31: hip_roll_1
-  32: hip_pitch_1
-  33: knee_pitch_1
-  34: ankle_yaw_1
-  35: wheel_joint_1
+  11: hip_roll_1
+  12: hip_pitch_1
+  13: knee_pitch_1
+  14: ankle_yaw_1
+  15: wheel_joint_1
 
-  41: hip_roll_2
-  42: hip_pitch_2
-  43: knee_pitch_2
-  44: ankle_yaw_2
-  45: wheel_joint_2
+  21: hip_roll_2
+  22: hip_pitch_2
+  23: knee_pitch_2
+  24: ankle_yaw_2
+  25: wheel_joint_2
 
-  51: hip_roll_3
-  52: hip_pitch_3
-  53: knee_pitch_3
-  54: ankle_yaw_3
-  55: wheel_joint_3
+  31: hip_roll_3
+  32: hip_pitch_3
+  33: knee_pitch_3
+  34: ankle_yaw_3
+  35: wheel_joint_3
 
-  61: hip_roll_4
-  62: hip_pitch_4
-  63: knee_pitch_4
-  64: ankle_yaw_4
-  65: wheel_joint_4
+  41: hip_roll_4
+  42: hip_pitch_4
+  43: knee_pitch_4
+  44: ankle_yaw_4
+  45: wheel_joint_4
 
   101: dagana_1_clamp_joint
   102: dagana_2_clamp_joint
