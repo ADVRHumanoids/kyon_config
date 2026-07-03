@@ -1,0 +1,31 @@
+<CycloneDDS>
+  <Domain Id="any">
+  
+    <General>
+      <Interfaces>
+        <!-- WireGuard interface -->
+        <NetworkInterface name="wg0" priority="100" multicast="false"/>
+
+        <!-- Robot/server LAN interface: replace eno2 with the actual interface name -->
+        <NetworkInterface name="eno2" priority="90" multicast="true"/>
+      </Interfaces>
+
+      <!-- Allow multicast only where the interface allows it.
+           wg0 has multicast=false above, LAN has multicast=true. -->
+      <AllowMulticast>true</AllowMulticast>
+    </General>
+
+    <Discovery>
+      <Peers>
+        <!-- WireGuard client -->
+        <Peer Address="10.0.0.10"/>
+
+        <!-- Robot LAN machines -->
+        <Peer Address="10.24.15.100"/>
+        <Peer Address="10.24.15.101"/>
+        <Peer Address="10.24.15.102"/>
+      </Peers>
+    </Discovery>
+
+  </Domain>
+</CycloneDDS>

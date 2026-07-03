@@ -1,0 +1,24 @@
+<CycloneDDS>
+  <Domain Id="any">
+    <General>
+      <Interfaces>
+        <!-- Replace eno1 with the real LAN interface name -->
+        <NetworkInterface name="eno1" priority="100" multicast="true"/>
+      </Interfaces>
+      <AllowMulticast>true</AllowMulticast>
+    </General>
+
+    <Discovery>
+      <Peers>
+        <Peer Address="10.24.15.100"/>
+        <Peer Address="10.24.15.101"/>
+        <Peer Address="10.24.15.102"/>
+
+        <!-- Optional: include WG client if it must be visible from robot LAN nodes.
+             This only works if routing/firewall allows 10.24.15.x <-> 10.0.0.10. -->
+        <Peer Address="10.0.0.10"/>
+      </Peers>
+    </Discovery>
+
+  </Domain>
+</CycloneDDS>

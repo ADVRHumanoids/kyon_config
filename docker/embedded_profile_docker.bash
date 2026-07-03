@@ -7,3 +7,6 @@ alias ecat_master_gdb="gdb --args repl -f $ECAT_MASTER_CONFIG"
 
 # generic
 source $SCRIPT_DIR/generic_profile_docker.bash
+
+# embedded cyclonedds config
+export CYCLONEDDS_URI=file://$SCRIPT_DIR/../network/cyclone/cyclonedds-embedded.xml
