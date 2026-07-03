@@ -1,6 +1,0 @@
-launcher:
-  launcher_config: launcher_config.yaml
-
-cartesian:
-  cmd_vel_topics:
-    - /omnisteering/cmd_vel

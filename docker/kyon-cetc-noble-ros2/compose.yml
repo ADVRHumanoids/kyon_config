@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - ROS_IP=${ROS_IP}
+        ROS_IP: ${ROS_IP}
     stdin_open: true
     tty: true 
     privileged: true
@@ -18,24 +18,42 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw  # x11
       - ~/.ssh:/home/user/.ssh  # ssh
-      # Mount the kyon_config repository root into the container
+        # Mount the kyon_config repository root into the container
       - ../../:/home/user/xbot2_ws/src/kyon_config:ro
+      - /dev:/dev
     environment:
       - TERM=xterm-256color
       - DISPLAY
       - HHCM_FOREST_CLONE_DEFAULT_PROTO=https
-      - ROBOT_CONFIG_PATH=/home/user/xbot2_ws/src/kyon_config/setup.sh
+      - ZENOH_CONFIG_OVERRIDE
+      - CONFIG_PATH_DOCKER
 
   dev:
     extends: base 
+    restart: always
     volumes:
-      - ~/.cache/kyon-cetc-noble-ros2-dev:/home/user/data
+      - ~/.cache/kyon-noble-ros2-dev:/home/user/data
     environment:
       - CUSTOM_PS=(dev)
-  sim:
-    extends: base 
+
+
+  dev-nvidia:
+    extends: dev
+    restart: always
     volumes:
-      - ~/.cache/kyon-cetc-noble-ros2-sim:/home/user/data
+      - ~:/home/user/host
+    environment:
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - NVIDIA_VISIBLE_DEVICES=all
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+              count: 1
+
 
   xbot2_gui_server:
     extends: base
@@ -43,3 +61,12 @@ services:
     restart: always
     environment:
       - CUSTOM_PS=(xbot2_gui_server)
+
+  zenoh_router:
+    extends: base
+    entrypoint: bash -c "echo $$ZENOH_CONFIG_OVERRIDE && source /opt/ros/jazzy/setup.bash && export RUST_LOG=zenoh=debug,zenoh_transport=debug,zenoh_link_tcp=debug && ros2 run rmw_zenoh_cpp rmw_zenohd"
+    restart: always
+    environment:
+      - ZENOH_CONFIG_OVERRIDE=$ZENOH_CONFIG_OVERRIDE_ROUTER
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - CUSTOM_PS=(zenoh_router)
