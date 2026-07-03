@@ -24,6 +24,8 @@ Run on **kyon-control**:
 ```bash
 wg genkey | sudo tee /etc/wireguard/server.key | wg pubkey | sudo tee /etc/wireguard/server.pub
 sudo chmod 600 /etc/wireguard/server.key
+sudo chmod 644 /etc/wireguard/server.pub  # public key should be world readable
+sudo chmod +x /etc/wireguard
 ```
 
 ---
