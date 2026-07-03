@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+# connect-wg.bash — register this machine as a dynamic WireGuard peer on kyon-control
+# Usage:
+#   ./connect-wg.bash          # connect
+#   ./connect-wg.bash down     # disconnect
+
+set -euo pipefail
+
+SERVER_SSH="kyon@kyon03-robot"
+SERVER_WG_IFACE="wg0"
+SERVER_WG_ADDR="10.0.0.1"
+SERVER_WG_PORT="51820"
+VPN_SUBNET="10.0.0"
+KEY_DIR="$HOME/.wireguard"
+CONF_FILE="/tmp/wg-kyon.conf"
+
+# ── Disconnect ────────────────────────────────────────────────────────────────
+if [[ "${1:-}" == "down" ]]; then
+    if [[ ! -f "$CONF_FILE" ]]; then
+        echo "No active session config found at $CONF_FILE" >&2
+        exit 1
+    fi
+    LOCAL_PUBKEY=$(wg pubkey < "$KEY_DIR/kyon.key")
+    echo "Removing peer from server..."
+    ssh -t "$SERVER_SSH" "sudo wg set $SERVER_WG_IFACE peer $LOCAL_PUBKEY remove" || true
+    sudo wg-quick down "$CONF_FILE"
+    rm -f "$CONF_FILE"
+    echo "Disconnected."
+    exit 0
+fi
+
+# ── Guards ────────────────────────────────────────────────────────────────────
+for cmd in wg wg-quick ssh; do
+    command -v "$cmd" &>/dev/null || { echo "Required command not found: $cmd" >&2; exit 1; }
+done
+
+# ── Keypair ───────────────────────────────────────────────────────────────────
+mkdir -p "$KEY_DIR"
+chmod 700 "$KEY_DIR"
+if [[ ! -f "$KEY_DIR/kyon.key" ]]; then
+    echo "Generating WireGuard keypair in $KEY_DIR ..."
+    wg genkey | tee "$KEY_DIR/kyon.key" | wg pubkey > "$KEY_DIR/kyon.pub"
+    chmod 600 "$KEY_DIR/kyon.key"
+    echo "  Public key: $(cat "$KEY_DIR/kyon.pub")"
+fi
+LOCAL_PRIVKEY=$(cat "$KEY_DIR/kyon.key")
+LOCAL_PUBKEY=$(cat "$KEY_DIR/kyon.pub")
+
+# ── Fetch server public key ───────────────────────────────────────────────────
+# -t allocates a pseudo-TTY so sudo password prompts appear on the terminal.
+echo "Connecting to $SERVER_SSH ..."
+SERVER_PUBKEY=$(ssh -t "$SERVER_SSH" "sudo cat /etc/wireguard/server.pub" | tr -d '\r')
+
+# ── Pick next free VPN address (start from .10 to leave room for static peers) ─
+USED_IPS=$(ssh -t "$SERVER_SSH" \
+    "sudo wg show $SERVER_WG_IFACE allowed-ips 2>/dev/null \
+     | awk '{print \$2}' | cut -d/ -f1" | tr -d '\r' || true)
+
+VPN_IP=""
+for i in $(seq 10 254); do
+    candidate="${VPN_SUBNET}.${i}"
+    if ! grep -qx "$candidate" <<< "$USED_IPS"; then
+        VPN_IP="$candidate"
+        break
+    fi
+done
+
+[[ -n "$VPN_IP" ]] || { echo "No free VPN addresses available in ${VPN_SUBNET}.10-254" >&2; exit 1; }
+echo "Assigned VPN address: $VPN_IP"
+
+# ── Register dynamic peer on the server ──────────────────────────────────────
+ssh -t "$SERVER_SSH" "sudo wg set $SERVER_WG_IFACE peer $LOCAL_PUBKEY allowed-ips ${VPN_IP}/32"
+echo "Peer registered (non-persistent, cleared on server reboot)."
+
+# ── Write local tunnel config ─────────────────────────────────────────────────
+cat > "$CONF_FILE" <<EOF
+[Interface]
+Address    = ${VPN_IP}/24
+PrivateKey = ${LOCAL_PRIVKEY}
+
+[Peer]
+PublicKey           = ${SERVER_PUBKEY}
+Endpoint            = kyon03-robot:${SERVER_WG_PORT}
+AllowedIPs          = 10.0.0.0/24, 10.24.15.0/24
+PersistentKeepalive = 25
+EOF
+chmod 600 "$CONF_FILE"
+
+# ── Bring up the tunnel ───────────────────────────────────────────────────────
+sudo wg-quick up "$CONF_FILE"
+
+echo ""
+echo "Connected as $VPN_IP"
+echo "  kyon-control   10.24.15.102  (${VPN_SUBNET}.1)"
+echo "  amax-kyon-iit  10.24.15.100"
+echo "  ed-power-board 10.24.15.200"
+echo ""
+echo "To disconnect:  $0 down"
