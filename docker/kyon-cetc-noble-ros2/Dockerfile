@@ -1,4 +1,4 @@
-FROM hhcmhub/xbot2-noble-robot
+FROM hhcmhub/xbot2-noble-robot:noble-ros2-linuxv5-20260702141901
 
 ARG ROS_IP
 
