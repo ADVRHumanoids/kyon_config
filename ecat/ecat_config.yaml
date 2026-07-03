@@ -61,7 +61,7 @@ SynapticonESC_X:
     #current: [2000, 2000]                                       #CC_current_ctrl: 0: Damping [mill, 1 --> 1000 mill], 1: Settling time [us]
     #torque: [0.08, 0.0015, 0.007]                                    # Torque control, Kp, Ki, Kd. LIMIT: [0.09, 0, 0.009]
 
-# arms
+# fl leg
 SynapticonESC_11:
   position_limits_rad:
     min: -2.7
@@ -92,29 +92,24 @@ SynapticonESC_15:
     max: 2.7
   link_zero_incr: 2699
 
-SynapticonESC_101:
-  position_limits_rad:
-    min: -0.1
-    max: 1.25
-  link_zero_incr: 568
-
+# fr leg
 SynapticonESC_21:
   position_limits_rad:
     min: -2.7
     max: 2.7
-  link_zero_incr: 184018
+  link_zero_incr: 106386
 
 SynapticonESC_22:
   position_limits_rad:
     min: -2.7
     max: 2.7
-  link_zero_incr: 1295155
+  link_zero_incr: 115338
 
 SynapticonESC_23:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 1492791
+  link_zero_incr: 547131
 
 SynapticonESC_24:
   position_limits_rad:
@@ -135,6 +130,33 @@ SynapticonESC_102:
   link_zero_incr: 2696
 
 
+# fl leg
+
+SynapticonESC_31:
+  position_limits_rad:
+    min: -0.75
+    max: 0.75
+  link_zero_incr: 1031366
+
+SynapticonESC_32:
+  position_limits_rad:
+    min: -3.0
+    max: 3.0
+  link_zero_incr: 641920
+
+SynapticonESC_33:
+  position_limits_rad:
+    min: -3.20
+    max: 3.20
+  link_zero_incr: 783968 #53126 aksim2 (before belt)
+
+SynapticonESC_34:
+  position_limits_rad:
+    min: -3.0
+    max: 3.0
+  link_zero_incr: 968380
+
+
 # dagana
 
 SynapticonESC_101:
@@ -150,31 +172,7 @@ SynapticonESC_102:
   link_zero_incr: 0
 
 
-# fl leg
 
-SynapticonESC_31:
-  position_limits_rad:
-    min: -0.75
-    max: 0.75
-  link_zero_incr: 774418
-
-SynapticonESC_32:
-  position_limits_rad:
-    min: -3.0
-    max: 3.0
-  link_zero_incr: 771956
-
-SynapticonESC_33:
-  position_limits_rad:
-    min: -3.20
-    max: 3.20
-  link_zero_incr: -16386 #53126 aksim2 (before belt)
-
-SynapticonESC_34:
-  position_limits_rad:
-    min: -3.0
-    max: 3.0
-  link_zero_incr: 968380
 
 
 
