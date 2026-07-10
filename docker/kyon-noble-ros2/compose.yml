@@ -62,16 +62,7 @@ services:
     environment:
       - CUSTOM_PS=(xbot2_gui_server)
 
-  zenoh_router:
-    extends: base
-    entrypoint: bash -c "echo $$ZENOH_CONFIG_OVERRIDE && source /opt/ros/jazzy/setup.bash && export RUST_LOG=zenoh=debug,zenoh_transport=debug,zenoh_link_tcp=debug && ros2 run rmw_zenoh_cpp rmw_zenohd"
-    restart: always
-    environment:
-      - ZENOH_CONFIG_OVERRIDE=$ZENOH_CONFIG_OVERRIDE_ROUTER
-      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
-      - CUSTOM_PS=(zenoh_router)
-
-  zenoh_bridge_server:
+  zenoh_bridge_client:
     image: eclipse/zenoh-bridge-ros2dds:latest
     restart: unless-stopped
     network_mode: host
@@ -80,12 +71,10 @@ services:
     environment:
       - ROS_DISTRO=jazzy
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
-      - CYCLONEDDS_URI=file:///etc/kyon_config/network/cyclone/cyclonedds-control.xml
       - ROS_DOMAIN_ID
-
-  zenoh_bridge_client:
-    extends: zenoh_bridge_server
-    environment:
-      - CYCLONEDDS_URI=""
     command: "-e tcp/10.24.15.102:7447"
     
+  zenoh_bridge_server:
+    extends: zenoh_bridge_client
+    environment:
+      - CYCLONEDDS_URI=file:///etc/kyon_config/network/cyclone/cyclonedds-control.xml
