@@ -26,7 +26,7 @@ function kyon_connect_wg() {
 function kyon_connect_zenoh() {
     SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
     cd $SCRIPT_DIR/../docker/kyon-noble-ros2 
-    docker compose up -d zenoh_bridge
+    docker compose up -d zenoh_bridge_client
 }
 
 # do it all

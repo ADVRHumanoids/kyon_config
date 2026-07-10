@@ -71,7 +71,7 @@ services:
       - RMW_IMPLEMENTATION=rmw_zenoh_cpp
       - CUSTOM_PS=(zenoh_router)
 
-  zenoh_bridge:
+  zenoh_bridge_server:
     image: eclipse/zenoh-bridge-ros2dds:latest
     restart: unless-stopped
     network_mode: host
@@ -79,8 +79,13 @@ services:
       - ../../:/etc/kyon_config:ro
     environment:
       - ROS_DISTRO=jazzy
-      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
       - CYCLONEDDS_URI=file:///etc/kyon_config/network/cyclone/cyclonedds-control.xml
       - ROS_DOMAIN_ID
-    command: $ZENOH_BRIDGE_ARGS
+
+  zenoh_bridge_client:
+    extends: zenoh_bridge_server
+    environment:
+      - CYCLONEDDS_URI=""
+    command: "-e tcp/10.24.15.102:7447"
     
