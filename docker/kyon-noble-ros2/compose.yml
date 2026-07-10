@@ -78,3 +78,4 @@ services:
     extends: zenoh_bridge_client
     environment:
       - CYCLONEDDS_URI=file:///etc/kyon_config/network/cyclone/cyclonedds-control.xml
+    command: ""

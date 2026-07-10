@@ -7,9 +7,6 @@ alias ssh_control='ssh kyon@kyon-control'
 # enable ros2 alias to login into docker container
 source $SCRIPT_DIR/../docker/kyon-noble-ros2/setup.sh
 
-# configure zenoh bridge to connect to the robot ip
-export ZENOH_BRIDGE_ARGS="-e tcp/10.24.15.102:7447"
-
 # specific ros domain id for clients to avoid any overlap with the local ros2 network
 export ROS_DOMAIN_ID=42
 
