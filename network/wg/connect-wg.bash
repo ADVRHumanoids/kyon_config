@@ -15,13 +15,14 @@ KEY_DIR="$HOME/.wireguard"
 CONF_FILE="/tmp/wg-kyon.conf"
 
 # ── Guards ────────────────────────────────────────────────────────────────────
-for cmd in wg wg-quick ssh; do
+for cmd in wg wg-quick ssh sshpass; do
     command -v "$cmd" &>/dev/null || { echo "Required command not found: $cmd" >&2; exit 1; }
 done
 
-# ── Remote sudo password (used via sudo -S to avoid TTY issues in subshells) ──
-read -rsp "sudo password for $SERVER_SSH: " SUDO_PASS
+# ── Remote password (used for SSH login and sudo -S) ─────────────────────────
+read -rsp "Password for $SERVER_SSH: " REMOTE_PASS
 echo
+SUDO_PASS="$REMOTE_PASS"
 
 # ── Disconnect ────────────────────────────────────────────────────────────────
 if [[ "${1:-}" == "down" ]]; then
@@ -31,10 +32,10 @@ if [[ "${1:-}" == "down" ]]; then
     fi
     LOCAL_PUBKEY=$(wg pubkey < "$KEY_DIR/kyon.key")
     echo "Removing peer from server..."
-    echo "$SUDO_PASS" | ssh "$SERVER_SSH" "sudo -S -p '' wg set $SERVER_WG_IFACE peer $LOCAL_PUBKEY remove" || true
+    echo "$SUDO_PASS" | sshpass -p "$REMOTE_PASS" ssh "$SERVER_SSH" "sudo -S -p '' wg set $SERVER_WG_IFACE peer $LOCAL_PUBKEY remove" || true
     sudo wg-quick down "$CONF_FILE"
     rm -f "$CONF_FILE"
-    unset SUDO_PASS
+    unset SUDO_PASS REMOTE_PASS
     echo "Disconnected."
     exit 0
 fi
@@ -54,10 +55,10 @@ LOCAL_PUBKEY=$(cat "$KEY_DIR/kyon.pub")
 # ── Fetch server public key ───────────────────────────────────────────────────
 # server.pub is world-readable (chmod 644) — no sudo needed.
 echo "Connecting to $SERVER_SSH ..."
-SERVER_PUBKEY=$(ssh "$SERVER_SSH" "cat /etc/wireguard/server.pub" | tr -d '\r')
+SERVER_PUBKEY=$(sshpass -p "$REMOTE_PASS" ssh "$SERVER_SSH" "cat /etc/wireguard/server.pub" | tr -d '\r')
 
 # ── Pick next free VPN address (start from .10 to leave room for static peers) ─
-USED_IPS=$(echo "$SUDO_PASS" | ssh "$SERVER_SSH" \
+USED_IPS=$(echo "$SUDO_PASS" | sshpass -p "$REMOTE_PASS" ssh "$SERVER_SSH" \
     "sudo -S -p '' wg show $SERVER_WG_IFACE allowed-ips 2>/dev/null \
      | awk '{print \$2}' | cut -d/ -f1" | tr -d '\r' || true)
 
@@ -74,8 +75,8 @@ done
 echo "Assigned VPN address: $VPN_IP"
 
 # ── Register dynamic peer on the server ──────────────────────────────────────
-echo "$SUDO_PASS" | ssh "$SERVER_SSH" "sudo -S -p '' wg set $SERVER_WG_IFACE peer $LOCAL_PUBKEY allowed-ips ${VPN_IP}/32"
-unset SUDO_PASS
+echo "$SUDO_PASS" | sshpass -p "$REMOTE_PASS" ssh "$SERVER_SSH" "sudo -S -p '' wg set $SERVER_WG_IFACE peer $LOCAL_PUBKEY allowed-ips ${VPN_IP}/32"
+unset SUDO_PASS REMOTE_PASS
 echo "Peer registered (non-persistent, cleared on server reboot)."
 
 # ── Write local tunnel config ─────────────────────────────────────────────────
