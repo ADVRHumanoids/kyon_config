@@ -1,4 +1,4 @@
-ros2(){
+kyon(){
     if [ -z "$1" ]
     then
         echo "No argument supplied" >&2
