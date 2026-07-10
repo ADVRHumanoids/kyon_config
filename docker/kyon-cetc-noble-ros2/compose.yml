@@ -70,3 +70,14 @@ services:
       - ZENOH_CONFIG_OVERRIDE=$ZENOH_CONFIG_OVERRIDE_ROUTER
       - RMW_IMPLEMENTATION=rmw_zenoh_cpp
       - CUSTOM_PS=(zenoh_router)
+
+  zenoh_bridge:
+    image: eclipse/zenoh-bridge-ros2dds:latest
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ../../:/etc/kyon_config:ro
+    environment:
+      - ROS_DISTRO=jazzy
+      - CYCLONEDDS_URI=file:///etc/kyon_config/network/cyclone/cyclonedds-control.xml
+    
