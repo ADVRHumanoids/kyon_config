@@ -7,8 +7,8 @@ context:
     - &control kyon@10.24.13.102
     - &vision kyon@10.24.13.101
 
-    - &docker-xeno  kyon-cetc-noble-ros2-xeno-dev-1
-    - &docker-base  kyon-cetc-noble-ros2-dev-1
+    - &docker-xeno  kyon-noble-ros2-xeno-dev-1
+    - &docker-base  kyon-noble-ros2-dev-1
     - &docker-isaac  kyon-isaac-base
 
 

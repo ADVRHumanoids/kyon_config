@@ -18,3 +18,4 @@
    - `*:22` --> `kyon-control:22` (ssh, control pc)
    - `*:23` --> `amax-kyon-iit:22` (ssh, embedded pc)
    - `*:9001` --> `ed-power-board:80` (power board gui)
+   - `*:51820` --> `kyon-control:51820` (wireguard)

@@ -79,5 +79,8 @@ services:
       - ../../:/etc/kyon_config:ro
     environment:
       - ROS_DISTRO=jazzy
+      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
       - CYCLONEDDS_URI=file:///etc/kyon_config/network/cyclone/cyclonedds-control.xml
+      - ROS_DOMAIN_ID
+    command: $ZENOH_BRIDGE_ARGS
     
