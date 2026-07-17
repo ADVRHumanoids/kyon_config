@@ -48,20 +48,20 @@ xbotcore_plugins:
           # elbow_pitch_2: 1.5
           # wrist_pitch_2: 1.5
           # wrist_yaw_2: 1.5
-          hip_roll_1: 0.4
+          hip_roll_1: 0.2
           hip_pitch_1: 0.8
           knee_pitch_1: 0.8
-          hip_roll_2: 0.4
+          hip_roll_2: 0.2
           hip_pitch_2: 0.8
           knee_pitch_2: 0.8
-          hip_roll_3: 0.4
+          hip_roll_3: 0.2
           hip_pitch_3: 0.8
           knee_pitch_3: 0.8
-          hip_roll_4: 0.4
+          hip_roll_4: 0.2
           hip_pitch_4: 0.8
           knee_pitch_4: 0.8
-        freq_min: 0.4
-        freq_max: 1.4
+        freq_min: 0.1
+        freq_max: 0.4
 
     # circulo9_trajectory: 
     #    thread: rt_main
