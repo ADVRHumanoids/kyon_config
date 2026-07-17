@@ -3,9 +3,9 @@
     <General>
       <Interfaces>
         <!-- Replace eno1 with the real LAN interface name -->
-        <NetworkInterface name="eno1" priority="100" multicast="true"/>
+        <NetworkInterface name="eno1" priority="100" multicast="false"/>
       </Interfaces>
-      <AllowMulticast>true</AllowMulticast>
+      <AllowMulticast>false</AllowMulticast>
     </General>
 
     <Discovery>

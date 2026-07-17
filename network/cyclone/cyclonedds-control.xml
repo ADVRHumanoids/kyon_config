@@ -7,12 +7,12 @@
         <!-- <NetworkInterface name="wg0" address="10.0.0.1" priority="100" multicast="false"/> -->
 
         <!-- Robot/server LAN interface: replace eno2 with the actual interface name -->
-        <NetworkInterface name="eno2" address="10.24.15.102" priority="100" multicast="true"/>
+        <NetworkInterface name="eno2" address="10.24.15.102" priority="100" multicast="false"/>
       </Interfaces>
 
       <!-- Allow multicast only where the interface allows it.
            wg0 has multicast=false above, LAN has multicast=true. -->
-      <AllowMulticast>true</AllowMulticast>
+      <AllowMulticast>false</AllowMulticast>
     </General>
 
     <Discovery>
