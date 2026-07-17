@@ -1,0 +1,28 @@
+aggregator:
+  zmq_endpoint: "tcp://*:9268"
+  stale_timeout_sec: 5.0
+  stale_check_interval_sec: 1.0
+
+sinks:
+  influxdb:
+    enabled: true
+    url: "http://localhost:8086"
+    token: "xbot2-diagnostics-dev-token"
+    org: "xbot2"
+    bucket: "diagnostics"
+
+  ros_diagnostics:
+    enabled: true
+    input_topic: "/diagnostics"
+    aggregated_topic: "/diagnostics_agg"
+    publish_aggregated: true
+    aggregation_root: "Robot"
+
+  json_file:
+    enabled: false
+    path: "/tmp/diagnostics.jsonl"
+    max_file_size_mb: 100
+
+  stdout:
+    enabled: false
+    interval_sec: 2.0

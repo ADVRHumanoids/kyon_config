@@ -1,0 +1,70 @@
+host_monitor:
+  # Empty uses XBOT_DIAG_ENDPOINT, then tcp://localhost:9268.
+  zmq_endpoint: ""
+  sample_interval_sec: 1.0
+  hostname: ""
+  hw_id: ""
+  node_prefix: "host"
+  include_per_cpu: false
+  # Publish only CPU temperature min/avg/max; omit individual and non-CPU sensors.
+  aggregate_cpu_temperatures_only: true
+
+  excluded_interfaces:
+    - "docker*"
+    - "veth*"
+    - "br-*"
+    - "virbr*"
+  required_interfaces: []
+
+  excluded_filesystem_types:
+    - "autofs"
+    - "binfmt_misc"
+    - "cgroup"
+    - "cgroup2"
+    - "configfs"
+    - "debugfs"
+    - "devpts"
+    - "devtmpfs"
+    - "fusectl"
+    - "hugetlbfs"
+    - "mqueue"
+    - "overlay"
+    - "proc"
+    - "pstore"
+    - "securityfs"
+    - "squashfs"
+    - "sysfs"
+    - "tmpfs"
+    - "tracefs"
+
+  gpu_command: "nvidia-smi"
+  gpu_timeout_sec: 1.0
+  xenomai_stat_path: "/proc/xenomai/sched/stat"
+
+  collectors:
+    system: true
+    cpu: true
+    memory: true
+    temperature: true
+    filesystem: true
+    disk_io: true
+    network: true
+    battery: true
+    gpu: true
+    xenomai: true
+
+  thresholds:
+    consecutive_samples: 3
+    recovery_margin: 5.0
+    cpu_warn_percent: 90.0
+    cpu_error_percent: 98.0
+    ram_warn_percent: 85.0
+    ram_error_percent: 95.0
+    swap_warn_percent: 80.0
+    swap_error_percent: 95.0
+    filesystem_warn_percent: 85.0
+    filesystem_error_percent: 95.0
+    temperature_warn_c: 80.0
+    temperature_error_c: 90.0
+    battery_warn_percent: 20.0
+    battery_error_percent: 10.0
