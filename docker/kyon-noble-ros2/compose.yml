@@ -57,7 +57,7 @@ services:
 
   xbot2_gui_server:
     extends: base
-    entrypoint: bash -ic "cd ~/xbot2_ws/src/kyon_config; git pull origin master; xbot2_gui_server gui/ros2/gui_server_config.yaml; bash"
+    entrypoint: bash -ic "cd ~/xbot2_ws/src/kyon_config; xbot2_gui_server gui/gui_server_config.yaml; bash"
     restart: always
     environment:
       - CUSTOM_PS=(xbot2_gui_server)
@@ -79,3 +79,31 @@ services:
     environment:
       - CYCLONEDDS_URI=file:///etc/kyon_config/network/cyclone/cyclonedds-control.xml
     command: ""
+
+  influxdb:
+    image: influxdb:2.7
+    restart: unless-stopped
+    ports:
+      - "${INFLUXDB_PORT:-8086}:8086"
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUXDB_USERNAME:-admin}
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUXDB_PASSWORD:-xbot2-diagnostics-dev-password}
+      DOCKER_INFLUXDB_INIT_ORG: ${INFLUXDB_ORG:-xbot2}
+      DOCKER_INFLUXDB_INIT_BUCKET: ${INFLUXDB_BUCKET:-diagnostics}
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUXDB_TOKEN:-xbot2-diagnostics-dev-token}
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+      - influxdb-config:/etc/influxdb2
+
+  diagnostics_aggregator:
+    extends: base
+    restart: always
+    entrypoint: bash -ic 'cd ~/xbot2_ws/src/xbot2_diagnostics; python3 -m pyxbot2_diagnostics.aggregator.aggregator_node --config config/aggregator.yaml'
+
+
+
+volumes:
+  influxdb-data:
+  influxdb-config:
+  grafana-data:

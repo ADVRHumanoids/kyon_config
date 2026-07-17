@@ -1,4 +1,4 @@
-FROM hhcmhub/xbot2-noble-robot:noble-ros2-linuxv5-20260702141901
+FROM hhcmhub/xbot2-noble-robot:v1.0.18
 
 ARG ROS_IP
 
@@ -14,7 +14,8 @@ RUN git clone https://github.com/advrhumanoids/ros2_config.git && \
 # kyon specific packages
 RUN cd xbot2_ws && \ 
     sudo chown user src && \ 
-    forest grow iit-kyon-ros-pkg  
+    cd recipes/multidof_recipes && git pull origin ros2 && \
+    forest grow iit-kyon-ros-pkg xbot2_diagnostics
 
 # source mounted kyon_config
 RUN echo 'source ~/xbot2_ws/src/kyon_config/$CONFIG_PATH_DOCKER' >> ~/.bashrc
