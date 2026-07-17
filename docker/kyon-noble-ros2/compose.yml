@@ -99,7 +99,9 @@ services:
   diagnostics_aggregator:
     extends: base
     restart: always
-    entrypoint: bash -ic 'cd ~/xbot2_ws/src/xbot2_diagnostics; python3 -m pyxbot2_diagnostics.aggregator.aggregator_node --config config/aggregator.yaml'
+    entrypoint: bash -ic 'python3 -m pyxbot2_diagnostics.aggregator.aggregator_node --config /etc/kyon_config/diagnostics/aggregator.yaml'
+    volumes:
+      - ../..:/etc/kyon_config:ro
 
 
 
