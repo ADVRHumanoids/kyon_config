@@ -23,7 +23,6 @@ services:
       - TERM=xterm-256color
       - DISPLAY
       - HHCM_FOREST_CLONE_DEFAULT_PROTO=https
-      - ZENOH_CONFIG_OVERRIDE
       - CONFIG_PATH_DOCKER
 
   dev:
@@ -38,6 +37,11 @@ services:
     environment:
       - CUSTOM_PS=(dev)
 
+  exp:
+    extends: dev
+    volumes:
+      - ~/.cache/kyon-noble-ros2-exp:/home/user/data
+
   xbot2_gui_server:
     extends: base
     entrypoint: bash -ic "cd ~/xbot2_ws/src/kyon_config; xbot2_gui_server gui/gui_server_config.yaml -p 8082; bash"
@@ -45,11 +49,6 @@ services:
     environment:
       - CUSTOM_PS=(xbot2_gui_server)
 
-  zenoh_router:
-    extends: base
-    entrypoint: bash -c "echo $$ZENOH_CONFIG_OVERRIDE && source /opt/ros/jazzy/setup.bash && export RUST_LOG=zenoh=debug,zenoh_transport=debug,zenoh_link_tcp=debug && ros2 run rmw_zenoh_cpp rmw_zenohd"
-    restart: always
-    environment:
-      - ZENOH_CONFIG_OVERRIDE=$ZENOH_CONFIG_OVERRIDE_ROUTER
-      - RMW_IMPLEMENTATION=rmw_zenoh_cpp
-      - CUSTOM_PS=(zenoh_router)
+
+
+
