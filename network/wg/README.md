@@ -138,7 +138,50 @@ PersistentKeepalive = 25
 
 ---
 
-## 7 · Verify connectivity
+## 7 · Dynamic peers via `connect-wg.bash`
+
+`connect-wg.bash` automates the dynamic peer workflow (section 6) for any client machine.  
+It SSHs into `kyon-control`, picks the next free VPN address (`10.0.0.10–254`), registers the peer, writes a temporary tunnel config to `/tmp/wg-kyon.conf`, and brings up the tunnel — all in one step.
+
+### Prerequisites
+
+Install the required tools on the **client**:
+
+```bash
+sudo apt install -y wireguard sshpass
+```
+
+SSH access to `kyon@kyon03-robot` must be reachable from the client (either on the LAN or via a jump host).
+
+### Connect
+
+```bash
+./connect-wg.bash
+```
+
+You will be prompted for the password of `kyon@kyon03-robot`.  
+On first run the script generates a keypair under `~/.wireguard/` (`kyon.key` / `kyon.pub`).  
+After connecting it prints the assigned VPN IP and reachable hosts:
+
+```
+Connected as 10.0.0.10
+  kyon-control   10.24.15.102  (10.0.0.1)
+  amax-kyon-iit  10.24.15.100
+  ed-power-board 10.24.15.200
+```
+
+### Disconnect
+
+```bash
+./connect-wg.bash down
+```
+
+This removes the peer from the server and tears down the local tunnel.  
+The peer is also cleared automatically on server reboot or tunnel restart.
+
+---
+
+## 8 · Verify connectivity
 
 ```bash
 # from any client

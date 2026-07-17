@@ -8,17 +8,40 @@ Configuration files for the Kyon robot: shell profiles, Docker containers, WireG
 
 The robot network is a dedicated LAN (`10.24.15.0/24`) managed by the onboard router. Two PCs live on this LAN:
 
-| Host | Role | IP | SSH port (via router WAN) |
-|---|---|---|---|
-| `kyon-control` | Control PC | `10.24.15.102` | `22` |
-| `amax-kyon-iit` | Embedded PC | `10.24.15.100` | `23` |
-| `kyon03-robot` | Router / gateway | `10.24.15.1` | — |
+| Host | Role | IP | 
+|---|---|---|
+| `amax-kyon-iit` | Embedded PC | `10.24.15.100` | 
+| `kyon-orin` | Vision PC | `10.24.15.101` | 
+| `kyon-control` | Control PC | `10.24.15.102` | 
+| `kyon03-robot` | Router / gateway | `10.24.15.1` | 
 
-The router forwards WireGuard (UDP `51820`) to `kyon-control`, allowing remote VPN access into the robot LAN.
+*Note:* the router's DHCP server is **enabled**. The IPs in the table above have been obtained by
+pinning each machine's MAC address to  a specific static IP from the router settings.
+
+*Note:* you must not connect any of the router's LAN ports to the corporate network.
+
+Because the robot LAN port is internally wired to the router's WAN port, accessing the robot local network from outside (WAN)
+is not directly possible. To circumvent this limitation, a WireGuard-based VPN is run by the `kyon-control` PC.
+The router then forwards WireGuard (UDP `51820`) to `kyon-control`, allowing remote VPN access into the robot LAN.
+
+The router also allows SSH access to all robot PCs from the WAN thanks to the following forwarding rules
+```
+kyon03-robot:22 --> kyon-control:22(sshd)
+kyon03-robot:23 --> amax-kyon-iit:22(sshd)
+kyon03-robot:24 --> kyon-orin:22(sshd)
+```
+
+Therefore, it is possible to SSH into the `amax-kyon-iit` machine from the WAN with
+```bash
+$ ssh -p 23 embedded@kyon03-robot
+```
+
+Connecting to the robot VPN is explained below in this document.
 
 ---
 
 ## A · Setting up the robot PCs
+This section is meant for robot maintainers, to help them with the robot commissioning operations.
 
 ### 1. Clone this repo
 
