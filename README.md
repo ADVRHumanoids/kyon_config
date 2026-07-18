@@ -20,7 +20,7 @@ pinning each machine's MAC address to  a specific static IP from the router sett
 
 *Note:* you must not connect any of the router's LAN ports to the corporate network.
 
-Because the robot LAN port is internally wired to the router's WAN port, accessing the robot local network from outside (WAN)
+Because the robot's RJ45 port is internally wired to the router's WAN port, accessing the robot local network from outside (WAN)
 is not directly possible. To circumvent this limitation, a WireGuard-based VPN is run by the `kyon-control` PC.
 The router then forwards WireGuard (UDP `51820`) to `kyon-control`, allowing remote VPN access into the robot LAN.
 
