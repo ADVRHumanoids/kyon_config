@@ -104,7 +104,6 @@ services:
       - ../..:/etc/kyon_config:ro
 
 
-
 volumes:
   influxdb-data:
   influxdb-config:

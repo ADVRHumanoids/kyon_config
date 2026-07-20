@@ -3,9 +3,9 @@ context:
   params:
     hw_type: ec_pos
   .defines:
-    - &embedded embedded@10.24.13.100
-    - &control kyon@10.24.13.102
-    - &vision kyon@10.24.13.101
+    - &embedded embedded@10.24.15.100
+    - &control kyon@10.24.15.102
+    - &vision kyon@10.24.15.101
 
     - &docker-xeno  kyon-noble-ros2-xeno-dev-1
     - &docker-base  kyon-noble-ros2-dev-1
@@ -14,9 +14,9 @@ context:
 
 imu: 
   cmd: ros2 launch vectornav vectornav.launch.py
-  machine: *embedded
+  machine: *control
   ready_check: timeout 5 ros2 topic echo /xbotcore/imu/imu_link --once
-  docker: *docker-xeno
+  docker: *docker-base
 
 ecat:
   cmd: ecat_master
@@ -24,7 +24,7 @@ ecat:
   docker: *docker-xeno
 
 xbot2:
-  cmd: xbot2-core --hw {hw_type}
+  cmd: xbot2-core --hw {hw_type} --config /home/user/xbot2_ws/src/kyon_config/xbot2/kyon_basic_ros2.yaml
   machine: *embedded
   ready_check: timeout 5 ros2 topic echo /xbotcore/joint_states --once
   docker: *docker-xeno
@@ -59,26 +59,26 @@ unpark:
 #   show_ui: false
 
 loco_isaac:
-  cmd: bash -i /workspace/kyon_isaac/scripts/rsl_rl/loco_isaac.bash
+  cmd: ros2 launch policy_deploy_toolkit run_example.launch.xml example:=kyon_locomotion_flat use_sim_time:=false
   machine: *control
-  docker: *docker-isaac
+  docker: *docker-base
   show_ui: true
 
-loco_mjx:
-  cmd: cd /home/user/kyon_mjx/src/kyon_mjx && bash scripts/run_eval.bash
-  machine: *control
-  docker: gg-docker-dev-1
-  show_ui: true
+# loco_mjx:
+#   cmd: cd /home/user/kyon_mjx/src/kyon_mjx && bash scripts/run_eval.bash
+#   machine: *control
+#   docker: gg-docker-dev-1
+#   show_ui: true
 
-loco_mjx_ferk:
-  cmd: cd /home/user/kyon_mjx/src/kyon_mjx && bash scripts/run_ferk_eval.bash
-  machine: *control
-  docker: gg-docker-dev-1
-  show_ui: true
+# loco_mjx_ferk:
+#   cmd: cd /home/user/kyon_mjx/src/kyon_mjx && bash scripts/run_ferk_eval.bash
+#   machine: *control
+#   docker: gg-docker-dev-1
+#   show_ui: true
 
-homing_ferk:
-  cmd: cd /home/user/kyon_mjx/src/kyon_mjx && bash scripts/ferk_homing.bash
-  machine: *control
-  docker: gg-docker-dev-1
-  show_ui: true
+# homing_ferk:
+#   cmd: cd /home/user/kyon_mjx/src/kyon_mjx && bash scripts/ferk_homing.bash
+#   machine: *control
+#   docker: gg-docker-dev-1
+#   show_ui: true
 

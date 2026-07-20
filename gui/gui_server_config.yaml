@@ -2,7 +2,7 @@ launcher:
   launcher_config: launcher_config.yaml
 
 ecat:
-  uri: kyon-mio-5375:5555
+  uri: 10.24.15.100:5555
 
 cartesian:
   cmd_vel_topics:
