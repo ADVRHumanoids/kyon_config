@@ -1,8 +1,9 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 # ssh aliases
-alias ssh_embedded='ssh embedded@amax-kyon-iit'
-alias ssh_control='ssh kyon@kyon-control'
+alias ssh_embedded='ssh embedded@10.24.15.100'
+alias ssh_control='ssh kyon@10.24.15.102'
+alias ssh_vision='ssh kyon@10.24.15.101'
 
 # enable ros2 alias to login into docker container
 source $SCRIPT_DIR/../docker/kyon-noble-ros2/setup.sh
