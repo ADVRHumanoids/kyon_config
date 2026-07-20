@@ -14,6 +14,9 @@ export ROS_DOMAIN_ID=42
 # configure ros automatic discovery range to localhost only, to avoid any overlap with the robot's lan
 export ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
 
+# config path
+export CONFIG_PATH_DOCKER=docker/client_profile_docker.bash
+
 # connect to the robot's vpn via wireguard
 function kyon_connect_wg() {
     $_KYON_CLIENT_PROFILE_SCRIPT_DIR/../network/wg/connect-wg.bash "$@"

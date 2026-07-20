@@ -103,15 +103,6 @@ services:
     volumes:
       - ../..:/etc/kyon_config:ro
 
-  robot_control_pc_services:
-    depends_on:
-      - dev  # development container 
-      - xbot2_gui_server  # gui server
-      - zenoh_bridge_server  # zenoh bridge server for external ros2 machines (pilot, ...)
-      - diagnostics_aggregator  # aggregate diagnostics from [/diagnostics, ZMQ tcp:/*:9268] =>  [influxdb, /diagnostics_agg]
-      - influxdb  # influxdb
-
-
 
 
 volumes:
