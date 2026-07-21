@@ -63,14 +63,6 @@ xbotcore_plugins:
         freq_min: 0.1
         freq_max: 0.4
 
-    # circulo9_trajectory: 
-    #    thread: rt_main
-    #    type: circulo9_trajectory
-    #    params:
-    #        config: { value: $PWD/Trajectories.yaml, type: yamlfile}
-    #        log_name: {value: p004-d0002_15kg, type: string}
-    #        buffer_size: {value: 500000, type: int}
-    #        use_custom_controller: false
 
     ros_io: 
       thread: main
@@ -85,16 +77,6 @@ xbotcore_plugins:
         autostart: true
 
     ros_control: {thread: nrt_main, type: ros2_control}
-
-    # circulo9_ros:
-    #   thread: nrt_main
-    #   type: circulo9_control
-
-    # ec_ros:
-    #   thread: nrt_main
-    #   type: ec_ros 
-    #   params:
-    #     aux_type_names: [iq_out, iq_ref]
 
     friction_comp:
       type: friction_comp_plugin
@@ -112,12 +94,12 @@ xbotcore_plugins:
 # global parameters
 xbotcore_param:
   /xbot/hal/joint_safety/filter_autostart: {value: true, type: bool}
-  /xbot/hal/joint_safety/filter_cutoff_hz: {value: 2.0, type: double}
+  /xbot/hal/joint_safety/filter_cutoff_hz: {value: 40.0, type: double}
   /xbot/hal/enable_safety: {value: true, type: bool}
   /xbot/hal/joint_safety/filter_safe_cutoff_hz: {value: 5.0, type: double}
   /xbot/hal/joint_safety/filter_medium_cutoff_hz: {value: 20.0, type: double}
   /xbot/hal/joint_safety/filter_fast_cutoff_hz: {value: 40.0, type: double}
-  /xbot/hal/joint_safety/delta_check_dt: 0.08
+  /xbot/hal/joint_safety/delta_check_dt: 0.12
 
 
 
