@@ -72,6 +72,7 @@ services:
       - ROS_DISTRO=jazzy
       - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
       - ROS_DOMAIN_ID
+      - ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
     command: "-e tcp/10.24.15.102:7447"
     
   zenoh_bridge_server:
