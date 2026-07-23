@@ -104,8 +104,32 @@ services:
     volumes:
       - ../..:/etc/kyon_config:ro
 
+  victorialogs:
+    image: victoriametrics/victoria-logs
+    restart: unless-stopped
+    command:
+      - -storageDataPath=/victoria-logs-data
+    volumes:
+      - victorialogs-data:/victoria-logs-data
+    ports:
+      - "9428:9428"
+
+  vector:
+    image: timberio/vector:0.57.0-debian
+    restart: unless-stopped
+    network_mode: host
+    depends_on:
+      - victorialogs
+    command: [--config, /etc/vector/vector.yaml]
+    volumes:
+      - ../../diagnostics/vector.yaml:/etc/vector/vector.yaml:ro
+      - /tmp:/log:ro
+      - vector-data:/var/lib/vector
+
 
 volumes:
   influxdb-data:
   influxdb-config:
   grafana-data:
+  vector-data:
+  victorialogs-data:

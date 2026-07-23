@@ -1,0 +1,220 @@
+data_dir: /var/lib/vector
+
+sources:
+  process_stdout:
+    type: file
+    include:
+      - /log/*.stdout
+
+    # "end" reads only newly appended lines for files without checkpoints.
+    # Change to "beginning" to import existing file contents.
+    read_from: end
+
+transforms:
+  process_logs:
+    type: remap
+    inputs:
+      - process_stdout
+
+    source: |
+      # Read the raw line and remove ANSI color/control sequences.
+      clean = strip_ansi_escape_codes(string!(.message))
+      .message = clean
+
+      # Extract process name from /log/<process>.stdout.
+      file_parts, file_err = parse_regex(
+        string!(.file),
+        r'/(?P<process>[^/]+)\.stdout$'
+      )
+
+      if file_err == null {
+        .process = string!(file_parts.process)
+      } else {
+        .process = "unknown"
+      }
+
+      # Expected structured format:
+      #
+      # [10:14:39.851949] [info][ros_io] task 'ros_io' started
+      parsed, parse_err = parse_regex(
+        clean,
+        r'^\[(?P<clock>\d{2}:\d{2}:\d{2}(?:\.\d{1,9})?)\]\s+\[(?P<level>[^\]]+)\]\s*(?:\[(?P<component>[^\]]+)\])?\s*(?P<log_message>.*)$'
+      )
+
+      if parse_err == null {
+        clock = string!(parsed.clock)
+        level_token = downcase(
+          strip_whitespace(string!(parsed.level))
+        )
+
+        # Infer today's calendar date in Europe/Rome.
+        current_date = format_timestamp!(
+          now(),
+          format: "%Y-%m-%d",
+          timezone: "Europe/Rome"
+        )
+
+        timestamp_text = current_date + " " + clock
+
+        event_time, time_err = parse_timestamp(
+          timestamp_text,
+          format: "%Y-%m-%d %H:%M:%S%.f",
+          timezone: "Europe/Rome"
+        )
+
+        if time_err == null {
+          .timestamp = event_time
+        } else {
+          .timestamp = now()
+          .timestamp_parse_error = true
+        }
+
+        .message = string!(parsed.log_message)
+
+        if exists(parsed.component) && parsed.component != null {
+          .component = string!(parsed.component)
+        }
+
+        # Normalize the structured severity token.
+        if match(
+          level_token,
+          r'^(fatal|critical|crit|panic|emerg|emergency|alert)$'
+        ) {
+          .level = "critical"
+
+        } else if match(
+          level_token,
+          r'^(error|err|fail|failed|failure)$'
+        ) {
+          .level = "error"
+
+        } else if match(
+          level_token,
+          r'^(warning|warn)$'
+        ) {
+          .level = "warn"
+
+        } else if match(
+          level_token,
+          r'^(debug|dbg)$'
+        ) {
+          .level = "debug"
+
+        } else if level_token == "trace" {
+          .level = "trace"
+
+        } else if match(
+          level_token,
+          r'^(ok|success|successful|passed|pass)$'
+        ) {
+          .level = "info"
+          .status = "success"
+
+        } else if match(
+          level_token,
+          r'^(info|information|notice)$'
+        ) {
+          .level = "info"
+
+        } else {
+          .level = "unknown"
+          .original_level = level_token
+        }
+
+      } else {
+        # Preserve lines that don't match the structured format.
+        .timestamp = now()
+        .level = "unknown"
+        .log_parse_error = true
+      }
+
+      # Fallback severity detection for raw lines such as:
+      #
+      # INFO: started
+      # [ERROR] operation failed
+      # WARNING: retrying
+      # [ok  ] completed
+      #
+      # Also accepts an optional [HH:MM:SS.microseconds] prefix.
+      severity_text = downcase(clean)
+
+      if .level == "unknown" {
+        if match(
+          severity_text,
+          r'^(?:\[\d{2}:\d{2}:\d{2}(?:\.\d+)?\]\s*)?(?:\[(?:fatal|critical|crit|panic|emerg|emergency|alert)\s*\]|(?:fatal|critical|crit|panic|emerg|emergency|alert)\s*:)'
+        ) {
+          .level = "critical"
+
+        } else if match(
+          severity_text,
+          r'^(?:\[\d{2}:\d{2}:\d{2}(?:\.\d+)?\]\s*)?(?:\[(?:error|err|fail|failed|failure)\s*\]|(?:error|err|fail|failed|failure)\s*:)'
+        ) {
+          .level = "error"
+
+        } else if match(
+          severity_text,
+          r'^(?:\[\d{2}:\d{2}:\d{2}(?:\.\d+)?\]\s*)?(?:\[(?:warning|warn)\s*\]|(?:warning|warn)\s*:)'
+        ) {
+          .level = "warn"
+
+        } else if match(
+          severity_text,
+          r'^(?:\[\d{2}:\d{2}:\d{2}(?:\.\d+)?\]\s*)?(?:\[(?:debug|dbg)\s*\]|(?:debug|dbg)\s*:)'
+        ) {
+          .level = "debug"
+
+        } else if match(
+          severity_text,
+          r'^(?:\[\d{2}:\d{2}:\d{2}(?:\.\d+)?\]\s*)?(?:\[trace\s*\]|trace\s*:)'
+        ) {
+          .level = "trace"
+
+        } else if match(
+          severity_text,
+          r'^(?:\[\d{2}:\d{2}:\d{2}(?:\.\d+)?\]\s*)?(?:\[(?:ok|success|successful|passed|pass)\s*\]|(?:ok|success|successful|passed|pass)\s*:)'
+        ) {
+          .level = "info"
+          .status = "success"
+
+        } else if match(
+          severity_text,
+          r'^(?:\[\d{2}:\d{2}:\d{2}(?:\.\d+)?\]\s*)?(?:\[(?:info|information|notice)\s*\]|(?:info|information|notice)\s*:)'
+        ) {
+          .level = "info"
+        }
+      }
+
+      .host = get_hostname!()
+
+      # Remove local Vector metadata that is not needed in VictoriaLogs.
+      del(.file)
+      del(.source_type)
+
+sinks:
+  victorialogs:
+    type: elasticsearch
+    inputs:
+      - process_logs
+
+    endpoints:
+      - http://10.24.15.102:9428/insert/elasticsearch/
+
+    api_version: v8
+    compression: gzip
+
+    healthcheck:
+      enabled: false
+
+    query:
+      _msg_field: message
+      _time_field: timestamp
+      _stream_fields: host,process
+
+    batch:
+      max_events: 1000
+      timeout_secs: 5
+
+    buffer:
+      type: disk
+      max_size: 1073741824
+      when_full: block

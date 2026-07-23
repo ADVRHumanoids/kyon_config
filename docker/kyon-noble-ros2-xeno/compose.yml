@@ -49,6 +49,18 @@ services:
     environment:
       - CUSTOM_PS=(xbot2_gui_server)
 
+  vector:
+    image: timberio/vector:0.57.0-debian
+    restart: unless-stopped
+    network_mode: host
+    depends_on:
+      - victorialogs
+    command: [--config, /etc/vector/vector.yaml]
+    volumes:
+      - ../../diagnostics/vector.yaml:/etc/vector/vector.yaml:ro
+      - /tmp:/log:ro
+      - vector-data:/var/lib/vector
+
 
 
 
