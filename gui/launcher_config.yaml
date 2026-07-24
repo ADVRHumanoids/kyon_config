@@ -28,6 +28,7 @@ xbot2:
   machine: *embedded
   ready_check: timeout 5 ros2 topic echo /xbotcore/joint_states --once
   docker: *docker-xeno
+  depends: [imu]
   variants:
     verbose:
       cmd: "{cmd} -V"
@@ -59,7 +60,19 @@ unpark:
 #   show_ui: false
 
 loco_isaac:
-  cmd: ros2 launch policy_deploy_toolkit run_example.launch.xml example:=kyon_locomotion_flat use_sim_time:=false
+  cmd: ros2 launch policy_deploy_toolkit run_example.launch.xml use_sim_time:=false
+  machine: *control
+  docker: *docker-base
+  show_ui: true
+  variants:
+    distilled:
+      cmd: "{cmd} distilled:=true"
+    heightscan:
+      cmd: "{cmd} heightscan:=true"
+
+
+morning_routine:
+  cmd: /home/user/xbot2_ws/src/kyon_config/scripts/robot_start_routine.bash
   machine: *control
   docker: *docker-base
   show_ui: true

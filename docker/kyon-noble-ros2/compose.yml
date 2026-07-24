@@ -61,6 +61,8 @@ services:
     restart: always
     environment:
       - CUSTOM_PS=(xbot2_gui_server)
+    labels:
+      vector.collect: "true"
 
   zenoh_bridge_client:
     image: eclipse/zenoh-bridge-ros2dds:latest
@@ -76,10 +78,15 @@ services:
     command: "-e tcp/10.24.15.102:7447"
     
   zenoh_bridge_server:
-    extends: zenoh_bridge_client
     environment:
       - CYCLONEDDS_URI=file:///etc/kyon_config/network/cyclone/cyclonedds-control.xml
-    command: ""
+      - ROS_DISTRO=jazzy
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+    image: eclipse/zenoh-bridge-ros2dds:latest
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ../../:/etc/kyon_config:ro
 
   influxdb:
     image: influxdb:2.7
