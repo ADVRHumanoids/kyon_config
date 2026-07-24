@@ -1,7 +1,7 @@
 host_monitor:
   # Empty uses XBOT_DIAG_ENDPOINT, then tcp://localhost:9268.
   zmq_endpoint: ""
-  sample_interval_sec: 10.0
+  sample_interval_sec: 1.0
   hostname: ""
   hw_id: ""
   node_prefix: "host"

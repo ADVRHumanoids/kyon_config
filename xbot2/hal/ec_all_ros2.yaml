@@ -1,8 +1,8 @@
 xbotcore_devices:
 
-  # imu_ros2_device:
-  #   thread: main
-  #   names: [imu_link]
+  imu_ros2_device:
+    thread: main
+    names: [imu_link]
   
   joint_ec_synapticon:
     names: []
@@ -19,6 +19,15 @@ xbotcore_devices:
       config_ec_idle:
         value: $PWD/../joint_config/idle.yaml
         type: yamlfile
+      joint_id_map: &jim
+        value: $PWD/../joint_map/joint_map.yaml
+        type: yamlfile
+
+  pow_ec_advrf:
+    names: []
+    thread: rt_main
+    params:
+      robot_name: &rn { value: NoNe, type: string }
       joint_id_map: &jim
         value: $PWD/../joint_map/joint_map.yaml
         type: yamlfile

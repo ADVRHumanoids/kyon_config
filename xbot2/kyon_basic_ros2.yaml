@@ -70,12 +70,6 @@ xbotcore_plugins:
       params:
         ignore_imu: [imu_link]
 
-    zmq_io: 
-      type: zmq_io
-      thread: nrt_main
-      params:
-        autostart: true
-
     ros_control: {thread: nrt_main, type: ros2_control}
 
     friction_comp:
@@ -88,7 +82,19 @@ xbotcore_plugins:
           value: $PWD/friction/fc_config.yaml
           type: yamlfile
       
-    
+    zmq_io:
+      type: zmq_io
+      thread: nrt_main
+      params:
+        autostart: true
+        protocol: tcp
+        tcp_state_port: 5559
+        tcp_cmd_port: 5558
+        tcp_service_port: 5557 
+        ipc_state_port: /tmp/xbot2_zmq_pub.ipc
+        ipc_cmd_port: /tmp/xbot2_zmq_cmd.ipc
+        ipc_service_port: /tmp/xbot2_zmq_rep.ipc
+        
 
 
 # global parameters
