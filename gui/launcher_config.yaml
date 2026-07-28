@@ -10,6 +10,9 @@ context:
     - &docker-xeno  kyon-noble-ros2-xeno-exp-1
     - &docker-base  kyon-noble-ros2-dev-1
     - &docker-isaac  kyon-isaac-base
+    
+    - &camera-up-serialno 52061328
+    - &camera-down-serialno 56033502
 
 
 imu: 
@@ -52,6 +55,24 @@ unpark:
   cmd: ros2 run kyon_cartesio parking.py -a unpark
   machine: *embedded
   docker: *docker-xeno
+
+zed_up:
+  cmd: ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zedxm serial_number:=52061328 camera_name:=zed_up
+  machine: *vision
+  docker: zed_ros2_jazzy_container
+  ready_check: timeout 5 ros2 topic echo /zed_up/zed_node/rgb/color/rect/image/compressed --once
+
+zed_down:
+  cmd: ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zedxm serial_number:=56033502 camera_name:=zed_down
+  machine: *vision
+  docker: zed_ros2_jazzy_container
+  ready_check: timeout 5 ros2 topic echo /zed_down/zed_node/rgb/color/rect/image/compressed --once
+
+lidar:
+  cmd: ros2 run hesai_ros_driver hesai_ros_driver_node --ros-args -p config_path:=/home/user/xbot2_ws/src/kyon_config/hesai/top_qt128_config.yaml
+  machine: *control
+  docker: *docker-base
+  ready_check: timeout 5 ros2 topic echo /lidar_points --once
 
 # record_bag:
 #   cmd: ~/data/record_bag.bash
