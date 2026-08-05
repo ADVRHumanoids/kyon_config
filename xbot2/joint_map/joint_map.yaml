@@ -36,8 +36,8 @@ joint_map:
   44: ankle_yaw_4
   45: wheel_joint_4
 
-  101: dagana_1_clamp_joint
-  102: dagana_2_clamp_joint
+  103: dagana_1_clamp_joint
+  203: dagana_2_clamp_joint
 
   201: power_board
 

@@ -11,7 +11,7 @@ ec_board_ctrl :
   
 ec_boards_base :
   app_mode : run_mode
-  #app_mode : config_mode
+  # app_mode : config_mode
   robot_name : NoNe
   read_SDOs : false
   use_pipes : true
@@ -78,7 +78,7 @@ SynapticonESC_13:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 556179
+  link_zero_incr: -111 # 556179
 
 SynapticonESC_14:
   position_limits_rad:
@@ -109,7 +109,7 @@ SynapticonESC_23:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 868525
+  link_zero_incr: -48 # before belt 868525
 
 SynapticonESC_24:
   position_limits_rad:
@@ -130,7 +130,7 @@ SynapticonESC_102:
   link_zero_incr: 2696
 
 
-# fl leg
+# rl leg
 
 SynapticonESC_31:
   position_limits_rad:
@@ -148,7 +148,7 @@ SynapticonESC_33:
   position_limits_rad:
     min: -3.20
     max: 3.20
-  link_zero_incr: 711795 #53126 aksim2 (before belt)
+  link_zero_incr: -54 # 711795 aksim2 (before belt)
 
 SynapticonESC_34:
   position_limits_rad:
@@ -157,27 +157,7 @@ SynapticonESC_34:
   link_zero_incr: 968380
 
 
-# dagana
-
-SynapticonESC_101:
-  position_limits_rad:
-    min: -0.01
-    max: 2.7
-  link_zero_incr: 0
-
-SynapticonESC_102:
-  position_limits_rad:
-    min: -0.01
-    max: 2.7
-  link_zero_incr: 0
-
-
-
-
-
-
-
-# fr leg
+# rr leg
 
 SynapticonESC_41:
   position_limits_rad:
@@ -195,7 +175,7 @@ SynapticonESC_43:
   position_limits_rad:
     min: -3.20
     max: 3.20
-  link_zero_incr: 335567 #998954 aksim2 (before belt)
+  link_zero_incr: -16326 # 335567 aksim2 (before belt)
 
 SynapticonESC_44:
   position_limits_rad:
@@ -204,60 +184,85 @@ SynapticonESC_44:
   link_zero_incr: 51764
 
 
+# dagana
+
+SynapticonESC_103:
+  position_limits_rad:
+    min: -0.1
+    max: 2.7
+  link_zero_incr: 4083
+
+SynapticonESC_203:
+  position_limits_rad:
+    min: -0.1
+    max: 2.7
+  link_zero_incr: 1986
 
 
-# rl leg
+# left arm
 
 SynapticonESC_51:
   position_limits_rad:
-    min: -0.75
-    max: 0.75
-  link_zero_incr: 902594
+    min: -3.0
+    max: 3.0
+  link_zero_incr: 967504
 
 SynapticonESC_52:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 1035096
+  link_zero_incr: 769250
 
 SynapticonESC_53:
   position_limits_rad:
-    min: -3.20
-    max: 3.20
-  link_zero_incr: -16417  #181440 aksim2 (before belt)
+    min: -3.0
+    max: 3.0
+  link_zero_incr: 181392
 
 SynapticonESC_54:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 705019
+  link_zero_incr: 3172
+
+SynapticonESC_55:
+  position_limits_rad:
+    min: -3.0
+    max: 3.0
+  link_zero_incr: 2562
 
 
 
 
-# rr leg
+# right arm
 
 SynapticonESC_61:
   position_limits_rad:
-    min: -0.75
-    max: 0.75
-  link_zero_incr: 511443
+    min: -3.0
+    max: 3.0
+  link_zero_incr: 573896
 
 SynapticonESC_62:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 509361
+  link_zero_incr: 116058
 
 SynapticonESC_63:
   position_limits_rad:
-    min: -3.20
-    max: 3.20
-  link_zero_incr: 43 #216272 aksim2 (before belt)
+    min: -3.0
+    max: 3.0
+  link_zero_incr: 577766
 
 SynapticonESC_64:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 576458
+  link_zero_incr: 2102
+
+SynapticonESC_65:
+  position_limits_rad:
+    min: -3.0
+    max: 3.0
+  link_zero_incr: 881
 
