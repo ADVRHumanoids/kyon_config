@@ -25,19 +25,17 @@ echo
 SUDO_PASS="$REMOTE_PASS"
 
 # ── Disconnect ────────────────────────────────────────────────────────────────
-if [[ "${1:-}" == "down" ]]; then
-    if [[ ! -f "$CONF_FILE" ]]; then
-        echo "No active session config found at $CONF_FILE" >&2
-        exit 1
-    fi
+if [[ -f "$CONF_FILE" ]]; then
     LOCAL_PUBKEY=$(wg pubkey < "$KEY_DIR/kyon.key")
     echo "Removing peer from server..."
     echo "$SUDO_PASS" | sshpass -p "$REMOTE_PASS" ssh "$SERVER_SSH" "sudo -S -p '' wg set $SERVER_WG_IFACE peer $LOCAL_PUBKEY remove" || true
     sudo wg-quick down "$CONF_FILE"
     rm -f "$CONF_FILE"
-    unset SUDO_PASS REMOTE_PASS
     echo "Disconnected."
-    exit 0
+fi
+
+if [[ "${1:-}" == "down" ]]; then
+    exit 0;
 fi
 
 # ── Keypair ───────────────────────────────────────────────────────────────────
