@@ -76,15 +76,15 @@ SynapticonESC_12:
 
 SynapticonESC_13:
   position_limits_rad:
-    min: -3.0
-    max: 3.0
-  link_zero_incr: -111 # 556179
+    min: -4.20
+    max: 4.20
+  link_zero_incr: -16409 # 556179
 
 SynapticonESC_14:
   position_limits_rad:
     min: -2.7
     max: 2.7
-  link_zero_incr: 2188
+  link_zero_incr: 576294
 
 SynapticonESC_15:
   position_limits_rad:
@@ -107,15 +107,15 @@ SynapticonESC_22:
 
 SynapticonESC_23:
   position_limits_rad:
-    min: -3.0
-    max: 3.0
-  link_zero_incr: -48 # before belt 868525
+    min: -4.20
+    max: 4.20
+  link_zero_incr: 0 # before belt 868525
 
 SynapticonESC_24:
   position_limits_rad:
     min: -2.7
     max: 2.7
-  link_zero_incr: 826
+  link_zero_incr: 705963
 
 SynapticonESC_25:
   position_limits_rad:
@@ -146,15 +146,15 @@ SynapticonESC_32:
 
 SynapticonESC_33:
   position_limits_rad:
-    min: -3.20
-    max: 3.20
-  link_zero_incr: -54 # 711795 aksim2 (before belt)
+    min: -4.20
+    max: 4.20
+  link_zero_incr: 0 # 711795 aksim2 (before belt)
 
 SynapticonESC_34:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 968380
+  link_zero_incr: 52465
 
 
 # rr leg
@@ -173,15 +173,15 @@ SynapticonESC_42:
 
 SynapticonESC_43:
   position_limits_rad:
-    min: -3.20
-    max: 3.20
-  link_zero_incr: -16326 # 335567 aksim2 (before belt)
+    min: -4.20
+    max: 4.20
+  link_zero_incr: 0 # 335567 aksim2 (before belt)
 
 SynapticonESC_44:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 51764
+  link_zero_incr: 706679
 
 
 # dagana
@@ -246,7 +246,7 @@ SynapticonESC_62:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 116058
+  link_zero_incr: 1033900
 
 SynapticonESC_63:
   position_limits_rad:

@@ -1,6 +1,6 @@
 XBotInterface:
-    urdf: xacro $(ros2 pkg prefix --share kyon_urdf)/urdf/kyon.urdf.xacro upper_body:=true legs:=true varta:=true dagana:=false
-    srdf: xacro $(ros2 pkg prefix --share kyon_srdf)/srdf/kyon.srdf.xacro upper_body:=true legs:=true varta:=true dagana:=false
+    urdf: xacro $(ros2 pkg prefix --share kyon_urdf)/urdf/kyon.urdf.xacro upper_body:=true legs:=true varta:=true dagana:=false wheels:=false
+    srdf: xacro $(ros2 pkg prefix --share kyon_srdf)/srdf/kyon.srdf.xacro upper_body:=true legs:=true varta:=true dagana:=false wheels:=false
 
 ModelInterface:
   model_type: pin
@@ -15,7 +15,7 @@ xbotcore_device_configs:
 
 # threads
 xbotcore_threads:
-    rt_main:  {sched: fifo , prio: 60, period: 0.001}
+    rt_main:  {sched: fifo , prio: 60, period: 0.001, core_id: 3}
     nrt_main: {sched: other, prio: 0 , period: 0.001}
     main: {sched: other, prio: 0 , period: 0.001, main: true}
 
@@ -23,45 +23,94 @@ xbotcore_threads:
 # plugins
 xbotcore_plugins:
 
-    homing:
-        thread: rt_main
-        type: homing
+    # homing:
+    #     thread: rt_main
+    #     type: homing
+
+    stress_removal:
+      thread: nrt_main
+      type: internal_stress_removal_plugin
+      params:
+        contact_links: [contact_1, contact_2, contact_3, contact_4]
 
     homing_isaac:
-        thread: rt_main
-        type: homing
-        params: 
-            home: home_isaac 
-
-    traj:
       thread: rt_main
-      type: trajectory_plugin
+      type: homing
+      params: 
+          home: home_isaac 
+          
+    homing_lb:
+      thread: rt_main
+      type: homing
       params:
-        amplitude:
-          shoulder_yaw_1: 1.5
-          shoulder_pitch_1: 1.5
-          elbow_pitch_1: 1.5
-          wrist_pitch_1: 1.5
-          wrist_yaw_1: 1.5
-          shoulder_yaw_2: 1.5
-          shoulder_pitch_2: 1.5
-          elbow_pitch_2: 1.5
-          wrist_pitch_2: 1.5
-          wrist_yaw_2: 1.5
-          # hip_roll_1: 0.2
-          # hip_pitch_1: 0.8
-          # knee_pitch_1: 0.8
-          # hip_roll_2: 0.2
-          # hip_pitch_2: 0.8
-          # knee_pitch_2: 0.8
-          # hip_roll_3: 0.2
-          # hip_pitch_3: 0.8
-          # knee_pitch_3: 0.8
-          # hip_roll_4: 0.2
-          # hip_pitch_4: 0.8
-          # knee_pitch_4: 0.8
-        freq_min: 0.05
-        freq_max: 0.2
+        ctrl_override:  # homing does not affect grippers and upper body
+          dagana_1_clamp_joint: 0
+          dagana_2_clamp_joint: 0
+          shoulder_yaw_1: 0
+          shoulder_pitch_1: 0
+          elbow_pitch_1: 0
+          wrist_pitch_1: 0
+          wrist_yaw_1: 0
+          shoulder_yaw_2: 0
+          shoulder_pitch_2: 0
+          elbow_pitch_2: 0
+          wrist_pitch_2: 0
+          wrist_yaw_2: 0
+
+    homing_ub:
+      thread: rt_main
+      type: homing
+      params:
+        ctrl_override:  # homing does not affect lower body
+          hip_roll_1: 0
+          hip_pitch_1: 0
+          knee_pitch_1: 0
+          hip_roll_2: 0
+          hip_pitch_2: 0
+          knee_pitch_2: 0
+          hip_roll_3: 0
+          hip_pitch_3: 0
+          knee_pitch_3: 0
+          hip_roll_4: 0
+          hip_pitch_4: 0    
+          knee_pitch_4: 0
+
+    # omnisteering:
+    #   type: omnisteering_controller_plugin
+    #   thread: nrt_main
+    #   params:
+    #     wheel_names: [wheel_1, wheel_2, wheel_3, wheel_4]
+    #     wheel_radius: [0.107, 0.107, 0.107, 0.107]
+
+    # traj:
+    #   thread: rt_main
+    #   type: trajectory_plugin
+    #   params:
+    #     amplitude:
+    #       shoulder_yaw_1: 1.5
+    #       shoulder_pitch_1: 1.5
+    #       elbow_pitch_1: 1.5
+    #       wrist_pitch_1: 1.5
+    #       wrist_yaw_1: 1.5
+    #       shoulder_yaw_2: 1.5
+    #       shoulder_pitch_2: 1.5
+    #       elbow_pitch_2: 1.5
+    #       wrist_pitch_2: 1.5
+    #       wrist_yaw_2: 1.5
+    #       # hip_roll_1: 0.2
+    #       # hip_pitch_1: 0.8
+    #       # knee_pitch_1: 0.8
+    #       # hip_roll_2: 0.2
+    #       # hip_pitch_2: 0.8
+    #       # knee_pitch_2: 0.8
+    #       # hip_roll_3: 0.2
+    #       # hip_pitch_3: 0.8
+    #       # knee_pitch_3: 0.8
+    #       # hip_roll_4: 0.2
+    #       # hip_pitch_4: 0.8
+    #       # knee_pitch_4: 0.8
+    #     freq_min: 0.05
+    #     freq_max: 0.2
 
 
     ros_io: 
@@ -72,28 +121,28 @@ xbotcore_plugins:
 
     ros_control: {thread: nrt_main, type: ros2_control}
 
-    friction_comp:
-      type: friction_comp_plugin
-      thread: rt_main
-      params:
-        fc_slope: 20.0
-        fc: 0.75
-        param_config: 
-          value: $PWD/friction/fc_config.yaml
-          type: yamlfile
+    # friction_comp:
+    #   type: friction_comp_plugin
+    #   thread: rt_main
+    #   params:
+    #     fc_slope: 20.0
+    #     fc: 0.75
+    #     param_config: 
+    #       value: $PWD/friction/fc_config.yaml
+    #       type: yamlfile
       
-    zmq_io:
-      type: zmq_io
-      thread: nrt_main
-      params:
-        autostart: true
-        protocol: tcp
-        tcp_state_port: 5559
-        tcp_cmd_port: 5558
-        tcp_service_port: 5557 
-        ipc_state_port: /tmp/xbot2_zmq_pub.ipc
-        ipc_cmd_port: /tmp/xbot2_zmq_cmd.ipc
-        ipc_service_port: /tmp/xbot2_zmq_rep.ipc
+    # zmq_io:
+    #   type: zmq_io
+    #   thread: nrt_main
+    #   params:
+    #     autostart: true
+    #     protocol: tcp
+    #     tcp_state_port: 5559
+    #     tcp_cmd_port: 5558
+    #     tcp_service_port: 5557 
+    #     ipc_state_port: /tmp/xbot2_zmq_pub.ipc
+    #     ipc_cmd_port: /tmp/xbot2_zmq_cmd.ipc
+    #     ipc_service_port: /tmp/xbot2_zmq_rep.ipc
         
 
 
