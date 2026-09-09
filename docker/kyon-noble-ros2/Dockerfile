@@ -20,5 +20,9 @@ RUN cd xbot2_ws && \
 # source mounted kyon_config
 RUN echo 'source ~/xbot2_ws/src/kyon_config/$CONFIG_PATH_DOCKER' >> ~/.bashrc
 
-# realsense
-RUN sudo apt update && sudo apt install -y ros-$ROS_DISTRO-realsense2-camera
+# realsense and Intel VAAPI runtime (needed by rtsp_image_transport's H.264 VAAPI encoder)
+RUN sudo apt update && sudo apt install -y \
+    ros-$ROS_DISTRO-realsense2-camera \
+    ros-$ROS_DISTRO-rtsp-image-transport \
+    intel-media-va-driver-non-free \
+    vainfo

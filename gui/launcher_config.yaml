@@ -48,31 +48,43 @@ xbot2:
 
 park:
   cmd: ros2 run kyon_cartesio parking.py -a park
-  machine: *embedded
-  docker: *docker-xeno
+  machine: *control
+  docker: *docker-base
 
 unpark:
   cmd: ros2 run kyon_cartesio parking.py -a unpark
-  machine: *embedded
-  docker: *docker-xeno
+  machine: *control
+  docker: *docker-base
+  variants:
+    fast:
+      cmd: "{cmd} -t 1.0"
 
 zed_up:
-  cmd: ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zedxm serial_number:=52061328 camera_name:=zed_up
+  cmd: ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zedxm serial_number:=52061328 camera_name:=zed_up publish_tf:=false camera_tf_parent_frame:=zed_front_up_mount_link
   machine: *vision
   docker: zed_ros2_jazzy_container
   ready_check: timeout 5 ros2 topic echo /zed_up/zed_node/rgb/color/rect/image/compressed --once
+  show_ui: false
 
 zed_down:
-  cmd: ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zedxm serial_number:=56033502 camera_name:=zed_down
+  cmd: ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zedxm serial_number:=56033502 camera_name:=zed_down publish_tf:=false camera_tf_parent_frame:=zed_front_down_mount_link
   machine: *vision
   docker: zed_ros2_jazzy_container
   ready_check: timeout 5 ros2 topic echo /zed_down/zed_node/rgb/color/rect/image/compressed --once
+  show_ui: false
+
+zed_republish:
+  cmd: /home/user/republish_zed
+  machine: *control
+  docker: kyon-noble-ros2-dev-intel-va-1
+  show_ui: false
 
 lidar:
   cmd: ros2 run hesai_ros_driver hesai_ros_driver_node --ros-args -p config_path:=/home/user/xbot2_ws/src/kyon_config/hesai/top_qt128_config.yaml
   machine: *control
   docker: *docker-base
   ready_check: timeout 5 ros2 topic echo /lidar_points --once
+  show_ui: false
 
 # record_bag:
 #   cmd: ~/data/record_bag.bash
@@ -90,7 +102,6 @@ loco_isaac:
       cmd: "{cmd} distilled:=true"
     heightscan:
       cmd: "{cmd} heightscan:=true"
-
 
 morning_routine:
   cmd: /home/user/xbot2_ws/src/kyon_config/scripts/robot_start_routine.bash

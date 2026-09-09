@@ -36,6 +36,18 @@ services:
     environment:
       - CUSTOM_PS=(dev)
 
+  # Intel VAAPI development environment. RENDER_GID is the host-side group
+  # of /dev/dri/renderD128; `kyon dev-intel-va` sets it automatically.
+  dev-intel-va:
+    extends: dev
+    devices:
+      - /dev/dri:/dev/dri
+    group_add:
+      - "${RENDER_GID}"  # set to render group id
+    environment:
+      - CUSTOM_PS=(dev-intel-va)
+      - LIBVA_DRIVER_NAME=iHD
+
 
   dev-nvidia:
     extends: dev
@@ -87,6 +99,7 @@ services:
     network_mode: host
     volumes:
       - ../../:/etc/kyon_config:ro
+    command: "-l tcp/10.0.0.1:7447 --rest-http-port 8000"
 
   influxdb:
     image: influxdb:2.7
@@ -103,6 +116,24 @@ services:
     volumes:
       - influxdb-data:/var/lib/influxdb2
       - influxdb-config:/etc/influxdb2
+
+  grafana:
+    image: grafana/grafana:13.1
+    container_name: xbot2-diagnostics-grafana
+    restart: unless-stopped
+    depends_on:
+      - influxdb
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      INFLUXDB_ORG: ${INFLUXDB_ORG:-xbot2}
+      INFLUXDB_BUCKET: ${INFLUXDB_BUCKET:-diagnostics}
+      INFLUXDB_TOKEN: ${INFLUXDB_TOKEN:-xbot2-diagnostics-dev-token}
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
 
   diagnostics_aggregator:
     extends: base

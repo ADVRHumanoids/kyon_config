@@ -16,3 +16,6 @@ alias ssh_control='ssh kyon@kyon-control'
 
 # config path
 export CONFIG_PATH_DOCKER=docker/control_profile_docker.bash
+
+# render group id for va hw accel
+export RENDER_GID="$(stat -c '%g' /dev/dri/renderD128)"

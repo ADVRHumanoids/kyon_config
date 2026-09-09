@@ -1,0 +1,43 @@
+#!/bin/bash
+
+REPUBLISH_CMD='ros2 run image_transport republish --ros-args     -p in_transport:=compressed -p out_transport:=rtsp     -r in/compressed:=/zed_down/zed_node/rgb/color/rect/image/compressed     -r out/rtsp:=/zed_down/rtsp     -p out.rtsp.codec:=H264     -p   out.rtsp.target_bitrate:=4000000     -p out.rtsp.expected_framerate:=30     -p   out.rtsp.use_hw_encoder:=false  -p  out.rtsp.udp_port:=50000'
+
+SUB_CMD='ros2 topic echo /zed_down/rtsp'
+
+##########
+
+set -Eeuo pipefail
+
+pids=()
+
+cleanup() {
+    local exit_code=$?
+
+    trap - EXIT INT TERM QUIT HUP
+
+    echo "Stopping child process groups..." >&2
+
+    for pid in "${pids[@]}"; do
+        if kill -0 "$pid" 2>/dev/null; then
+            # Negative PID means "signal the whole process group".
+            kill -TERM -- "-$pid" 2>/dev/null || true
+        fi
+    done
+
+    for pid in "${pids[@]}"; do
+        wait "$pid" 2>/dev/null || true
+    done
+
+    exit "$exit_code"
+}
+
+trap cleanup EXIT INT TERM QUIT HUP
+
+setsid $REPUBLISH_CMD &
+pids+=("$!")
+
+setsid $SUB_CMD &
+pids+=("$!")
+
+wait "${pids[@]}"
+
