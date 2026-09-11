@@ -1,0 +1,41 @@
+{
+  "apiVersion": 1,
+  "prune": true,
+  "datasources": [
+    {
+      "uid": "afu9xn6p4581sc",
+      "name": "influxdb",
+      "type": "influxdb",
+      "typeName": "InfluxDB",
+      "access": "proxy",
+      "url": "http://influxdb:8086",
+      "user": "",
+      "database": "",
+      "basicAuth": false,
+      "isDefault": true,
+      "jsonData": {
+        "dbName": "diagnostics",
+        "defaultBucket": "diagnostics",
+        "httpMode": "POST",
+        "organization": "xbot2",
+        "tlsSkipVerify": false,
+        "version": "Flux"
+      }
+    },
+    {
+      "uid": "bfwmtukf9vu9sa",
+      "name": "victoriametrics-logs-datasource",
+      "type": "victoriametrics-logs-datasource",
+      "typeName": "VictoriaLogs",
+      "access": "proxy",
+      "url": "http://victorialogs:9428",
+      "user": "",
+      "database": "",
+      "basicAuth": false,
+      "isDefault": false,
+      "jsonData": {
+        "pdcInjected": false
+      }
+    }
+  ]
+}

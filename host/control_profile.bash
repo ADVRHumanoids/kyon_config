@@ -19,3 +19,6 @@ export CONFIG_PATH_DOCKER=docker/control_profile_docker.bash
 
 # render group id for va hw accel
 export RENDER_GID="$(stat -c '%g' /dev/dri/renderD128)"
+
+# set concert launcher output folder
+export CONCERT_LAUNCHER_STDOUT_PATH=/var/log/concert_launcher

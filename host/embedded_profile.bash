@@ -12,3 +12,6 @@ source $SCRIPT_DIR/../docker/kyon-noble-ros2-xeno/setup.sh
 
 # config path
 export CONFIG_PATH_DOCKER=docker/embedded_profile_docker.bash
+
+# set concert launcher output folder
+export CONCERT_LAUNCHER_STDOUT_PATH=/var/log/concert_launcher
