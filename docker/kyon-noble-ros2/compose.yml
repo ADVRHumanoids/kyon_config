@@ -161,7 +161,7 @@ services:
     command: [--config, /etc/vector/vector.yaml]
     volumes:
       - ../../diagnostics/vector.yaml:/etc/vector/vector.yaml:ro
-      - /tmp:/log:ro
+      - /var/log/concert_launcher:/log:ro
       - vector-data:/var/lib/vector
 
 
