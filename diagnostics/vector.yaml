@@ -9,10 +9,9 @@ sources:
     type: file
     include:
       - /log/*.stdout
-
-    # "end" reads only newly appended lines for files without checkpoints.
-    # Change to "beginning" to import existing file contents.
-    read_from: end
+    read_from: beginning
+    fingerprint:
+      strategy: device_and_inode
 
 transforms:
   process_logs:
