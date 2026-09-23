@@ -40,7 +40,7 @@ RUN apt-get update && apt-get install -y \
 # ---------------------------------------------------------------- shell setup
 # /etc/bash.bashrc and /etc/tmux.conf are system-wide: write them while root
 RUN echo "alias vim=nvim" >> /etc/bash.bashrc && \
-    echo '[ -n "$CONFIG_PATH_DOCKER" ] && source ~/ros2_ws/src/kyon_config/$CONFIG_PATH_DOCKER' \
+    echo '[ -n "$CONFIG_PATH_DOCKER" ] && source ~/xbot2_ws/src/kyon_config/$CONFIG_PATH_DOCKER' \
       >> /etc/bash.bashrc && \
     touch /etc/modules
 
