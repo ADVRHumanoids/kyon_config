@@ -1,0 +1,31 @@
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        ROS_IP: ${ROS_IP}
+        USER_ID: ${UID:-1000}
+    container_name: kyon-noble-ros2-jetpack-dev-1
+    stdin_open: true
+    tty: true
+    privileged: true
+    entrypoint: /bin/bash
+    restart: always
+    network_mode: host
+    runtime: nvidia
+    ipc: host
+    ulimits:
+      core: -1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw  # x11
+      - ~/.ssh:/home/user/.ssh  # ssh
+      - /dev:/dev
+      - /var/nvidia/nvcam/settings:/var/nvidia/nvcam/settings
+      - /tmp:/tmp
+    environment:
+      - DISPLAY
+      - TERM=xterm-256color
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - HHCM_FOREST_CLONE_DEFAULT_PROTO=https

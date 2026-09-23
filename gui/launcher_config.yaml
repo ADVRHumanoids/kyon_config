@@ -10,12 +10,13 @@ context:
     - &docker-xeno  kyon-noble-ros2-xeno-exp-1
     - &docker-base  kyon-noble-ros2-dev-1
     - &docker-isaac  kyon-isaac-base
-    
+    - &docker-jetpack kyon-noble-ros2-jetpack-dev-1
+
     - &camera-up-serialno 52061328
     - &camera-down-serialno 56033502
 
 
-imu: 
+imu:
   cmd: ros2 launch vectornav vectornav.launch.py
   machine: *control
   ready_check: timeout 5 ros2 topic echo /xbotcore/imu/imu_link --once
@@ -108,6 +109,11 @@ morning_routine:
   machine: *control
   docker: *docker-base
   show_ui: true
+
+mediamtx:
+  cmd: /home/user/ros2_ws/src/network_bridge/mediamtx/mediamtx
+  machine: *vision
+  docker: *docker-jetpack
 
 # loco_mjx:
 #   cmd: cd /home/user/kyon_mjx/src/kyon_mjx && bash scripts/run_eval.bash
