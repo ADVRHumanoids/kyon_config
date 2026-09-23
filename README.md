@@ -6,7 +6,7 @@ Configuration files for the Kyon robot: shell profiles, Docker containers, WireG
 
 ## Network overview
 
-The robot network is a dedicated LAN (`10.24.15.0/24`) managed by the onboard router. Two PCs live on this LAN:
+The robot network is a dedicated LAN (`10.24.15.0/24`) managed by the onboard router. Three PCs live on this LAN:
 
 | Host | Role | IP | 
 |---|---|---|
@@ -45,7 +45,7 @@ This section is meant for robot maintainers, to help them with the robot commiss
 
 ### 1. Clone this repo
 
-Clone the repository to the same path on both PCs:
+Clone the repository to the same path on all robot PCs:
 
 ```bash
 $ git clone <repo-url> <path/to/kyon_config>
@@ -67,6 +67,12 @@ Each PC has a host-side shell profile that sets environment variables, SSH alias
   ```
   Sets `ROS_IP=10.24.15.100`, `ROS_MASTER_URI`, `KERNEL_VER`, and sources the `kyon-noble-ros2-xeno` Docker helper.
 
+- **kyon-orin (vision):**
+  ```bash
+  $ source <path/to/kyon_config>/host/vision_profile.bash
+  ```
+  Sets `ROS_IP=10.24.15.101`, `ROS_MASTER_URI`, and sources the `kyon-noble-ros2-jetpack-r36.5` Docker helper.
+
 ### 3. Start a Docker container with the `kyon` alias
 
 Sourcing the host profile above makes the `kyon` shell function available. It takes a Docker Compose service name as its argument, starts the container if it is not already running, and opens an interactive shell inside it. The service name is always `dev`:
@@ -85,8 +91,9 @@ When a shell is opened inside a container, the corresponding Docker profile is s
 |---|---|
 | `kyon-noble-ros2` (control) | `docker/control_profile_docker.bash` |
 | `kyon-noble-ros2-xeno` (embedded) | `docker/embedded_profile_docker.bash` |
+| `kyon-noble-ros2-jetpack-r36.5` (vision) | `docker/vision_profile_docker.bash` |
 
-Both profiles source `docker/generic_profile_docker.bash`, which sets `RMW_IMPLEMENTATION=rmw_cyclonedds_cpp`. Each then sets the appropriate `CYCLONEDDS_URI` pointing to the corresponding CycloneDDS XML config under `network/cyclone/`. The embedded profile additionally sets `ECAT_MASTER_CONFIG` and the `ecat_master` / `ecat_master_gdb` aliases for the EtherCAT master.
+All profiles source `docker/generic_profile_docker.bash`, which sets `RMW_IMPLEMENTATION=rmw_cyclonedds_cpp`. Each then sets the appropriate `CYCLONEDDS_URI` pointing to the corresponding CycloneDDS XML config under `network/cyclone/`. The embedded profile additionally sets `ECAT_MASTER_CONFIG` and the `ecat_master` / `ecat_master_gdb` aliases for the EtherCAT master.
 
 ### 5. WireGuard server (kyon-control only)
 
