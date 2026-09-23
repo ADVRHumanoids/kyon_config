@@ -1,0 +1,47 @@
+<CycloneDDS>
+  <Domain Id="any">
+    <General>
+      <MaxMessageSize>65500B</MaxMessageSize>
+      <Interfaces>
+        <!-- WireGuard interface (experimental, commented out) -->
+        <!-- <NetworkInterface name="wg0" address="10.0.0.1" priority="100" multicast="false"/> -->
+
+        <!-- Loopback: keep it in the interface list so intra-host discovery stays on lo instead
+             of being forced onto eno1. Without this, zed_wrapper's LoadComposableNodes hangs
+             (node never loads, no error, container at 0% CPU). -->
+        <NetworkInterface name="lo" priority="default" multicast="true"/>
+
+        <!-- Robot/server LAN interface for direct cross-host DDS (domain 0). Multicast OFF on
+             the LAN: cross-host discovery uses the unicast <Peers> below, so the switch does
+             not need to forward multicast. Local discovery still uses multicast on lo above. -->
+        <NetworkInterface name="eno1" address="10.24.15.101" priority="100" multicast="false"/>
+      </Interfaces>
+
+      <!-- Multicast ON: required for intra-host (loopback) discovery so the local load_node
+           RPC matches. Cross-host discovery to the peers below also works via unicast, so
+           this stays robust even if the LAN switch does not forward multicast. -->
+      <AllowMulticast>false</AllowMulticast>
+      <EnableMulticastLoopback>true</EnableMulticastLoopback>
+    </General>
+
+    <Internal>
+      <SocketReceiveBufferSize min="10MB"/>
+      <Watermarks>
+        <WhcHigh>500kB</WhcHigh>
+      </Watermarks>
+    </Internal>
+
+    <Discovery>
+      <Peers>
+        <!-- WireGuard client (experimental, commented out) -->
+        <!-- <Peer Address="10.0.0.10"/> -->
+
+        <!-- Robot LAN machines + Loopback -->
+        <Peer Address="10.24.15.100"/>
+        <Peer Address="10.24.15.101"/>
+        <Peer Address="10.24.15.102"/>
+      </Peers>
+    </Discovery>
+
+  </Domain>
+</CycloneDDS>
