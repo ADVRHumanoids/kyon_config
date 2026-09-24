@@ -6,6 +6,8 @@ services:
       args:
         ROS_IP: ${ROS_IP}
         USER_ID: ${UID:-1000}
+      secrets:
+        - deploy_key
     container_name: kyon-noble-ros2-jetpack-dev-1
     stdin_open: true
     tty: true
@@ -24,6 +26,8 @@ services:
       - /var/nvidia/nvcam/settings:/var/nvidia/nvcam/settings
       - /tmp:/tmp
       - ../../:/home/user/xbot2_ws/src/kyon_config:ro
+      - ../../data/perception/mediamtx.yml:/home/user/ros2_ws/src/network_bridge/mediamtx/mediamtx.yml:ro
+      - ../../data/perception/rtsp.yaml:/home/user/ros2_ws/src/network_bridge/config/rtsp_bridge/kyon.yaml:ro
     environment:
       - DISPLAY
       - TERM=xterm-256color
@@ -32,3 +36,10 @@ services:
       - HHCM_FOREST_CLONE_DEFAULT_PROTO=https
       - ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
       - CONFIG_PATH_DOCKER
+
+secrets:
+  # Read-only github deploy key for advrhumanoids/network_bridge, used at build
+  # time to clone it. The file must exist and hold the key -- compose fails
+  # before the build otherwise.
+  deploy_key:
+    file: ${NETWORK_BRIDGE_DEPLOY_KEY:-${HOME}/.ssh/network_bridge_deploy_key}

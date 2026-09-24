@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.7
 FROM ros:jazzy-ros-base
 
 ARG USER_ID
@@ -16,32 +17,32 @@ RUN test -n "$USER_ID" || { echo "USER_ID build arg is required" >&2; exit 1; };
 RUN rm -f /etc/apt/apt.conf.d/docker-clean && \
     apt-get update && apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
-      sudo ca-certificates curl wget gnupg gnupg2 lsb-release && \
+    sudo ca-certificates curl wget gnupg gnupg2 lsb-release && \
     rm -rf /var/lib/apt/lists/*
 
 # ---------------------------------------------------------------- packages
 # NVIDIA GStreamer plugins are NOT installed here: the nvidia runtime mounts
 # them from the host. kmod is required or nvv4l2*enc misdetects the platform.
 RUN apt-get update && apt-get install -y \
-      ros-$ROS_DISTRO-desktop \
-      ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
-      libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
-      gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
-      gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly \
-      libboost-all-dev libboost-test-dev libboost-filesystem-dev \
-      libboost-timer-dev libboost-tools-dev libzmq3-dev \
-      build-essential cmake cmake-curses-gui clang gdb \
-      git openssh-client \
-      vim neovim tmux bash-completion \
-      python3-venv python3-pip \
-      libxcb-cursor-dev kmod file locate && \
+    ros-$ROS_DISTRO-desktop \
+    ros-$ROS_DISTRO-rmw-cyclonedds-cpp \
+    libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
+    gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly \
+    libboost-all-dev libboost-test-dev libboost-filesystem-dev \
+    libboost-timer-dev libboost-tools-dev libzmq3-dev \
+    build-essential cmake cmake-curses-gui clang gdb \
+    git openssh-client \
+    vim neovim tmux bash-completion \
+    python3-venv python3-pip \
+    libxcb-cursor-dev kmod file locate && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # ---------------------------------------------------------------- shell setup
 # /etc/bash.bashrc and /etc/tmux.conf are system-wide: write them while root
 RUN echo "alias vim=nvim" >> /etc/bash.bashrc && \
     echo '[ -n "$CONFIG_PATH_DOCKER" ] && source ~/xbot2_ws/src/kyon_config/$CONFIG_PATH_DOCKER' \
-      >> /etc/bash.bashrc && \
+    >> /etc/bash.bashrc && \
     touch /etc/modules
 
 RUN cat >> /etc/tmux.conf <<'EOF'
@@ -76,7 +77,7 @@ RUN python3 -m venv --system-site-packages ~/env && \
     source ~/env/bin/activate && \
     pip install --no-cache-dir setuptools hhcm-forest && \
     python3 -c "from importlib.metadata import version; from packaging.version import Version; \
-v = version('hhcm-forest'); assert Version(v) >= Version('1.1.23'), f'hhcm-forest {v} < 1.1.23'"
+    v = version('hhcm-forest'); assert Version(v) >= Version('1.1.23'), f'hhcm-forest {v} < 1.1.23'"
 
 # ---------------------------------------------------------------- ros2 config
 RUN git clone https://github.com/advrhumanoids/ros2_config.git ~/ros2_config && \
@@ -86,6 +87,18 @@ RUN git clone https://github.com/advrhumanoids/ros2_config.git ~/ros2_config && 
 RUN source ~/env/bin/activate && \
     mkdir -p ~/ros2_ws && cd ~/ros2_ws && forest init && \
     echo "source ~/ros2_ws/setup.bash" >> ~/.bashrc && forest add-recipes https://github.com/ADVRHumanoids/multidof_recipes.git --tag ros2
+
+# ---------------------------------------------------------------- network_bridge
+# Private repo, cloned with a read-only github deploy key passed as a BuildKit
+# secret
+RUN --mount=type=secret,id=deploy_key,uid=${USER_ID},required=true \
+    mkdir -p -m 0700 ~/.ssh && \
+    ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null && \
+    GIT_SSH_COMMAND="ssh -i /run/secrets/deploy_key -o IdentitiesOnly=yes" \
+    git clone --recursive --branch master \
+    git@github.com:advrhumanoids/network_bridge.git \
+    ~/ros2_ws/src/network_bridge && \
+    mkdir -p ~/ros2_ws/src/network_bridge/mediamtx
 
 WORKDIR /home/user/ros2_ws
 CMD ["/bin/bash"]
