@@ -17,6 +17,9 @@ services:
     network_mode: host
     runtime: nvidia
     ipc: host
+    group_add:
+      - "44"     # video
+      - "104"    # render
     ulimits:
       core: -1
     volumes:
