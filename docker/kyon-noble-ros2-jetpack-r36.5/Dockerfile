@@ -99,6 +99,9 @@ RUN --mount=type=secret,id=deploy_key,uid=${USER_ID},required=true \
     git@github.com:advrhumanoids/network_bridge.git \
     ~/ros2_ws/src/network_bridge && \
     mkdir -p ~/ros2_ws/src/network_bridge/mediamtx
-
 WORKDIR /home/user/ros2_ws
+RUN source ~/env/bin/activate && \
+    source /opt/ros/$ROS_DISTRO/setup.bash && \
+    forest grow network_bridge -j$(nproc) --verbose
+
 CMD ["/bin/bash"]
