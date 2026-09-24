@@ -103,5 +103,9 @@ WORKDIR /home/user/ros2_ws
 RUN source ~/env/bin/activate && \
     source /opt/ros/$ROS_DISTRO/setup.bash && \
     forest grow network_bridge -j$(nproc) --verbose
+# Install mediamtx bin
+WORKDIR /home/user/ros2_ws/src/network_bridge
+RUN ./scripts/install_mediamtx.sh
 
+WORKDIR /home/user/ros2_ws
 CMD ["/bin/bash"]
