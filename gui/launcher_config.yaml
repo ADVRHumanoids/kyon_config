@@ -110,10 +110,11 @@ morning_routine:
   docker: *docker-base
   show_ui: true
 
-mediamtx:
-  cmd: /home/user/ros2_ws/src/network_bridge/mediamtx/mediamtx
+rtsp_bridge:
+  cmd: ros2 launch network_bridge rtsp_bridge_rtsp_bridge.launch.py config:=/home/user/ros2_ws/src/network_bridge/config/rtsp_bridge/kyon.yaml
   machine: *vision
   docker: *docker-jetpack
+  show_ui: false
 
 # loco_mjx:
 #   cmd: cd /home/user/kyon_mjx/src/kyon_mjx && bash scripts/run_eval.bash
