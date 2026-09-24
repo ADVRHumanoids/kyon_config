@@ -12,7 +12,6 @@ services:
     stdin_open: true
     tty: true
     privileged: true
-    entrypoint: /bin/bash
     restart: always
     network_mode: host
     runtime: nvidia

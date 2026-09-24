@@ -107,5 +107,14 @@ RUN source ~/env/bin/activate && \
 WORKDIR /home/user/ros2_ws/src/network_bridge
 RUN ./scripts/install_mediamtx.sh
 
+# ---------------------------------------------------------------- entrypoint
+COPY --chmod=0755 <<'EOF' /home/user/entrypoint.sh
+#!/bin/bash
+MEDIAMTX_DIR=/home/user/ros2_ws/src/network_bridge/mediamtx
+"$MEDIAMTX_DIR/mediamtx" "$MEDIAMTX_DIR/mediamtx.yml" >> /tmp/mediamtx.log 2>&1 &
+exec "$@"
+EOF
+
 WORKDIR /home/user/ros2_ws
+ENTRYPOINT ["/home/user/entrypoint.sh"]
 CMD ["/bin/bash"]
