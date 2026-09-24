@@ -1,0 +1,53 @@
+pipeline_conf:
+  - name: videoconvert
+    caps: "video/x-raw,format=NV12"
+    properties:
+      - name: encvidconv
+        pairs:
+          - key: n-threads
+            value: 0
+  - name: nvvidconv
+    caps: "video/x-raw(memory:NVMM),format=NV12"
+    properties:
+      - name: nvconv
+        pairs: []
+  - name: nvv4l2h265enc
+    properties:
+      - name: enc
+        pairs:
+          - key: bitrate
+            value: 4000000
+          - key: control-rate
+            value: 1
+          - key: preset-level
+            value: 1
+          - key: iframeinterval
+            value: 30
+          - key: idrinterval
+            value: 30
+          - key: insert-sps-pps
+            value: true
+          - key: maxperf-enable
+            value: true
+          - key: vbv-size
+            value: 133333
+          - key: insert-aud
+            value: true
+  - name: h265parse
+    properties:
+      - name: parse
+        pairs:
+          - key: config-interval
+            value: -1
+  - name: rtspclientsink
+    properties:
+      - name: sink
+        pairs:
+          - key: location
+            value: rtsp://127.0.0.1:8554/mystream
+          - key: protocols
+            value: tcp
+          - key: latency
+            value: 0
+          - key: rtx-time
+            value: 0

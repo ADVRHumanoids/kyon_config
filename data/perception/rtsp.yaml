@@ -5,7 +5,7 @@
     topics:
       - /zed_up/zed_node/rgb/color/rect/image
       - /zed_down/zed_node/rgb/color/rect/image
-    encoderPipelineFile: "config/rtsp_bridge/h265_jetson_sink.yaml"
+    encoderPipelineFile: "config/rtsp_bridge/h265_kyon_sink.yaml"
 
     # Per-topic override
     # /D435_camera_front/color/image_raw:
