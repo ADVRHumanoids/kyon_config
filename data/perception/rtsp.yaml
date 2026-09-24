@@ -1,0 +1,12 @@
+/**/*:
+  ros__parameters:
+    gstreamerBitrateKbps: 4000
+    gstreamerGopSize: 30
+    topics:
+      - /zed_up/zed_node/rgb/color/rect/image
+      - /zed_down/zed_node/rgb/color/rect/image
+    encoderPipelineFile: "config/rtsp_bridge/h265_gpu_sink.yaml"
+
+    # Per-topic override
+    # /D435_camera_front/color/image_raw:
+    #   encoderPipelineFile: "config/rtsp_bridge/h264_15fps.yaml"
