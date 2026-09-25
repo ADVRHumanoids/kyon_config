@@ -4,9 +4,9 @@
     networkInterface: "network_bridge::UdpInterface"
 
     UdpInterface:
-      localAddress: 127.0.0.1 #e.g. 10.8.0.2
+      localAddress: 10.24.15.102 #e.g. 10.8.0.2
       receivePort: 5001
-      remoteAddress: 10.0.0.10 #e.g. 10.8.0.1
+      remoteAddress: 10.24.15.135 #e.g. 10.8.0.1
       sendPort: 5002
 
     defaultRate: 100.0

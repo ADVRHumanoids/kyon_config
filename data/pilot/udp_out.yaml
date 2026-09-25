@@ -4,9 +4,9 @@
     networkInterface: "network_bridge::UdpInterface"
 
     UdpInterface:
-      localAddress: "127.0.0.1"      # this machine, e.g. 10.8.0.1
+      localAddress: 10.24.15.135      # this machine, e.g. 10.8.0.1
       receivePort: 5000              # must match the peer's sendPort
-      remoteAddress: "10.24.15.102"     # the peer, e.g. 10.8.0.2
+      remoteAddress: 10.24.15.102     # the peer, e.g. 10.8.0.2
       sendPort: 5001                 # must match the peer's receivePort
       fec: true
       fecLossTolerance: 0.10          # fraction of a message's blocks that may be lost
