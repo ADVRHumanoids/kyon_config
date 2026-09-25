@@ -18,6 +18,7 @@
 
     useCloudini: true
     cloudiniResolution: 0.05
+    cloudCropRadius: 2.0
 
     useGstreamer: true
     gstreamerBitrateKbps: 4000
