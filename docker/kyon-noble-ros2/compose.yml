@@ -21,8 +21,6 @@ services:
         # Mount the kyon_config repository root into the container
       - ../../:/home/user/xbot2_ws/src/kyon_config:ro
       - /dev:/dev
-      - ../../data/control/tcp_out.yaml:/home/user/xbot2_ws/src/network_bridge/config/topic_bridge/tcp/kyon.yaml:ro
-      - ../../data/control/udp_in.yaml:/home/user/xbot2_ws/src/network_bridge/config/topic_bridge/udp/kyon.yaml:ro
     environment:
       - TERM=xterm-256color
       - DISPLAY
@@ -35,6 +33,8 @@ services:
     restart: always
     volumes:
       - ~/.cache/kyon-noble-ros2-dev:/home/user/data
+      - ../../data/control/tcp_out.yaml:/home/user/xbot2_ws/src/network_bridge/config/topic_bridge/tcp/kyon.yaml:ro
+      - ../../data/control/udp_in.yaml:/home/user/xbot2_ws/src/network_bridge/config/topic_bridge/udp/kyon.yaml:ro
     environment:
       - CUSTOM_PS=(dev)
 
