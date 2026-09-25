@@ -4,10 +4,11 @@
     networkInterface: "network_bridge::UdpInterface"
 
     UdpInterface:
-      localAddress: 10.24.15.102 #e.g. 10.8.0.2
-      receivePort: 5001
-      remoteAddress: 10.24.15.135 #e.g. 10.8.0.1
-      sendPort: 5002
+      port: 5001                        # binds here, and answers wherever the peer called from
+      # This end only republishes what it receives, so it never sends first and needs no
+      # remoteAddress: it takes the peer, port included, from the first datagram that arrives.
+      # remoteAddress: 10.24.15.135     #e.g. 10.8.0.1, only on the end that sends first
+      # localAddress: 10.24.15.102      #e.g. 10.8.0.2, only to pin one interface
 
     defaultRate: 100.0
 
