@@ -28,9 +28,9 @@ services:
       - /var/nvidia/nvcam/settings:/var/nvidia/nvcam/settings
       - /tmp:/tmp
       - ../../:/home/user/xbot2_ws/src/kyon_config:ro
-      - ../../data/perception/mediamtx.yml:/home/user/ros2_ws/src/network_bridge/mediamtx/mediamtx.yml:ro
-      - ../../data/perception/rtsp.yaml:/home/user/ros2_ws/src/network_bridge/config/rtsp_bridge/kyon.yaml:ro
-      - ../../data/perception/h265_jetson_sink.yaml:/home/user/ros2_ws/src/network_bridge/config/rtsp_bridge/h265_kyon_sink.yaml:ro
+      - ../../data/perception/mediamtx.yml:/home/user/ros2_ws/src/network_bridge/mediamtx/mediamtx.yml
+      - ../../data/perception/rtsp.yaml:/home/user/ros2_ws/src/network_bridge/config/rtsp_bridge/kyon.yaml
+      - ../../data/perception/h265_jetson_sink.yaml:/home/user/ros2_ws/src/network_bridge/config/rtsp_bridge/h265_kyon_sink.yaml
     environment:
       - DISPLAY
       - TERM=xterm-256color
