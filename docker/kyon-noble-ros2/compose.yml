@@ -33,8 +33,6 @@ services:
     restart: always
     volumes:
       - ~/.cache/kyon-noble-ros2-dev:/home/user/data
-      - ../../data/control/tcp_out.yaml:/home/user/xbot2_ws/src/network_bridge/config/topic_bridge/tcp/kyon.yaml:ro
-      - ../../data/control/udp_in.yaml:/home/user/xbot2_ws/src/network_bridge/config/topic_bridge/udp/kyon.yaml:ro
     environment:
       - CUSTOM_PS=(dev)
 
@@ -56,8 +54,6 @@ services:
     restart: always
     volumes:
       - ~:/home/user/host
-      - ../../data/pilot/tcp_in.yaml:/home/user/xbot2_ws/src/network_bridge/config/topic_bridge/tcp/kyon.yaml
-      - ../../data/pilot/udp_out.yaml:/home/user/xbot2_ws/src/network_bridge/config/topic_bridge/udp/kyon.yaml
     environment:
       - NVIDIA_DRIVER_CAPABILITIES=all
       - NVIDIA_VISIBLE_DEVICES=all
