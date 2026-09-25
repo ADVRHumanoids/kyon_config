@@ -116,6 +116,18 @@ rtsp_bridge:
   docker: *docker-jetpack
   show_ui: false
 
+lidar_imu_out_bridge:
+  cmd:  ros2 run network_bridge topic_bridge --ros-args --params-file /home/user/xbot2_ws/src/kyon_config/data/control/tcp_out.yaml
+  machine: *control
+  docker: *docker-base
+  show_ui: false
+
+ctrl_in_bridge:
+  cmd:  ros2 run network_bridge topic_bridge --ros-args --params-file /home/user/xbot2_ws/src/kyon_config/data/control/udp_in.yaml
+  machine: *control
+  docker: *docker-base
+  show_ui: false
+
 # loco_mjx:
 #   cmd: cd /home/user/kyon_mjx/src/kyon_mjx && bash scripts/run_eval.bash
 #   machine: *control
