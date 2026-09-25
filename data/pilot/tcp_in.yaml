@@ -1,0 +1,30 @@
+# TCP bridge, client end. See doc/parameters.md for what each parameter does.
+/**/*:
+  ros__parameters:
+    networkInterface: "network_bridge::TcpInterface"
+
+    TcpInterface:
+      role: "client" # "client" or "server"
+      remoteAddress: 10.24.15.102 # IP of the server
+      port: 5000 # Desired port to connect to
+
+    defaultRate: 100.0
+
+    defaultZstdLevel: 3
+
+    useCloudini: true
+    cloudiniResolution: 0.001
+
+    useGstreamer: true
+    gstreamerBitrateKbps: 4000
+    gstreamerGopSize: 30
+    decoderPipelineFile: "config/topic_bridge/decoders/h265_cpu.yaml"
+
+
+    publishStaleData: False
+
+    # topics:
+    #   - ""
+
+    # subscribeNamespace: "/tcp2"
+    publishNamespace: "/tcp2"

@@ -1,0 +1,45 @@
+# TCP bridge, server end. See doc/parameters.md for what each parameter does.
+/**/*:
+  ros__parameters:
+    networkInterface: "network_bridge::TcpInterface"
+
+    TcpInterface:
+      role: "server" # "client" or "server"
+      port: 5000 # Desired port to listen on
+      # Outbound queue; at 1 Gbps, 4 MB is ~32ms of added latency
+      linkRateBytesPerSec: 0
+      sendQueueMaxSeconds: 2.0
+      # Read stops above this, closing the window so the peer sheds instead of this end growing
+      receiveQueueLimitBytes: 4194304
+
+    defaultRate: 100.0
+
+    defaultZstdLevel: 3
+
+    useCloudini: true
+    cloudiniResolution: 0.05
+
+    useGstreamer: true
+    gstreamerBitrateKbps: 4000
+    gstreamerGopSize: 30
+    encoderPipelineFile: "config/topic_bridge/encoders/h265_cpu.yaml"
+
+
+    publishStaleData: False
+
+    topics:
+      - /lidar_points
+      - /xbotcore/imu/imu_link
+
+
+    # Per-topic overrides: rate, zstdLevel, priority (0-255, lower goes first)
+    /lidar_points:
+      priority: 192
+      # rate:
+
+    /xbotcore/imu/imu_link:
+      priority: 10
+      # rate:
+
+    # subscribeNamespace: "/tcp1"
+    publishNamespace: "/tcp1"

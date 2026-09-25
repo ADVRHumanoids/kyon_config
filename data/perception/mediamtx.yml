@@ -1,2 +1,28 @@
 paths:
   all:
+
+api: yes
+
+apiAddress: :9997
+
+authInternalUsers:
+  # Username. 'any' means any user, including anonymous ones.
+  - user: any
+    # Password. Not used in case of 'any' user.
+    pass:
+    # IPs or networks allowed to use this user. An empty list means any IP.
+    ips: []
+    # Permissions.
+    permissions:
+      # Available actions are: publish, read, playback, api, metrics, pprof.
+      - action: publish
+        # Paths can be set to further restrict access to a specific path.
+        # An empty path means any path.
+        # Regular expressions can be used by using a tilde as prefix.
+        path:
+      - action: read
+        path:
+      - action: playback
+        path:
+      - action: api
+        path:
