@@ -28,7 +28,7 @@
     gstreamerBitrateKbps: 4000
     gstreamerGopSize: 30            # a loss corrupts the picture for gop_size / rate seconds
     maxGstreamerDecoders: 8
-    encoderPipelineFile: "config/topic_bridge/encoders/h264_gpu.yaml"
+    encoderPipelineFile: "config/topic_bridge/encoders/h264_cpu.yaml"
 
     allTopics: false
     topics:

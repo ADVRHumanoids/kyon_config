@@ -19,7 +19,7 @@
     useGstreamer: true
     gstreamerBitrateKbps: 4000
     gstreamerGopSize: 30
-    decoderPipelineFile: "config/topic_bridge/decoders/h264_gpu.yaml"
+    decoderPipelineFile: "config/topic_bridge/decoders/h264_cpu.yaml"
 
     publishStaleData: False
 
