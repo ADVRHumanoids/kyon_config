@@ -27,6 +27,7 @@ services:
       - /dev:/dev
       - /var/nvidia/nvcam/settings:/var/nvidia/nvcam/settings
       - /tmp:/tmp
+      - /usr/local/cuda-12.6:/usr/local/cuda-12.6:ro
     environment:
       - DISPLAY
       - TERM=xterm-256color
@@ -35,6 +36,8 @@ services:
       - HHCM_FOREST_CLONE_DEFAULT_PROTO=https
       - ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST
       - CONFIG_PATH_DOCKER
+      - PATH=/usr/local/cuda-12.6/bin:/home/user/env/bin:/opt/ros/jazzy/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      - LD_LIBRARY_PATH=/usr/local/cuda-12.6/lib64
 
 secrets:
   # Read-only github deploy key for advrhumanoids/network_bridge, used at build
