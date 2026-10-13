@@ -1,0 +1,12 @@
+[Unit]
+Description=gPTP (802.1AS) grandmaster for Hesai lidar
+After=network-online.target chrony.service sys-subsystem-net-devices-eno2.device
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/sbin/ptp4l -f /usr/share/doc/linuxptp/configs/gPTP.cfg -i eno2 --serverOnly=1 --clockClass=6 --clockAccuracy=0x21 --priority1=1 --priority2=1 --neighborPropDelayThresh=20000
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
