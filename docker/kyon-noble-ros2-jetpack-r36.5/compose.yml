@@ -26,6 +26,7 @@ services:
       - ~/.ssh:/home/user/.ssh  # ssh
       - /dev:/dev
       - /var/nvidia/nvcam/settings:/var/nvidia/nvcam/settings
+      - ../../:/home/user/ros2_ws/src/kyon_config:ro
       - /tmp:/tmp
       - /usr/local/cuda-12.6:/usr/local/cuda-12.6:ro
     environment:
