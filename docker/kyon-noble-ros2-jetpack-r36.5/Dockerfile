@@ -111,7 +111,7 @@ RUN ./scripts/install_mediamtx.sh
 COPY --chmod=0755 <<'EOF' /home/user/entrypoint.sh
 #!/bin/bash
 MEDIAMTX_DIR=/home/user/ros2_ws/src/network_bridge/mediamtx
-"$MEDIAMTX_DIR/mediamtx" "$MEDIAMTX_DIR/mediamtx.yml" >> /tmp/mediamtx.log 2>&1 &
+"$MEDIAMTX_DIR/mediamtx" "/home/user/ros2_ws/src/kyon_config/data/perception/mediamtx.yml" >> /tmp/mediamtx.log 2>&1 &
 exec "$@"
 EOF
 

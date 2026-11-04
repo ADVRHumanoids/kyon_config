@@ -52,6 +52,7 @@ host_monitor:
     battery: true
     gpu: true
     xenomai: true
+    tegrastats: true
 
   thresholds:
     consecutive_samples: 3
