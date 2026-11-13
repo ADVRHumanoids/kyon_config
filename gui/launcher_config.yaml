@@ -2,6 +2,7 @@ context:
   session: kyon
   params:
     hw_type: ec_pos
+    knee_mode_flag: ''
   .defines:
     - &embedded embedded@10.24.15.100
     - &control kyon@10.24.15.102
@@ -11,7 +12,7 @@ context:
     - &docker-base  kyon-noble-ros2-dev-1
     - &docker-isaac  kyon-isaac-base
     - &docker-jetpack kyon-noble-ros2-jetpack-dev-1
-
+    
     - &camera-up-serialno 52061328
     - &camera-down-serialno 56033502
 
@@ -53,12 +54,23 @@ park:
   docker: *docker-base
 
 unpark:
-  cmd: ros2 run kyon_cartesio parking.py -a unpark
+  cmd: ros2 run kyon_cartesio parking.py -a unpark {knee_mode_flag}
   machine: *control
   docker: *docker-base
   variants:
     fast:
       cmd: "{cmd} -t 1.0"
+    knee_mode:
+      - auto:
+          params:
+            knee_mode_flag: ""
+      - ferk:
+          params: 
+            knee_mode_flag: "--force-ferk"
+      - alle:
+          params:
+            knee_mode_flag: "--force-alle"
+
 
 zed_up:
   cmd: ros2 launch zed_wrapper zed_camera.launch.py camera_model:=zedxm serial_number:=52061328 camera_name:=zed_up publish_tf:=false camera_tf_parent_frame:=zed_front_up_mount_link
@@ -72,13 +84,33 @@ zed_down:
   machine: *vision
   docker: zed_ros2_jazzy_container
   ready_check: timeout 5 ros2 topic echo /zed_down/zed_node/rgb/color/rect/image/compressed --once
+  show_ui: false  
+
+
+rtsp_bridge:
+  cmd: ros2 launch network_bridge rtsp_bridge_rtsp_bridge.launch.py config:=/home/user/ros2_ws/src/kyon_config/data/perception/rtsp.yaml
+  machine: *vision
+  docker: *docker-jetpack
   show_ui: false
 
-zed_republish:
-  cmd: /home/user/republish_zed
-  machine: *control
-  docker: kyon-noble-ros2-dev-intel-va-1
+cam_record:
+  cmd: python /home/user/ros2_ws/src/kyon_config/data/perception/record_cameras.py
+  machine: *vision
+  docker: *docker-jetpack
   show_ui: false
+  depends: [rtsp_bridge]
+
+#lidar_imu_out_bridge:
+#  cmd:  ros2 run network_bridge topic_bridge --ros-args --params-file /home/user/xbot2_ws/src/kyon_config/data/control/tcp_out.yaml
+#  machine: *control
+#  docker: *docker-base
+#  show_ui: false
+
+#ctrl_in_bridge:
+#  cmd:  ros2 run network_bridge topic_bridge --ros-args --params-file /home/user/xbot2_ws/src/kyon_config/data/control/udp_in.yaml
+#  machine: *control
+#  docker: *docker-base
+#  show_ui: false
 
 lidar:
   cmd: ros2 run hesai_ros_driver hesai_ros_driver_node --ros-args -p config_path:=/home/user/xbot2_ws/src/kyon_config/hesai/top_qt128_config.yaml
@@ -87,14 +119,14 @@ lidar:
   ready_check: timeout 5 ros2 topic echo /lidar_points --once
   show_ui: false
 
-# record_bag:
-#   cmd: ~/data/record_bag.bash
-#   machine: *control
-#   docker: *docker-dev
-#   show_ui: false
+record_bag:
+  cmd: ~/record_bag.bash
+  machine: *control
+  docker: *docker-base
+  show_ui: false
 
 loco_isaac:
-  cmd: ros2 launch policy_deploy_toolkit run_example.launch.xml use_sim_time:=false
+  cmd: ros2 launch kyon_locomotion autorun_policy.launch.xml use_sim_time:=false
   machine: *control
   docker: *docker-base
   show_ui: true
@@ -104,29 +136,93 @@ loco_isaac:
     heightscan:
       cmd: "{cmd} heightscan:=true"
 
-morning_routine:
-  cmd: /home/user/xbot2_ws/src/kyon_config/scripts/robot_start_routine.bash
+loco_fasce:
+  cmd: /home/user/al-experimental-policies/run_policy.bash
   machine: *control
   docker: *docker-base
   show_ui: true
 
+lio:
+  cmd: ros2 launch lio_mapping bag.launch.py use_sim_time:=false tmux:=false launch_rviz:=false
+  machine: *vision
+  docker: *docker-jetpack
+  show_ui: false
+  depends: [imu, lidar]
+  variants: 
+    loc_fasce:
+      cmd: "{cmd} mode:=localization map_dir:=maps/fasce/"
+    loc_iit:
+      cmd: "{cmd} mode:=localization map_dir:=maps/iit_floor/"
+    odom:
+      cmd: "{cmd} mode:=odometry"
+
+
+nav:
+  cmd: ros2 launch kyon_navigation nav.launch.py tmux:=false use_sim_time:=false launch_rviz:=false
+  machine: *vision
+  docker: *docker-jetpack
+  show_ui: false
+  variants:
+      fasce: 
+        cmd: "{cmd} map_dir:=/home/user/ros2_ws/maps/fasce/"
+      iit:
+        cmd: "{cmd} map_dir:=/home/user/ros2_ws/maps/iit_floor/"
+      exploration_odometry:
+        cmd: "{cmd} explore:=true localization:=odometry"
+      exploration_iit:
+        cmd: "{cmd} localization:=global map_dir:=/home/user/ros2_ws/maps/iit_floor/ explore:=true"
+      exploration_fasce:
+        cmd: "{cmd} localization:=global map_dir:=/home/user/ros2_ws/maps/iit_fasce/ explore:=true"
+      omnisteering:
+        cmd: "{cmd} cmd_vel_topic:=/omnisteering/cmd_vel"
+
+#nav_iit:
+#  cmd: ros2 launch kyon_navigation nav.launch.py map_dir:=/home/user/ros2_ws/maps/iit_floor/ tmux:=false use_sim_time:=false launch_rviz:=false
+#  machine: *vision
+#  docker: *docker-jetpack
+#  show_ui: false
+
+# morning_routine:
+#   cmd: /home/user/xbot2_ws/src/kyon_config/scripts/robot_start_routine.bash
+#   machine: *control
+#   docker: *docker-base
+#   show_ui: true
+
 rtsp_bridge:
-  cmd: ros2 launch network_bridge rtsp_bridge_rtsp_bridge.launch.py config:=/home/user/ros2_ws/src/network_bridge/config/rtsp_bridge/kyon.yaml
+  cmd: ros2 launch network_bridge rtsp_bridge_rtsp_bridge.launch.py config:=/home/user/ros2_ws/src/kyon_config/data/perception/rtsp.yaml
   machine: *vision
   docker: *docker-jetpack
   show_ui: false
 
-lidar_imu_out_bridge:
-  cmd:  ros2 run network_bridge topic_bridge --ros-args --params-file /home/user/xbot2_ws/src/kyon_config/data/control/tcp_out.yaml
+localization_bridge:
+  cmd:  ros2 run network_bridge topic_bridge --ros-args --params-file /home/user/xbot2_ws/src/network_bridge/config/topic_bridge/udp/localization_robot.yaml
   machine: *control
   docker: *docker-base
   show_ui: false
 
-ctrl_in_bridge:
-  cmd:  ros2 run network_bridge topic_bridge --ros-args --params-file /home/user/xbot2_ws/src/kyon_config/data/control/udp_in.yaml
+nav_bridge:
+  cmd:  ros2 run network_bridge topic_bridge --ros-args --params-file /home/user/xbot2_ws/src/network_bridge/config/topic_bridge/udp/nav_robot.yaml
   machine: *control
   docker: *docker-base
   show_ui: false
+
+goal_bridge:
+  cmd:  ros2 run network_bridge topic_bridge --ros-args --params-file /home/user/xbot2_ws/src/network_bridge/config/topic_bridge/tcp/goal_robot.yaml
+  machine: *control
+  docker: *docker-base
+  show_ui: false
+
+#lidar_imu_out_bridge:
+#  cmd:  ros2 run network_bridge topic_bridge --ros-args --params-file /home/user/xbot2_ws/src/kyon_config/data/control/tcp_out.yaml
+#  machine: *control
+#  docker: *docker-base
+#  show_ui: false
+
+#ctrl_in_bridge:
+#  cmd:  ros2 run network_bridge topic_bridge --ros-args --params-file /home/user/xbot2_ws/src/kyon_config/data/control/udp_in.yaml
+#  machine: *control
+#  docker: *docker-base
+#  show_ui: false
 
 # loco_mjx:
 #   cmd: cd /home/user/kyon_mjx/src/kyon_mjx && bash scripts/run_eval.bash

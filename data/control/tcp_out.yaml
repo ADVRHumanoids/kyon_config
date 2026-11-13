@@ -31,12 +31,16 @@
     topics:
       - /lidar_points
       - /xbotcore/imu/imu_link
-
+      - /xbotcore/joint_states
 
     # Per-topic overrides: rate, zstdLevel, priority (0-255, lower goes first)
     /lidar_points:
       priority: 192
       # rate:
+
+    /xbotcore/joint_states:
+      priority: 11
+      rate: 20.0
 
     /xbotcore/imu/imu_link:
       priority: 10
