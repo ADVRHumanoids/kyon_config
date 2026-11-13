@@ -9,6 +9,8 @@ services:
       secrets:
         - deploy_key
     container_name: kyon-noble-ros2-jetpack-dev-1
+    entrypoint: ["/bin/bash", "/home/user/dev-entrypoint.sh"]
+    command: ["/bin/bash"]
     stdin_open: true
     tty: true
     privileged: true
@@ -22,6 +24,7 @@ services:
     ulimits:
       core: -1
     volumes:
+      - ./entrypoint.sh:/home/user/dev-entrypoint.sh:ro
       - /tmp/.X11-unix:/tmp/.X11-unix:rw  # x11
       - ~/.ssh:/home/user/.ssh  # ssh
       - /dev:/dev
@@ -29,6 +32,7 @@ services:
       - ../../:/home/user/ros2_ws/src/kyon_config:ro
       - /tmp:/tmp
       - /usr/local/cuda-12.6:/usr/local/cuda-12.6:ro
+      - /mnt/data/kyon:/home/user/data
     environment:
       - DISPLAY
       - TERM=xterm-256color

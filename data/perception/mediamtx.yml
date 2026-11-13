@@ -1,5 +1,8 @@
 paths:
   all:
+    recordPath: /home/user/data/recordings/%path/%Y-%m-%d_%H-%M-%S-%f
+    recordSegmentDuration: 10m
+    recordDeleteAfter: 0s
 
 api: yes
 
