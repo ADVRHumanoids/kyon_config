@@ -11,7 +11,7 @@ ec_board_ctrl :
   
 ec_boards_base :
   app_mode : run_mode
-  # app_mode : config_mode
+  #app_mode : config_mode
   robot_name : NoNe
   read_SDOs : false
   use_pipes : true
@@ -86,13 +86,6 @@ SynapticonESC_14:
     max: 2.7
   link_zero_incr: 576294
 
-SynapticonESC_15:
-  position_limits_rad:
-    min: -2.7
-    max: 2.7
-  link_zero_incr: 2699
-
-# fr leg
 SynapticonESC_21:
   position_limits_rad:
     min: -2.7
@@ -109,19 +102,13 @@ SynapticonESC_23:
   position_limits_rad:
     min: -4.20
     max: 4.20
-  link_zero_incr: 0 # before belt 868525
+  link_zero_incr: -16388 # before belt 868525
 
 SynapticonESC_24:
   position_limits_rad:
     min: -2.7
     max: 2.7
   link_zero_incr: 705963
-
-SynapticonESC_25:
-  position_limits_rad:
-    min: -2.7
-    max: 2.7
-  link_zero_incr: 501
 
 SynapticonESC_102:
   position_limits_rad:
@@ -205,31 +192,33 @@ SynapticonESC_51:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 967504
+  link_zero_incr: 440337
 
 SynapticonESC_52:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 769250
+  link_zero_incr: 244496
 
 SynapticonESC_53:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 181392
+  link_zero_incr: 180049
 
 SynapticonESC_54:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 3172
+  link_zero_incr: 3167  # -267176
+  ntc_steinhart_hart_coeffs: [7.18e-4, 2.15e-4, 1.05e-7]
 
 SynapticonESC_55:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 2562
+  link_zero_incr: 519
+  ntc_steinhart_hart_coeffs: [7.18e-4, 2.15e-4, 1.05e-7]
 
 
 
@@ -240,29 +229,32 @@ SynapticonESC_61:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 573896
+  link_zero_incr: 49368
 
 SynapticonESC_62:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 1033900
+  link_zero_incr: 508356
 
 SynapticonESC_63:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 577766
+  link_zero_incr: 52322
 
 SynapticonESC_64:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 2102
+  link_zero_incr: 2099
+  ntc_steinhart_hart_coeffs: [7.18e-4, 2.15e-4, 1.05e-7]
+
 
 SynapticonESC_65:
   position_limits_rad:
     min: -3.0
     max: 3.0
-  link_zero_incr: 881
+  link_zero_incr: 878
+  ntc_steinhart_hart_coeffs: [7.18e-4, 2.15e-4, 1.05e-7]
 

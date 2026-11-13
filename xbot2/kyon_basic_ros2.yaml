@@ -1,6 +1,6 @@
 XBotInterface:
-    urdf: xacro $(ros2 pkg prefix --share kyon_urdf)/urdf/kyon.urdf.xacro upper_body:=true legs:=true varta:=true dagana:=false wheels:=false
-    srdf: xacro $(ros2 pkg prefix --share kyon_srdf)/srdf/kyon.srdf.xacro upper_body:=true legs:=true varta:=true dagana:=false wheels:=false
+    urdf: /home/user/xbot2_ws/src/kyon_config/scripts/robot_description.py urdf --warn-on-wrong-order
+    srdf: /home/user/xbot2_ws/src/kyon_config/scripts/robot_description.py srdf --warn-on-wrong-order
 
 ModelInterface:
   model_type: pin
@@ -33,11 +33,11 @@ xbotcore_plugins:
       params:
         contact_links: [contact_1, contact_2, contact_3, contact_4]
 
-    homing_isaac:
-      thread: rt_main
-      type: homing
-      params: 
-          home: home_isaac 
+        #    homing_isaac:
+        #thread: rt_main
+        #type: homing
+        #params: 
+        #  home: home_isaac 
           
     homing_lb:
       thread: rt_main
@@ -75,43 +75,13 @@ xbotcore_plugins:
           hip_pitch_4: 0    
           knee_pitch_4: 0
 
-    # omnisteering:
-    #   type: omnisteering_controller_plugin
-    #   thread: nrt_main
-    #   params:
-    #     wheel_names: [wheel_1, wheel_2, wheel_3, wheel_4]
-    #     wheel_radius: [0.107, 0.107, 0.107, 0.107]
-
-    # traj:
-    #   thread: rt_main
-    #   type: trajectory_plugin
-    #   params:
-    #     amplitude:
-    #       shoulder_yaw_1: 1.5
-    #       shoulder_pitch_1: 1.5
-    #       elbow_pitch_1: 1.5
-    #       wrist_pitch_1: 1.5
-    #       wrist_yaw_1: 1.5
-    #       shoulder_yaw_2: 1.5
-    #       shoulder_pitch_2: 1.5
-    #       elbow_pitch_2: 1.5
-    #       wrist_pitch_2: 1.5
-    #       wrist_yaw_2: 1.5
-    #       # hip_roll_1: 0.2
-    #       # hip_pitch_1: 0.8
-    #       # knee_pitch_1: 0.8
-    #       # hip_roll_2: 0.2
-    #       # hip_pitch_2: 0.8
-    #       # knee_pitch_2: 0.8
-    #       # hip_roll_3: 0.2
-    #       # hip_pitch_3: 0.8
-    #       # knee_pitch_3: 0.8
-    #       # hip_roll_4: 0.2
-    #       # hip_pitch_4: 0.8
-    #       # knee_pitch_4: 0.8
-    #     freq_min: 0.05
-    #     freq_max: 0.2
-
+    omnisteering:
+      type: omnisteering_controller_plugin
+      thread: nrt_main
+      params:
+        vel_offset_gain: 1.0
+        wheel_names: [wheel_1, wheel_2, wheel_3, wheel_4]
+        wheel_radius: [0.107, 0.107, 0.107, 0.107]
 
     ros_io: 
       thread: main
@@ -120,6 +90,23 @@ xbotcore_plugins:
         ignore_imu: [imu_link]
 
     ros_control: {thread: nrt_main, type: ros2_control}
+
+    #traj:
+    #  thread: rt_main
+    #  type: trajectory_plugin
+    #  params:
+    #    amplitude:
+    #      shoulder_yaw_1: 1.5
+    #      shoulder_pitch_1: 1.5
+    #      elbow_pitch_1: 1.5
+    #      wrist_pitch_1: 1.5
+    #      wrist_yaw_1: 1.5
+    #      shoulder_yaw_2: 1.5
+    #      shoulder_pitch_2: 1.5
+    #      elbow_pitch_2: 1.5
+    #      wrist_pitch_2: 1.5
+    #      wrist_yaw_2: 1.5
+
 
     # friction_comp:
     #   type: friction_comp_plugin
